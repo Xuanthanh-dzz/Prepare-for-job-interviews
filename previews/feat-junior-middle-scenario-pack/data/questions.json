@@ -1,5 +1,5 @@
 {
-  "version": 9,
+  "version": 10,
   "questions": [
     {
       "id": "INT-CS-001",
@@ -6783,6 +6783,439 @@
         {
           "question": "IL có phải machine code không?",
           "answer": "Không. IL là mã trung gian độc lập hơn với CPU; JIT hoặc AOT sẽ chuyển nó thành native machine code phù hợp platform đích."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-018",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Một Angular app hiện đại có thể bootstrap mà không cần AppModule như thế nào?",
+      "answer": "Angular hiện đại có thể bootstrap bằng `bootstrapApplication()` với một standalone root component. Các provider dùng chung như Router, HttpClient hoặc cấu hình khác được đăng ký qua `providers`, giúp giảm ceremony của NgModule nhưng vẫn giữ dependency rõ ràng.",
+      "keyPoints": [
+        "Dùng bootstrapApplication",
+        "Root component có thể standalone",
+        "Provider đăng ký khi bootstrap"
+      ],
+      "followUps": [
+        {
+          "question": "Standalone có nghĩa NgModule đã biến mất hoàn toàn không?",
+          "answer": "Không. Standalone là hướng ưu tiên cho code mới, nhưng NgModule vẫn tồn tại để tương thích với library hoặc codebase cũ và có thể coexist trong cùng ứng dụng."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-019",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Content projection trong Angular giải quyết bài toán gì?",
+      "answer": "Content projection cho phép component cha truyền một phần template vào vị trí do component con định nghĩa bằng `ng-content`. Nó phù hợp cho reusable container như card, dialog hoặc layout khi cấu trúc khung ổn định nhưng nội dung bên trong thay đổi.",
+      "keyPoints": [
+        "Cho parent truyền template content",
+        "Dùng ng-content",
+        "Hợp reusable container"
+      ],
+      "followUps": [
+        {
+          "question": "Content projection khác Input truyền string hoặc data thế nào?",
+          "answer": "Input truyền dữ liệu; content projection truyền cả cấu trúc template/DOM để parent kiểm soát phần nội dung được render bên trong component con."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-020",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "InjectionToken trong Angular dùng khi nào?",
+      "answer": "`InjectionToken` dùng khi dependency không có class runtime để làm DI token, ví dụ interface TypeScript, configuration object hoặc primitive value. Token tạo identity rõ cho DI container và có thể đi kèm factory/provider mặc định.",
+      "keyPoints": [
+        "Dùng khi không có class runtime token",
+        "Hợp config/interface/primitive",
+        "Tạo identity cho DI"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao không thể inject trực tiếp một TypeScript interface?",
+          "answer": "Interface bị xóa khi compile sang JavaScript nên runtime không còn object đại diện cho interface để Angular DI dùng làm token."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-021",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Typed Reactive Forms giúp gì so với form không typed?",
+      "answer": "Typed Reactive Forms giữ type của `FormControl`, `FormGroup` và value ở compile time, giúp giảm cast và bắt lỗi sai field/type sớm hơn. Điều này đặc biệt hữu ích với form lớn vì refactor an toàn hơn và IDE hỗ trợ tốt hơn.",
+      "keyPoints": [
+        "Type-safe form model",
+        "Giảm cast",
+        "Refactor tốt hơn"
+      ],
+      "followUps": [
+        {
+          "question": "Typed form có kiểm tra dữ liệu backend ở runtime không?",
+          "answer": "Không. TypeScript chỉ kiểm tra compile time; dữ liệu từ API vẫn cần validation hoặc mapping nếu không thể tin hoàn toàn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-022",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "FormArray phù hợp cho loại form nào?",
+      "answer": "`FormArray` phù hợp khi số lượng control hoặc group thay đổi động, ví dụ danh sách số điện thoại, line item hoặc nhiều địa chỉ. Mỗi phần tử vẫn có validation/state riêng nhưng form có thể thêm hoặc xóa item trong runtime.",
+      "keyPoints": [
+        "Danh sách control động",
+        "Mỗi item có state/validation",
+        "Có thể add/remove runtime"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào FormGroup phù hợp hơn FormArray?",
+          "answer": "Khi cấu trúc field cố định và mỗi control có key rõ ràng như name, email, address thì FormGroup thường diễn đạt model tốt hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-LINQ-005",
+      "level": "Junior",
+      "topic": "Collections/LINQ",
+      "question": "LINQ query syntax và method syntax nên chọn thế nào?",
+      "answer": "Hai cú pháp thường tạo semantics tương đương và cuối cùng đều dựa trên các LINQ extension method. Method syntax linh hoạt hơn vì hỗ trợ toàn bộ operator; query syntax có thể dễ đọc với nhiều join/group. Nên ưu tiên style nhất quán và readability.",
+      "keyPoints": [
+        "Semantics thường tương đương",
+        "Method syntax đầy đủ operator hơn",
+        "Chọn theo readability"
+      ],
+      "followUps": [
+        {
+          "question": "Có khác biệt performance chỉ vì đổi từ query syntax sang method syntax không?",
+          "answer": "Thông thường không; compiler chuyển query syntax thành method calls tương ứng, nên performance phụ thuộc operator/query thực tế chứ không phải hình thức cú pháp."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-015",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Khi viết raw SQL trong EF Core, vì sao parameterization quan trọng?",
+      "answer": "Parameterization tách dữ liệu khỏi cấu trúc câu SQL, giúp chống SQL injection và để database xử lý parameter đúng type. Với input người dùng, không nên nối chuỗi trực tiếp vào SQL; dùng API có parameter hoặc interpolated API được EF chuyển thành `DbParameter`.",
+      "keyPoints": [
+        "Chống SQL injection",
+        "Tách data khỏi SQL structure",
+        "Dùng DbParameter/parameterized API"
+      ],
+      "followUps": [
+        {
+          "question": "Có thể nối trực tiếp tên bảng hoặc tên cột bằng parameter không?",
+          "answer": "Không theo cách thông thường vì identifier là một phần cấu trúc SQL, không phải value parameter; nếu thật sự cần dynamic identifier thì phải whitelist giá trị hợp lệ."
+        }
+      ]
+    },
+    {
+      "id": "JUN-CS-014",
+      "level": "Junior",
+      "topic": "C#",
+      "question": "`IEquatable<T>` hữu ích khi nào?",
+      "answer": "`IEquatable<T>` cho phép type định nghĩa equality strongly typed mà không cần đi qua `object`, hữu ích cho value-like type được so sánh thường xuyên. Nếu override equality, cần giữ `Equals`, `GetHashCode` và toán tử liên quan nhất quán.",
+      "keyPoints": [
+        "Strongly typed equality",
+        "Hợp value-like type",
+        "Phải nhất quán với GetHashCode"
+      ],
+      "followUps": [
+        {
+          "question": "Implement IEquatable<T> có cần override Equals(object) không?",
+          "answer": "Với public value semantics, nên giữ cả hai nhất quán để equality hoạt động đúng khi object được dùng qua API không generic hoặc collection khác."
+        }
+      ]
+    },
+    {
+      "id": "JUN-JS-004",
+      "level": "Junior",
+      "topic": "JavaScript",
+      "question": "`structuredClone()` khác shallow copy bằng spread ở điểm nào?",
+      "answer": "`structuredClone()` có thể tạo deep clone cho nhiều loại dữ liệu được structured-clone algorithm hỗ trợ, còn spread chỉ copy level ngoài cùng. Tuy nhiên structuredClone không clone được function và không bảo toàn mọi descriptor/getter/setter đặc biệt.",
+      "keyPoints": [
+        "structuredClone là deep clone cho nhiều type",
+        "Spread chỉ shallow copy",
+        "Có type/metadata không hỗ trợ"
+      ],
+      "followUps": [
+        {
+          "question": "structuredClone có thay thế mọi cách clone object không?",
+          "answer": "Không. Với class instance, function, DOM node hoặc object có semantics đặc biệt, bạn vẫn cần mapping hoặc clone strategy phù hợp domain."
+        }
+      ]
+    },
+    {
+      "id": "JUN-JS-005",
+      "level": "Junior",
+      "topic": "JavaScript",
+      "question": "Unhandled Promise rejection là gì?",
+      "answer": "Unhandled rejection xảy ra khi Promise bị reject nhưng không có handler phù hợp như `catch` hoặc `try/catch` quanh `await`. Nó có thể làm lỗi bị bỏ sót, tạo log runtime và tùy môi trường có thể ảnh hưởng process hoặc flow ứng dụng.",
+      "keyPoints": [
+        "Promise reject không được handle",
+        "Cần catch/try-catch phù hợp",
+        "Không nên bỏ lỗi âm thầm"
+      ],
+      "followUps": [
+        {
+          "question": "Bọc toàn bộ code async trong try/catch có đủ không?",
+          "answer": "Chỉ khi Promise được `await` trong scope đó; Promise được tạo nhưng không await/return vẫn có thể reject ngoài phạm vi try/catch."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TS-005",
+      "level": "Junior",
+      "topic": "TypeScript",
+      "question": "Toán tử `satisfies` giúp gì so với ép kiểu bằng `as`?",
+      "answer": "`satisfies` kiểm tra một value có phù hợp với type yêu cầu nhưng vẫn giữ type cụ thể được suy luận của value. `as` chủ yếu nói với compiler hãy coi value là type đó và có thể che lỗi nếu dùng để ép kiểu quá mạnh.",
+      "keyPoints": [
+        "Kiểm tra compatibility",
+        "Giữ inferred type cụ thể",
+        "An toàn hơn cast mù"
+      ],
+      "followUps": [
+        {
+          "question": "satisfies có thay đổi object ở runtime không?",
+          "answer": "Không. Đây là tính năng type system tại compile time và không tạo validation runtime."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TEST-007",
+      "level": "Junior",
+      "topic": "Testing",
+      "question": "Mock, stub, spy và fake khác nhau ở mục đích chính nào?",
+      "answer": "Stub trả dữ liệu được cấu hình sẵn; mock thường dùng để xác nhận interaction kỳ vọng; spy quan sát lời gọi trên implementation hoặc function; fake là implementation đơn giản nhưng hoạt động thật ở mức nhất định. Chọn test double theo mục tiêu thay vì gọi tất cả là mock.",
+      "keyPoints": [
+        "Stub cung cấp canned result",
+        "Mock/spy tập trung interaction",
+        "Fake là implementation nhẹ"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên verify mọi method call bằng mock không?",
+          "answer": "Không. Verify quá nhiều interaction làm test bám implementation và dễ vỡ khi refactor dù behavior bên ngoài không đổi."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-021",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Signal input khác `@Input()` truyền thống ở điểm nào?",
+      "answer": "Signal input biểu diễn input dưới dạng read-only Signal nên có thể tham gia trực tiếp vào `computed` và reactive dependency tracking. `@Input()` truyền thống gán vào property; cả hai đều nhận data từ parent nhưng signal input tích hợp tự nhiên hơn với signal-based state.",
+      "keyPoints": [
+        "Input dưới dạng Signal",
+        "Kết hợp computed/reactivity",
+        "Parent vẫn là nguồn cập nhật"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên chuyển toàn bộ @Input sang signal input ngay lập tức không?",
+          "answer": "Không bắt buộc. Migration nên dựa trên codebase, version và lợi ích reactive thực tế; hai cách có thể coexist trong quá trình chuyển đổi."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-022",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Model input trong Angular phù hợp khi nào?",
+      "answer": "Model input phù hợp khi component cần nhận một value từ parent và phát lại thay đổi của chính value đó theo pattern two-way binding. Nó hữu ích cho reusable control nhỏ, nhưng với business state phức tạp vẫn nên giữ ownership và event flow rõ ràng.",
+      "keyPoints": [
+        "Hỗ trợ two-way binding",
+        "Input + change output semantics",
+        "Hợp reusable control"
+      ],
+      "followUps": [
+        {
+          "question": "Model input có nên dùng cho mọi state giữa parent và child không?",
+          "answer": "Không. Two-way binding quá rộng dễ làm ownership state mơ hồ; state phức tạp thường rõ hơn với input một chiều và event/action riêng."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-023",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "`useClass`, `useValue`, `useFactory` và `useExisting` khác nhau thế nào trong Angular DI?",
+      "answer": "`useClass` tạo instance từ class; `useValue` cung cấp giá trị có sẵn; `useFactory` tạo dependency bằng function; `useExisting` alias sang provider/token khác. Chọn strategy theo lifecycle và cách dependency được tạo, không chỉ để DI resolve được.",
+      "keyPoints": [
+        "useClass tạo class instance",
+        "useValue cho constant/config",
+        "useFactory tạo động",
+        "useExisting tạo alias"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào useFactory hữu ích?",
+          "answer": "Khi dependency cần được tạo dựa trên config, environment hoặc dependency khác thay vì chỉ gọi constructor trực tiếp."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-024",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Bạn test service dùng HttpClient mà không gọi API thật như thế nào?",
+      "answer": "Dùng Angular HTTP testing provider/controller để intercept request, assert URL/method/body rồi flush response hoặc error giả lập. Test vẫn đi qua HttpClient pipeline ở mức phù hợp nhưng không phụ thuộc network thật, giúp deterministic và nhanh.",
+      "keyPoints": [
+        "Intercept request",
+        "Assert request contract",
+        "Flush response/error giả"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên mock thẳng method của HttpClient trong mọi test không?",
+          "answer": "Không luôn. HTTP testing utilities cho tín hiệu tốt hơn về request thực tế; mock HttpClient trực tiếp chỉ phù hợp khi muốn cô lập sâu hơn và không quan tâm request contract."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-025",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Hydration mismatch trong Angular SSR thường đến từ đâu?",
+      "answer": "Mismatch xảy ra khi DOM server render khác với DOM client mong đợi khi hydrate, thường do code phụ thuộc browser-only state, random/time khác nhau hoặc sửa DOM trực tiếp trước hydration. Cần giữ render deterministic và isolate browser-only behavior đúng lifecycle.",
+      "keyPoints": [
+        "Server/client DOM phải tương thích",
+        "Tránh random/time không đồng bộ",
+        "Cẩn thận browser-only DOM mutation"
+      ],
+      "followUps": [
+        {
+          "question": "Dùng `window` trực tiếp trong constructor có thể gây vấn đề gì với SSR?",
+          "answer": "Server không có browser global như window theo cách client có; code có thể throw hoặc tạo output khác, dẫn tới SSR failure hoặc hydration mismatch."
+        }
+      ]
+    },
+    {
+      "id": "MID-JS-004",
+      "level": "Middle",
+      "topic": "JavaScript",
+      "question": "Proxy và Reflect thường được dùng để giải quyết loại bài toán nào?",
+      "answer": "Proxy intercept các operation như get, set hoặc delete trên object, còn Reflect cung cấp API chuẩn để thực hiện các operation tương ứng. Chúng hữu ích cho reactive system, validation hoặc virtualization nhưng làm control flow khó theo dõi nếu lạm dụng.",
+      "keyPoints": [
+        "Proxy intercept object operations",
+        "Reflect thực hiện operation chuẩn",
+        "Hữu ích cho reactive/validation"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao Proxy có thể làm debugging khó hơn?",
+          "answer": "Behavior khi đọc/ghi property không còn nằm trực tiếp ở object code mà bị trap chặn, nên stack và side effect có thể khó đoán hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-JS-005",
+      "level": "Middle",
+      "topic": "JavaScript",
+      "question": "`Object.freeze()` có làm object immutable sâu không?",
+      "answer": "Không. `Object.freeze()` chỉ đóng băng chính object đó: không thêm/xóa property và không gán lại data property trực tiếp. Nested object vẫn có thể thay đổi nếu bản thân chúng chưa được freeze hoặc được quản lý theo immutable pattern khác.",
+      "keyPoints": [
+        "Freeze là shallow",
+        "Nested object vẫn mutable",
+        "Không đồng nghĩa deep immutable"
+      ],
+      "followUps": [
+        {
+          "question": "Deep freeze có luôn là lựa chọn tốt cho state lớn không?",
+          "answer": "Không. Recursive freeze có cost và có thể không cần trong production; immutable update pattern hoặc tooling phù hợp thường linh hoạt hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-JS-006",
+      "level": "Middle",
+      "topic": "JavaScript",
+      "question": "Race condition trong async frontend thường xuất hiện như thế nào?",
+      "answer": "Một race phổ biến là request cũ hoàn thành sau request mới rồi ghi đè state mới hơn. Có thể xử lý bằng cancellation, request sequence/token, `switchMap` hoặc chỉ chấp nhận response còn khớp với state hiện tại.",
+      "keyPoints": [
+        "Response có thể về sai thứ tự",
+        "Cần cancellation hoặc identity",
+        "Latest request không tự thắng"
+      ],
+      "followUps": [
+        {
+          "question": "Debounce có tự giải quyết race condition không?",
+          "answer": "Không hoàn toàn. Debounce giảm số request nhưng hai request vẫn có thể overlap; vẫn cần cancellation hoặc kiểm tra request hiện hành."
+        }
+      ]
+    },
+    {
+      "id": "MID-CS-009",
+      "level": "Middle",
+      "topic": "C#",
+      "question": "`[EnumeratorCancellation]` có vai trò gì với `IAsyncEnumerable<T>`?",
+      "answer": "Khi async iterator nhận `CancellationToken`, `[EnumeratorCancellation]` cho compiler biết token từ `WithCancellation()` của consumer cần được kết hợp/truyền vào iterator đúng semantics. Nó giúp cancellation của `await foreach` thực sự tới code producer.",
+      "keyPoints": [
+        "Liên kết cancellation từ consumer",
+        "Dùng với async iterator",
+        "Hỗ trợ await foreach cancellation"
+      ],
+      "followUps": [
+        {
+          "question": "Chỉ thêm CancellationToken parameter mà không có attribute có luôn đủ không?",
+          "answer": "Không trong mọi pattern async iterator; attribute giúp compiler xử lý token do consumer truyền qua `WithCancellation` đúng cách."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-014",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "Raw SQL có tên bảng hoặc tên cột động nên xử lý thế nào để tránh SQL injection?",
+      "answer": "Identifier như table/column name thường không thể parameterize như value. Nếu business thật sự cần dynamic identifier, phải map hoặc whitelist từ tập giá trị server kiểm soát rồi mới ghép vào SQL; tuyệt đối không nối trực tiếp input tùy ý từ client.",
+      "keyPoints": [
+        "Identifier không parameterize như value",
+        "Whitelist/map server-side",
+        "Không nối raw user input"
+      ],
+      "followUps": [
+        {
+          "question": "Parameterization bảo vệ được phần ORDER BY column động không?",
+          "answer": "Không trực tiếp cho identifier. Nên map key như `name`, `createdAt` sang column expression đã biết thay vì dùng chuỗi client gửi thẳng vào SQL."
+        }
+      ]
+    },
+    {
+      "id": "MID-TEST-007",
+      "level": "Middle",
+      "topic": "Testing",
+      "question": "Test isolation quan trọng thế nào với một test suite lớn?",
+      "answer": "Mỗi test nên tự chuẩn bị state và không phụ thuộc test khác chạy trước. Shared database, static state, clock hoặc file dùng chung dễ tạo test flaky. Isolation tốt giúp chạy parallel, rerun riêng và tin failure phản ánh đúng behavior.",
+      "keyPoints": [
+        "Không phụ thuộc thứ tự test",
+        "Kiểm soát shared state",
+        "Hỗ trợ parallel/deterministic"
+      ],
+      "followUps": [
+        {
+          "question": "Reset database toàn bộ sau mỗi test có luôn là cách tốt nhất không?",
+          "answer": "Không. Có thể tốn thời gian; transaction rollback, schema snapshot hoặc per-test data strategy thường nhanh hơn tùy loại integration test."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-015",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Vì sao query có index nhưng optimizer vẫn chọn scan?",
+      "answer": "Optimizer chọn plan dựa trên cost ước lượng. Nếu query cần phần lớn row, index không selective, statistics sai hoặc predicate không tận dụng được key, scan có thể rẻ hơn seek + lookup. Có index không đồng nghĩa database bắt buộc dùng index.",
+      "keyPoints": [
+        "Optimizer chọn theo cost",
+        "Selectivity/statistics ảnh hưởng",
+        "Scan đôi khi là plan đúng"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên ép index hint ngay khi thấy scan không?",
+          "answer": "Không nên trước khi hiểu nguyên nhân. Hint có thể khóa plan xấu khi data distribution thay đổi; trước tiên cần xem actual plan, statistics và query predicate."
         }
       ]
     }
