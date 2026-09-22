@@ -1,5 +1,5 @@
 {
-  "version": 13,
+  "version": 14,
   "questions": [
     {
       "id": "INT-CS-001",
@@ -9160,6 +9160,1266 @@
         {
           "question": "HTTP/2 có loại bỏ head-of-line blocking hoàn toàn không?",
           "answer": "Không ở tầng TCP; packet loss vẫn có thể ảnh hưởng các stream trên cùng connection, dù nó cải thiện blocking ở tầng HTTP so với HTTP/1.1."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-013",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "`[ApiController]` thay đổi behavior validation của controller như thế nào?",
+      "answer": "Với controller gắn `[ApiController]`, ASP.NET Core áp dụng convention dành cho API như suy luận binding source và tự trả lỗi 400 khi model validation không hợp lệ. Điều này giảm code kiểm tra `ModelState` lặp lại nhưng error contract vẫn nên được chuẩn hóa cho toàn API.",
+      "keyPoints": [
+        "Tự xử lý model validation lỗi",
+        "Có binding conventions",
+        "Giảm kiểm tra ModelState thủ công"
+      ],
+      "followUps": [
+        {
+          "question": "Có cần tự viết `if (!ModelState.IsValid)` trong mọi action nữa không?",
+          "answer": "Thông thường không khi dùng `[ApiController]`; chỉ cần can thiệp nếu bạn muốn custom validation flow hoặc response contract đặc biệt."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-014",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Route constraint trong ASP.NET Core dùng để làm gì?",
+      "answer": "Route constraint giới hạn giá trị route theo kiểu hoặc pattern, ví dụ `{id:int}` chỉ match số nguyên. Nó giúp routing chọn endpoint đúng và loại request không khớp sớm, nhưng không thay thế business validation.",
+      "keyPoints": [
+        "Giới hạn giá trị route",
+        "Giúp endpoint matching rõ hơn",
+        "Không thay business validation"
+      ],
+      "followUps": [
+        {
+          "question": "`{id:int}` có đảm bảo id đó tồn tại trong database không?",
+          "answer": "Không. Constraint chỉ kiểm tra shape/type của route value; existence vẫn phải được kiểm tra trong application/data layer."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-015",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Options validation nên được dùng như thế nào khi ứng dụng khởi động?",
+      "answer": "Configuration quan trọng có thể được map vào Options rồi validate bằng annotation hoặc custom validator. Với cấu hình bắt buộc, `ValidateOnStart` giúp fail fast lúc startup thay vì để request đầu tiên mới phát hiện connection string hoặc setting sai.",
+      "keyPoints": [
+        "Strongly typed config",
+        "Validate configuration",
+        "Fail fast với ValidateOnStart"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao fail startup có thể tốt hơn chạy với config sai?",
+          "answer": "Vì lỗi được phát hiện ngay trong deploy/health check thay vì tạo lỗi ngẫu nhiên khi traffic thật đã vào ứng dụng."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-016",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "ClaimsPrincipal trong ASP.NET Core đại diện cho gì?",
+      "answer": "`ClaimsPrincipal` đại diện identity của caller cùng tập claim như subject, role hoặc tenant. Sau authentication, endpoint có thể đọc `HttpContext.User` để authorization hoặc lấy thông tin cần thiết, nhưng không nên tin claim chưa được token/session validation.",
+      "keyPoints": [
+        "Đại diện identity caller",
+        "Chứa claims",
+        "Được dùng sau authentication"
+      ],
+      "followUps": [
+        {
+          "question": "Claim và role có giống nhau hoàn toàn không?",
+          "answer": "Không. Role có thể được biểu diễn bằng claim nhưng claim nói chung là key/value về identity; authorization policy có thể dùng nhiều loại claim khác role."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-017",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Kestrel có vai trò gì trong ASP.NET Core?",
+      "answer": "Kestrel là web server đa nền tảng của ASP.NET Core, nhận HTTP connection và chạy request pipeline của ứng dụng. Trong production nó thường đứng sau reverse proxy hoặc load balancer nhưng cũng có thể chạy trực tiếp tùy kiến trúc.",
+      "keyPoints": [
+        "Web server của ASP.NET Core",
+        "Nhận HTTP connections",
+        "Thường đứng sau proxy/load balancer"
+      ],
+      "followUps": [
+        {
+          "question": "Reverse proxy có thay thế Kestrel không?",
+          "answer": "Không. Proxy nhận traffic phía trước rồi chuyển request vào Kestrel, nơi ASP.NET Core application thực sự xử lý request."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-018",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Response compression giúp gì cho Web API?",
+      "answer": "Response compression giảm kích thước payload text như JSON, HTML hoặc CSS trước khi gửi qua mạng, giúp tiết kiệm bandwidth và có thể giảm latency. Đổi lại server tốn CPU để nén và không phải content type nào cũng nên nén.",
+      "keyPoints": [
+        "Giảm payload qua mạng",
+        "Đổi bandwidth lấy CPU",
+        "Chỉ áp dụng content phù hợp"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên nén file ảnh JPEG thêm bằng response compression không?",
+          "answer": "Thường không đáng vì JPEG đã được nén; nén lại tốn CPU nhưng giảm kích thước rất ít."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-019",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Upload file bằng `IFormFile` cần chú ý những gì?",
+      "answer": "Cần giới hạn kích thước request, validate loại file theo nội dung/use case, không tin filename từ client và lưu ở vị trí an toàn. File lớn có thể cần streaming thay vì giữ toàn bộ dữ liệu trong memory hoặc buffer không cần thiết.",
+      "keyPoints": [
+        "Giới hạn file size",
+        "Không tin filename/content type mù",
+        "File lớn nên cân nhắc streaming"
+      ],
+      "followUps": [
+        {
+          "question": "Chỉ kiểm tra phần mở rộng `.jpg` có đủ an toàn không?",
+          "answer": "Không. Extension có thể giả; cần validate theo policy, content/signature phù hợp và không thực thi file upload như code."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-020",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "TypedResults trong Minimal API có lợi gì?",
+      "answer": "`TypedResults` tạo các HTTP result có type cụ thể như `Ok<T>` hoặc `NotFound`, giúp metadata và OpenAPI mô tả response rõ hơn. Nó cũng làm signature handler dễ hiểu hơn so với trả một `IResult` quá chung.",
+      "keyPoints": [
+        "Typed HTTP result",
+        "Metadata/OpenAPI rõ hơn",
+        "Signature dễ đọc"
+      ],
+      "followUps": [
+        {
+          "question": "TypedResults có bắt buộc cho mọi Minimal API không?",
+          "answer": "Không. `Results` vẫn hợp lệ; TypedResults đáng dùng khi muốn contract và tooling hiểu response type rõ hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-016",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Các EntityState chính trong EF Core là gì?",
+      "answer": "Change Tracker thường quản entity ở các state như Detached, Unchanged, Added, Modified và Deleted. `SaveChanges` dựa vào state để quyết định có phát INSERT, UPDATE hay DELETE xuống database hay không.",
+      "keyPoints": [
+        "Detached/Unchanged",
+        "Added/Modified/Deleted",
+        "State quyết định write SQL"
+      ],
+      "followUps": [
+        {
+          "question": "Entity query mặc định thường ở state nào?",
+          "answer": "Với tracking query, entity thường được track ở `Unchanged` cho tới khi EF phát hiện property bị thay đổi."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-017",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "`Attach` và `Update` khác nhau thế nào?",
+      "answer": "`Attach` đưa entity vào context với state mặc định là Unchanged, phù hợp khi bạn chỉ muốn bắt đầu track. `Update` thường đánh dấu entity và graph liên quan là Modified, có thể khiến nhiều column bị update hơn mong muốn.",
+      "keyPoints": [
+        "Attach bắt đầu tracking",
+        "Update đánh dấu Modified",
+        "Cẩn thận disconnected entity"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nhận DTO từ API có nên gọi Update thẳng entity map từ DTO không?",
+          "answer": "Thường không nên mù quáng; tốt hơn load entity hiện tại rồi map các field được phép sửa để tránh over-posting và update dư."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-018",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Cascade delete trong EF Core là gì?",
+      "answer": "Cascade delete cho phép delete principal kéo theo dependent theo relationship configuration. Behavior thực tế phụ thuộc required/optional relationship và database constraint, nên cần hiểu trước khi xóa aggregate có nhiều dữ liệu liên quan.",
+      "keyPoints": [
+        "Delete principal có thể xóa dependent",
+        "Phụ thuộc relationship config",
+        "Có thể ảnh hưởng nhiều row"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao cascade delete cần thận trọng ở production?",
+          "answer": "Một lệnh xóa tưởng nhỏ có thể xóa cả graph dữ liệu; cần test constraint và authorization trước khi expose operation nguy hiểm."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-019",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Relationship fixup trong EF Core là gì?",
+      "answer": "Khi các entity liên quan được track, EF Core có thể tự đồng bộ navigation property và foreign key trong memory để graph nhất quán. Ví dụ set `Order.Customer` có thể làm navigation collection phía Customer được cập nhật tương ứng.",
+      "keyPoints": [
+        "Đồng bộ FK và navigation",
+        "Xảy ra trong tracked graph",
+        "Giữ relationship nhất quán"
+      ],
+      "followUps": [
+        {
+          "question": "Relationship fixup có tự lưu thay đổi xuống database không?",
+          "answer": "Không. Nó chỉ cập nhật tracked graph; vẫn cần `SaveChanges` để persistence thay đổi nếu state yêu cầu."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-020",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Value Converter trong EF Core dùng để làm gì?",
+      "answer": "Value Converter chuyển giá trị giữa type trong model và type lưu ở database, ví dụ enum mạnh hơn thành string hoặc custom value object thành primitive. Converter không thay thế business validation và cần giữ conversion ổn định theo dữ liệu cũ.",
+      "keyPoints": [
+        "Chuyển model value ↔ provider value",
+        "Hữu ích cho enum/value object",
+        "Cần compatibility với dữ liệu cũ"
+      ],
+      "followUps": [
+        {
+          "question": "Value Converter có phù hợp để mã hóa mọi dữ liệu nhạy cảm không?",
+          "answer": "Không mặc định. Encryption cần key management, rotation và query semantics; converter chỉ là một điểm transform, không phải security design hoàn chỉnh."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-021",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Shadow property trong EF Core là gì?",
+      "answer": "Shadow property là property tồn tại trong EF model nhưng không có property CLR tương ứng trên entity class. Nó thường dùng cho foreign key hoặc metadata mà domain model không muốn expose trực tiếp.",
+      "keyPoints": [
+        "Có trong EF model",
+        "Không có CLR property",
+        "Có thể dùng cho FK/metadata"
+      ],
+      "followUps": [
+        {
+          "question": "Làm sao truy cập shadow property trong query?",
+          "answer": "Có thể dùng `EF.Property<T>(entity, \"PropertyName\")` trong LINQ query hoặc Change Tracker API khi cần."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-022",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Key tự sinh như identity được cập nhật vào entity khi nào?",
+      "answer": "Với key do database sinh, EF Core gửi INSERT trong `SaveChanges` rồi lấy giá trị key trả về và cập nhật tracked entity. Trước SaveChanges, entity có thể có temporary key do EF dùng nội bộ.",
+      "keyPoints": [
+        "DB sinh key khi insert",
+        "EF cập nhật entity sau SaveChanges",
+        "Có thể có temporary key"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao không nên phụ thuộc database ID trước SaveChanges?",
+          "answer": "Vì key thật có thể chưa tồn tại; nếu cần correlation trước persistence nên dùng business key hoặc client-generated key phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-023",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Entity trả về từ `FromSql` có được tracking không?",
+      "answer": "Nếu `FromSql` tạo query cho entity type và query không tắt tracking, kết quả vẫn có thể được Change Tracker theo dõi giống LINQ query thông thường. Có thể thêm `AsNoTracking` nếu chỉ đọc dữ liệu.",
+      "keyPoints": [
+        "Raw SQL entity vẫn có thể tracking",
+        "Có thể dùng AsNoTracking",
+        "Tracking phụ thuộc query mode"
+      ],
+      "followUps": [
+        {
+          "question": "FromSql có được compose thêm LINQ phía sau không?",
+          "answer": "Trong nhiều trường hợp có nếu SQL có thể compose như subquery; nhưng cần hiểu provider và SQL shape để tránh query không hợp lệ."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-014",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "UNIQUE constraint khác PRIMARY KEY thế nào?",
+      "answer": "Cả hai đều bảo vệ uniqueness, nhưng primary key là định danh chính của row và mỗi bảng chỉ có một primary key constraint. Bảng có thể có nhiều UNIQUE constraint cho các candidate key khác như email hoặc mã nghiệp vụ.",
+      "keyPoints": [
+        "PK là định danh chính",
+        "Có nhiều UNIQUE constraints",
+        "Đều enforce uniqueness"
+      ],
+      "followUps": [
+        {
+          "question": "Email unique có nhất thiết nên là primary key không?",
+          "answer": "Không. Email có thể thay đổi và mang business semantics; surrogate key ổn định thường phù hợp hơn làm primary key."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-015",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "`UNION` và `UNION ALL` khác nhau thế nào?",
+      "answer": "`UNION` gộp kết quả rồi loại row trùng, còn `UNION ALL` giữ toàn bộ row. Vì không phải deduplicate, `UNION ALL` thường rẻ hơn và nên dùng khi business không cần loại duplicate.",
+      "keyPoints": [
+        "UNION loại duplicate",
+        "UNION ALL giữ tất cả",
+        "UNION ALL thường rẻ hơn"
+      ],
+      "followUps": [
+        {
+          "question": "Khi hai tập dữ liệu chắc chắn không trùng nên chọn gì?",
+          "answer": "Thường chọn `UNION ALL` để tránh chi phí sort/hash deduplication không cần thiết."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-016",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "View trong SQL dùng để làm gì?",
+      "answer": "View lưu một query dưới tên như một bảng logic để tái sử dụng, ẩn bớt schema phức tạp hoặc giới hạn column được expose. View thường không tự lưu dữ liệu trừ loại materialized/indexed view tùy database.",
+      "keyPoints": [
+        "Named query abstraction",
+        "Có thể ẩn schema phức tạp",
+        "Không mặc định lưu dữ liệu"
+      ],
+      "followUps": [
+        {
+          "question": "View có luôn làm query nhanh hơn không?",
+          "answer": "Không. View thường chỉ là abstraction; optimizer vẫn phải chạy query nền và performance phụ thuộc plan/index thật."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-017",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "Subquery và JOIN nên chọn theo tiêu chí nào?",
+      "answer": "Cả hai có thể biểu diễn nhiều bài toán giống nhau và optimizer đôi khi tạo plan tương đương. Nên chọn cách diễn đạt rõ intent trước, rồi xem execution plan nếu query là hot path thay vì mặc định JOIN luôn nhanh hơn.",
+      "keyPoints": [
+        "Có thể biểu diễn bài toán tương tự",
+        "Ưu tiên readability",
+        "Đo execution plan khi cần"
+      ],
+      "followUps": [
+        {
+          "question": "EXISTS subquery có thể tốt hơn JOIN khi nào?",
+          "answer": "Khi chỉ cần kiểm tra existence mà không cần dữ liệu phía bên kia, EXISTS thường diễn đạt intent rõ và tránh nhân row không cần thiết."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-018",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "`DELETE` và `TRUNCATE` khác nhau ở mức khái niệm?",
+      "answer": "`DELETE` xóa row theo predicate và đi qua semantics DML thông thường; `TRUNCATE` thường xóa toàn bộ bảng theo operation mức cao hơn và có behavior về logging, identity, trigger hoặc lock khác tùy database. Không nên coi chúng là tương đương.",
+      "keyPoints": [
+        "DELETE có thể dùng WHERE",
+        "TRUNCATE xóa toàn bảng",
+        "Behavior DB-specific khác nhau"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên dùng TRUNCATE trên production table chỉ vì nhanh hơn không?",
+          "answer": "Không nếu chưa hiểu transaction, permission, foreign key và recovery behavior của database cụ thể; đây là operation có blast radius lớn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-019",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "Các aggregate function như COUNT, SUM, AVG hoạt động thế nào với GROUP BY?",
+      "answer": "`GROUP BY` chia row thành các nhóm theo key, còn aggregate tính một giá trị cho mỗi nhóm như số lượng, tổng hoặc trung bình. Column trong SELECT thường phải là group key hoặc nằm trong aggregate theo rule của database.",
+      "keyPoints": [
+        "GROUP BY tạo nhóm",
+        "Aggregate tính theo nhóm",
+        "SELECT phải phù hợp grouping"
+      ],
+      "followUps": [
+        {
+          "question": "COUNT(*) và COUNT(column) khác nhau thế nào?",
+          "answer": "COUNT(*) đếm row; COUNT(column) bỏ qua row mà column đó là NULL."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-020",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "Composite primary key phù hợp khi nào?",
+      "answer": "Composite key dùng nhiều column cùng nhau để định danh duy nhất một row, thường gặp ở bảng liên kết như UserRole hoặc OrderProduct. Nó diễn đạt uniqueness tự nhiên nhưng foreign key tham chiếu sẽ rộng hơn.",
+      "keyPoints": [
+        "Nhiều column tạo identity",
+        "Hợp junction table",
+        "FK/index có thể rộng hơn"
+      ],
+      "followUps": [
+        {
+          "question": "Có cần thêm surrogate ID vào mọi bảng liên kết không?",
+          "answer": "Không bắt buộc. Nếu cặp foreign key đã là identity tự nhiên và phù hợp access pattern, composite primary key có thể đủ."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-021",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "COMMIT và ROLLBACK có vai trò gì trong transaction?",
+      "answer": "`COMMIT` xác nhận các thay đổi của transaction trở thành lâu dài, còn `ROLLBACK` hủy các thay đổi chưa commit của transaction. Chúng giúp giữ nhiều statement trong cùng một atomic business operation.",
+      "keyPoints": [
+        "COMMIT xác nhận thay đổi",
+        "ROLLBACK hủy thay đổi chưa commit",
+        "Phục vụ atomicity"
+      ],
+      "followUps": [
+        {
+          "question": "Sau COMMIT có thể ROLLBACK lại transaction đó không?",
+          "answer": "Không theo transaction thông thường; sau commit muốn đảo thay đổi phải chạy operation bù hoặc restore theo strategy khác."
+        }
+      ]
+    },
+    {
+      "id": "JUN-CS-015",
+      "level": "Junior",
+      "topic": "C#",
+      "question": "`abstract`, `virtual` và `override` khác nhau thế nào?",
+      "answer": "`abstract` yêu cầu derived type cung cấp implementation; `virtual` có implementation mặc định nhưng cho phép override; `override` là implementation thay thế ở derived type. Chúng hỗ trợ polymorphism qua base class.",
+      "keyPoints": [
+        "abstract bắt buộc implement",
+        "virtual có default implementation",
+        "override thay behavior"
+      ],
+      "followUps": [
+        {
+          "question": "Method không virtual có override được không?",
+          "answer": "Không theo polymorphism runtime thông thường; derived type chỉ có thể hide bằng `new`, đây là semantics khác override."
+        }
+      ]
+    },
+    {
+      "id": "JUN-CS-016",
+      "level": "Junior",
+      "topic": "C#",
+      "question": "`sealed` class hoặc `sealed override` dùng để làm gì?",
+      "answer": "`sealed class` ngăn type khác kế thừa; `sealed override` cho phép override một lần rồi chặn derived type sâu hơn override tiếp. Nó hữu ích khi muốn khóa behavior hoặc bảo vệ invariant của design.",
+      "keyPoints": [
+        "sealed class chặn inheritance",
+        "sealed override chặn override tiếp",
+        "Bảo vệ design/invariant"
+      ],
+      "followUps": [
+        {
+          "question": "Sealed có thể giúp performance không?",
+          "answer": "Đôi khi runtime dễ devirtualize hơn, nhưng nên dùng sealed chủ yếu vì semantics thiết kế, không phải tối ưu vi mô."
+        }
+      ]
+    },
+    {
+      "id": "JUN-CS-017",
+      "level": "Junior",
+      "topic": "C#",
+      "question": "Direct cast, `as` và pattern `is` khác nhau thế nào?",
+      "answer": "Direct cast throw nếu object không tương thích; `as` trả null cho reference/nullable type nếu cast thất bại; pattern `is` vừa kiểm tra vừa bind biến typed an toàn. Với flow hiện đại, pattern matching thường rõ nhất.",
+      "keyPoints": [
+        "Direct cast có thể throw",
+        "as trả null",
+        "is pattern kiểm tra + bind"
+      ],
+      "followUps": [
+        {
+          "question": "`as` dùng được với non-nullable value type không?",
+          "answer": "Không theo cách thông thường vì `as` cần khả năng trả null; có thể dùng với nullable value type."
+        }
+      ]
+    },
+    {
+      "id": "JUN-CS-018",
+      "level": "Junior",
+      "topic": "C#",
+      "question": "`nameof` có lợi gì so với viết string literal?",
+      "answer": "`nameof` trả tên symbol ở compile time và được compiler/refactoring tool hiểu, giúp giảm string magic bị sai khi rename. Nó hữu ích cho argument exception, logging hoặc property notification.",
+      "keyPoints": [
+        "Compile-time symbol name",
+        "An toàn khi refactor",
+        "Giảm magic string"
+      ],
+      "followUps": [
+        {
+          "question": "`nameof(user.Name)` trả cả đường dẫn `user.Name` không?",
+          "answer": "Không. Nó trả tên symbol cuối cùng là `Name`, không phải toàn biểu thức."
+        }
+      ]
+    },
+    {
+      "id": "JUN-NET-016",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": "`global.json` trong .NET solution dùng để làm gì?",
+      "answer": "`global.json` có thể chọn .NET SDK version/roll-forward policy cho CLI trong repository, giúp developer và CI dùng toolchain nhất quán hơn. Nó không thay Target Framework của từng project.",
+      "keyPoints": [
+        "Chọn SDK cho repo",
+        "Giúp CI/dev nhất quán",
+        "Khác TargetFramework"
+      ],
+      "followUps": [
+        {
+          "question": "Nếu máy không có SDK phù hợp thì sao?",
+          "answer": "CLI có thể fail hoặc roll forward theo policy cấu hình; pipeline nên cài SDK version được repository yêu cầu."
+        }
+      ]
+    },
+    {
+      "id": "JUN-NET-017",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": "Transitive NuGet dependency là gì?",
+      "answer": "Nếu project tham chiếu package A và A phụ thuộc package B, B có thể được restore transitively dù project không reference trực tiếp. Điều này tiện nhưng version conflict hoặc vulnerability ở dependency gián tiếp vẫn cần được quản lý.",
+      "keyPoints": [
+        "Dependency qua package khác",
+        "Được restore tự động",
+        "Vẫn có risk version/security"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao lock file hoặc central package management hữu ích?",
+          "answer": "Chúng giúp kiểm soát version dependency rõ hơn và giảm drift giữa developer/CI khi graph package lớn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-023",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Hàm `inject()` trong Angular dùng để làm gì?",
+      "answer": "`inject()` lấy dependency từ injection context mà không cần constructor parameter, thường hữu ích trong functional guard, interceptor hoặc field initialization. Nó vẫn tuân theo DI hierarchy chứ không phải service locator toàn cục.",
+      "keyPoints": [
+        "Lấy dependency từ injection context",
+        "Hợp functional APIs",
+        "Vẫn theo DI hierarchy"
+      ],
+      "followUps": [
+        {
+          "question": "Có thể gọi inject() ở bất kỳ function nào không?",
+          "answer": "Không. Nó cần injection context hợp lệ, ví dụ khi Angular đang tạo provider/component hoặc trong API chạy trong injection context."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-024",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Functional HTTP interceptor khác class interceptor thế nào?",
+      "answer": "Functional interceptor là function tham gia HttpClient pipeline và có thể dùng `inject()` để lấy dependency. Nó giảm ceremony class/provider và phù hợp Angular hiện đại, nhưng vẫn cần giữ interceptor nhỏ và tránh nhét business logic.",
+      "keyPoints": [
+        "Interceptor dạng function",
+        "Có thể dùng inject()",
+        "Dùng cho cross-cutting HTTP concern"
+      ],
+      "followUps": [
+        {
+          "question": "Interceptor có nên hiển thị toast UI trực tiếp cho mọi lỗi API không?",
+          "answer": "Không mặc định. Interceptor nên normalize/log concern chung; UX cụ thể thường thuộc component/application layer để tránh side effect toàn cục khó kiểm soát."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-025",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Built-in control flow `@if`, `@for`, `@switch` giúp gì?",
+      "answer": "Các block control flow cho phép viết điều kiện và loop trực tiếp trong template với syntax rõ ràng hơn. `@for` còn yêu cầu/khuyến khích identity tracking rõ để Angular cập nhật DOM hiệu quả.",
+      "keyPoints": [
+        "Control flow trong template",
+        "Syntax hiện đại",
+        "@for có tracking identity"
+      ],
+      "followUps": [
+        {
+          "question": "@if có thay thế logic business trong component không?",
+          "answer": "Không. Nó chỉ điều khiển render; business calculation phức tạp vẫn nên nằm trong component/service/computed state phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-026",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "View query như `viewChild` dùng để làm gì?",
+      "answer": "View query lấy reference tới child component, directive hoặc element nằm trong view của component hiện tại. Nó nên dùng khi thật sự cần imperative interaction; data flow thông thường vẫn ưu tiên input/output hoặc state rõ ràng.",
+      "keyPoints": [
+        "Query child trong view",
+        "Có thể lấy component/element reference",
+        "Không thay input/output"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao lạm dụng viewChild có thể tạo coupling?",
+          "answer": "Parent bắt đầu phụ thuộc implementation nội bộ của child và gọi method trực tiếp, làm component khó tái sử dụng và test hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TS-006",
+      "level": "Junior",
+      "topic": "TypeScript",
+      "question": "`unknown` khác `any` thế nào?",
+      "answer": "`any` gần như tắt type checking cho value, còn `unknown` buộc code phải narrow hoặc kiểm tra trước khi sử dụng. Với dữ liệu không tin cậy từ JSON hoặc external API, `unknown` an toàn hơn làm điểm bắt đầu.",
+      "keyPoints": [
+        "any bỏ type safety",
+        "unknown cần narrowing",
+        "unknown hợp external data"
+      ],
+      "followUps": [
+        {
+          "question": "Có thể gọi method trực tiếp trên unknown không?",
+          "answer": "Không trước khi narrow/cast hợp lệ; compiler buộc bạn chứng minh type trước khi truy cập member."
+        }
+      ]
+    },
+    {
+      "id": "JUN-JS-006",
+      "level": "Junior",
+      "topic": "JavaScript",
+      "question": "`Promise.all()` và `Promise.allSettled()` khác nhau thế nào?",
+      "answer": "`Promise.all` reject ngay khi một Promise reject và phù hợp khi toàn bộ task đều phải thành công. `Promise.allSettled` chờ tất cả hoàn tất rồi trả trạng thái từng task, phù hợp khi muốn xử lý partial success.",
+      "keyPoints": [
+        "all fail-fast",
+        "allSettled chờ tất cả",
+        "Chọn theo failure semantics"
+      ],
+      "followUps": [
+        {
+          "question": "Promise.all có hủy các Promise còn lại khi một task fail không?",
+          "answer": "Không tự động. Các operation đã bắt đầu thường vẫn tiếp tục; muốn hủy cần cancellation mechanism riêng như AbortController nếu API hỗ trợ."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TEST-012",
+      "level": "Junior",
+      "topic": "Testing",
+      "question": "Shared fixture trong test nên dùng khi nào?",
+      "answer": "Fixture dùng chung phù hợp setup đắt nhưng có thể tái sử dụng an toàn, ví dụ test server hoặc container cho một nhóm test. Shared state mutable phải được reset/cô lập để test không phụ thuộc thứ tự chạy.",
+      "keyPoints": [
+        "Tái sử dụng setup đắt",
+        "Cẩn thận shared mutable state",
+        "Giữ test independent"
+      ],
+      "followUps": [
+        {
+          "question": "Database fixture dùng chung có thể gây flaky thế nào?",
+          "answer": "Nếu test để lại data hoặc chạy song song trên cùng record, kết quả có thể phụ thuộc thứ tự và timing."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TEST-013",
+      "level": "Junior",
+      "topic": "Testing",
+      "question": "Integration test cho endpoint có authentication nên kiểm tra gì?",
+      "answer": "Nên kiểm tra ít nhất request không đăng nhập bị từ chối, credential hợp lệ được chấp nhận và user thiếu quyền bị 403 khi cần. Test nên đi qua authentication/authorization pipeline thật ở mức gần production.",
+      "keyPoints": [
+        "401 khi chưa authenticate",
+        "403 khi thiếu quyền",
+        "Test pipeline auth thật"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên bỏ authentication middleware khỏi integration test cho dễ setup không?",
+          "answer": "Không nếu authorization là behavior cần bảo vệ; bỏ nó sẽ khiến test không phát hiện cấu hình route/policy sai."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SEC-010",
+      "level": "Junior",
+      "topic": "Security",
+      "question": "API key và Bearer token khác nhau ở điểm nào?",
+      "answer": "API key thường xác định ứng dụng/client bằng secret tương đối tĩnh, còn Bearer token thường mang identity/claims và có lifetime ngắn hơn. Cả hai phải đi qua HTTPS và cần rotation/revocation strategy phù hợp.",
+      "keyPoints": [
+        "API key thường là shared secret",
+        "Bearer token có claims/lifetime",
+        "Đều cần bảo vệ qua TLS"
+      ],
+      "followUps": [
+        {
+          "question": "API key có phù hợp làm đăng nhập user cuối không?",
+          "answer": "Thường không. User authentication cần identity, session/token lifecycle và authorization semantics phong phú hơn API key tĩnh."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SEC-011",
+      "level": "Junior",
+      "topic": "Security",
+      "question": "Dependency vulnerability trong NuGet/npm nên được xử lý thế nào?",
+      "answer": "Team nên theo dõi advisory, scan dependency trong CI, cập nhật package có patch và đánh giá breaking change. Không nên bỏ qua chỉ vì vulnerability nằm ở dependency gián tiếp; cần xem app có thực sự reachable/exploitable hay không.",
+      "keyPoints": [
+        "Scan dependency",
+        "Patch có kiểm soát",
+        "Đánh giá transitive/reachability"
+      ],
+      "followUps": [
+        {
+          "question": "Update tất cả package lên bản mới nhất ngay lập tức có luôn tốt không?",
+          "answer": "Không. Cần test compatibility và ưu tiên security fix cần thiết; upgrade lớn nên được rollout có kiểm soát."
+        }
+      ]
+    },
+    {
+      "id": "JUN-AZR-007",
+      "level": "Junior",
+      "topic": "Cloud/Azure",
+      "question": "Shared Access Signature (SAS) của Azure Storage dùng để làm gì?",
+      "answer": "SAS cấp quyền giới hạn theo thời gian và resource để client truy cập Storage mà không cần biết account key. Token nên có permission tối thiểu và thời hạn ngắn để giảm blast radius nếu bị lộ.",
+      "keyPoints": [
+        "Delegated limited access",
+        "Có expiry/permissions",
+        "Không lộ account key"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên tạo SAS có quyền full account trong nhiều ngày cho frontend không?",
+          "answer": "Không. Frontend chỉ nên nhận quyền tối thiểu cho resource và operation cần thiết với thời hạn càng ngắn càng hợp lý."
+        }
+      ]
+    },
+    {
+      "id": "JUN-AZR-008",
+      "level": "Junior",
+      "topic": "Cloud/Azure",
+      "question": "Application Insights giúp gì cho ứng dụng .NET trên Azure?",
+      "answer": "Application Insights thu telemetry như request, dependency, exception và performance để theo dõi behavior production. Với OpenTelemetry, app có thể instrument theo chuẩn rồi export telemetry tới Azure Monitor/Application Insights.",
+      "keyPoints": [
+        "Theo dõi request/dependency/error",
+        "Hỗ trợ performance diagnostics",
+        "Có thể tích hợp OpenTelemetry"
+      ],
+      "followUps": [
+        {
+          "question": "Application Insights có thay unit test không?",
+          "answer": "Không. Test phòng ngừa regression trước deploy; telemetry quan sát behavior thực tế sau deploy, hai lớp bổ trợ nhau."
+        }
+      ]
+    },
+    {
+      "id": "JUN-DEV-010",
+      "level": "Junior",
+      "topic": "DevOps",
+      "question": "Vì sao config của container nên truyền từ môi trường thay vì bake vào image?",
+      "answer": "Một image nên có thể chạy qua nhiều môi trường, còn config/secret được inject lúc deploy. Nếu bake endpoint hoặc secret production vào image, artifact khó promote và dễ rò thông tin hoặc phải build lại cho từng environment.",
+      "keyPoints": [
+        "Một image nhiều environment",
+        "Inject config lúc deploy",
+        "Không bake secret"
+      ],
+      "followUps": [
+        {
+          "question": "Environment variable có an toàn tuyệt đối cho secret không?",
+          "answer": "Không. Nó chỉ là delivery mechanism; secret vẫn cần secret store, permission và tránh bị dump/log ra ngoài."
+        }
+      ]
+    },
+    {
+      "id": "JUN-HTTP-007",
+      "level": "Junior",
+      "topic": "HTTP/API",
+      "question": "CORS preflight request là gì?",
+      "answer": "Browser có thể gửi request `OPTIONS` trước một cross-origin request không đơn giản để hỏi server có cho phép method/header/origin đó không. Server trả các CORS header phù hợp thì browser mới gửi request chính.",
+      "keyPoints": [
+        "Browser gửi OPTIONS trước",
+        "Kiểm tra method/header/origin",
+        "Chỉ là browser security mechanism"
+      ],
+      "followUps": [
+        {
+          "question": "Postman gọi API được nhưng browser bị CORS có mâu thuẫn không?",
+          "answer": "Không. CORS chủ yếu được browser enforce; tool HTTP như Postman không áp cùng same-origin policy."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-014",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Forwarded Headers cần cấu hình thế nào khi app đứng sau reverse proxy?",
+      "answer": "Proxy có thể chuyển scheme, host và client IP qua `X-Forwarded-*` hoặc header chuẩn tương đương. ASP.NET Core chỉ nên tin các proxy/network đã cấu hình, nếu không attacker có thể spoof thông tin forwarded.",
+      "keyPoints": [
+        "Khôi phục scheme/IP gốc",
+        "Chỉ trust proxy đã biết",
+        "Ảnh hưởng redirect/auth/logging"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao HTTPS redirect có thể loop khi forwarded headers sai?",
+          "answer": "App có thể nghĩ request từ proxy vẫn là HTTP và redirect liên tục dù client đã dùng HTTPS ở edge."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-015",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "`IOptionsMonitor<T>` phù hợp hơn `IOptions<T>` khi nào?",
+      "answer": "`IOptionsMonitor<T>` cho phép đọc giá trị hiện tại và nhận callback khi provider hỗ trợ config reload. Nó phù hợp singleton hoặc service dài hạn cần thấy config mới, nhưng business-critical change vẫn cần rollout/validation cẩn thận.",
+      "keyPoints": [
+        "Đọc CurrentValue",
+        "Hỗ trợ change notification",
+        "Hợp long-lived service"
+      ],
+      "followUps": [
+        {
+          "question": "Reload config động có thay deployment cho mọi setting không?",
+          "answer": "Không. Một số setting ảnh hưởng dependency graph hoặc connection lifecycle nên thay qua controlled deployment an toàn hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-016",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Antiforgery quan trọng thế nào với SPA dùng cookie authentication?",
+      "answer": "Khi browser tự gửi cookie credential, attacker có thể lợi dụng cross-site request để tạo side effect. Antiforgery token, SameSite phù hợp và request design giúp chứng minh request đến từ application hợp lệ; bearer token không tự gửi có threat model khác.",
+      "keyPoints": [
+        "Cookie tự gửi tạo CSRF risk",
+        "Antiforgery token giúp xác minh request",
+        "SameSite là defense bổ trợ"
+      ],
+      "followUps": [
+        {
+          "question": "API chỉ dùng Bearer token trong Authorization header có cần antiforgery giống cookie không?",
+          "answer": "Thông thường CSRF risk thấp hơn vì browser không tự gắn bearer token từ attacker site, nhưng XSS và token storage vẫn là concern riêng."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-017",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Request timeout nên được thiết kế thế nào trong Web API?",
+      "answer": "Timeout cần phản ánh request budget và downstream latency, propagate cancellation xuống database/HTTP call và trả lỗi có kiểm soát. Timeout quá dài giữ resource, còn quá ngắn tạo false failure và retry storm.",
+      "keyPoints": [
+        "Có request budget",
+        "Propagate cancellation",
+        "Phối hợp downstream timeout/retry"
+      ],
+      "followUps": [
+        {
+          "question": "Timeout ở reverse proxy và app nên quan hệ thế nào?",
+          "answer": "Nên được phối hợp để app có cơ hội cancel/cleanup trước khi proxy đóng connection, tránh work mồ côi tiếp tục chạy."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-018",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "OpenAPI contract nên được dùng thế nào trong lifecycle API?",
+      "answer": "OpenAPI mô tả endpoint, schema và response để tạo documentation, client hoặc contract checks. Nó hữu ích phát hiện breaking change sớm nhưng không thay integration test cho behavior, auth hoặc business semantics.",
+      "keyPoints": [
+        "Machine-readable API contract",
+        "Dùng docs/client/contract check",
+        "Không thay behavior tests"
+      ],
+      "followUps": [
+        {
+          "question": "OpenAPI diff có thể chặn CI khi nào?",
+          "answer": "Khi thay đổi xóa endpoint, đổi required field hoặc response schema phá consumer theo compatibility policy của team."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-015",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "DbContext pooling có lợi và rủi ro gì?",
+      "answer": "DbContext pooling tái sử dụng instance context đã reset để giảm allocation/setup overhead ở workload cao. Context được pool phải tránh giữ state per-request tùy ý vì instance có thể được dùng lại cho request khác.",
+      "keyPoints": [
+        "Giảm context setup cost",
+        "Context được tái sử dụng",
+        "Không giữ request state tùy ý"
+      ],
+      "followUps": [
+        {
+          "question": "TenantId lưu trong field của pooled DbContext có nguy hiểm không?",
+          "answer": "Có nếu không được reset/set đúng mỗi scope; state có thể rò giữa request/tenant. Multi-tenancy cần pattern tương thích pooling."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-016",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "Savepoint trong transaction giúp gì?",
+      "answer": "Savepoint tạo mốc bên trong transaction để rollback một phần về mốc đó thay vì hủy toàn transaction. EF Core có thể dùng savepoint quanh SaveChanges khi transaction đã tồn tại, giúp xử lý một số failure/retry cục bộ.",
+      "keyPoints": [
+        "Rollback một phần transaction",
+        "Giữ outer transaction",
+        "Hữu ích khi nhiều bước"
+      ],
+      "followUps": [
+        {
+          "question": "Savepoint có thay thế transaction boundary rõ ràng không?",
+          "answer": "Không. Nó chỉ là công cụ bên trong transaction; use case vẫn cần định nghĩa atomicity và error strategy."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-017",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "`TagWith` giúp debug query production thế nào?",
+      "answer": "`TagWith` chèn comment vào SQL generated để liên hệ query với use case hoặc code path. Khi xem database profiler/slow query log, tag giúp tìm source nhanh hơn mà không thay semantics query.",
+      "keyPoints": [
+        "Gắn comment vào SQL",
+        "Dễ liên hệ query với code",
+        "Hữu ích cho profiling"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên đưa user input nhạy cảm vào query tag không?",
+          "answer": "Không. Tag có thể xuất hiện trong database logs/telemetry nên chỉ dùng identifier an toàn, không chứa secret hoặc PII."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-018",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "Compiled model trong EF Core giải quyết bài toán gì?",
+      "answer": "Compiled model pre-generate một phần model metadata để giảm startup/model-building cost cho model lớn. Nó chủ yếu tối ưu startup, không làm query SQL tự nhiên nhanh hơn, và thêm bước regenerate khi model thay đổi.",
+      "keyPoints": [
+        "Giảm model startup cost",
+        "Hợp model lớn",
+        "Không thay query optimization"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên dùng compiled model cho project nhỏ không?",
+          "answer": "Không mặc định. Nếu startup/model build không phải bottleneck thì complexity build thêm thường không đáng."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-019",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "`AsNoTrackingWithIdentityResolution` khác `AsNoTracking` thế nào?",
+      "answer": "Cả hai không track entity cho update, nhưng `AsNoTrackingWithIdentityResolution` đảm bảo cùng một key trong kết quả dùng chung object instance trong phạm vi materialization. Nó hữu ích khi graph có duplicate entity nhưng vẫn muốn read-only.",
+      "keyPoints": [
+        "Đều read-only no tracking",
+        "Có identity resolution",
+        "Tốn thêm overhead so với no-tracking thuần"
+      ],
+      "followUps": [
+        {
+          "question": "Khi projection DTO thì còn cần identity resolution không?",
+          "answer": "Thường ít cần hơn vì bạn chủ động tạo shape DTO và không dựa vào entity reference identity."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-020",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Key lookup trong execution plan là gì và khi nào thành vấn đề?",
+      "answer": "Optimizer dùng nonclustered index tìm key rồi lookup về row gốc để lấy column còn thiếu. Với ít row lookup có thể rẻ; với nhiều row nó tạo random I/O lớn và có thể đáng cover query bằng index hợp lý.",
+      "keyPoints": [
+        "Lookup lấy column còn thiếu",
+        "Ổn khi ít row",
+        "Đắt khi nhiều lookup"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên thêm mọi column vào INCLUDE để loại lookup không?",
+          "answer": "Không. Index rộng làm write/storage/cache cost tăng; chỉ cover hot query dựa trên đo lường."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-021",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Temp table và CTE khác nhau thế nào khi xử lý query phức tạp?",
+      "answer": "CTE chủ yếu là query expression giúp readability và thường không materialize độc lập. Temp table lưu intermediate result thật, có thể index/statistics và tái sử dụng nhiều lần, đổi lại tốn write/temp storage.",
+      "keyPoints": [
+        "CTE là query expression",
+        "Temp table materialize dữ liệu",
+        "Temp table có thể index/reuse"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào temp table có thể giúp optimizer hơn CTE?",
+          "answer": "Khi intermediate result lớn được tái sử dụng hoặc cần statistics/index riêng để tách một plan phức tạp thành nhiều bước dễ estimate hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-022",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Transaction log tăng rất nhanh thường do những nguyên nhân nào?",
+      "answer": "Bulk write lớn, transaction mở lâu, recovery/replication chưa truncate được log hoặc workload write tăng đều có thể làm log phình. Cần tìm nguyên nhân trước thay vì chỉ tăng file hoặc shrink lặp lại.",
+      "keyPoints": [
+        "Large/long transactions",
+        "Replication/recovery giữ log",
+        "Không shrink mù"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao transaction dài làm log khó giải phóng?",
+          "answer": "Database phải giữ log record cần thiết để rollback/recovery cho transaction chưa hoàn tất."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-023",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Missing index có thể làm blocking tăng như thế nào?",
+      "answer": "Query thiếu index phù hợp có thể scan nhiều row/page và giữ lock lâu hơn, làm transaction khác phải chờ. Thêm index đúng có thể giảm phạm vi/thời gian đọc, nhưng blocking còn phụ thuộc transaction và isolation.",
+      "keyPoints": [
+        "Scan rộng giữ lock lâu hơn",
+        "Index có thể giảm touched rows",
+        "Blocking không chỉ do index"
+      ],
+      "followUps": [
+        {
+          "question": "Thêm index luôn giải quyết deadlock không?",
+          "answer": "Không. Nó có thể giảm contention nhưng lock order, transaction scope và application retry vẫn cần xem xét."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-024",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Read Committed Snapshot thay đổi behavior đọc như thế nào?",
+      "answer": "Ở database hỗ trợ như SQL Server, RCSI dùng row version cho read committed để reader thường không phải chờ writer giữ lock trên row cũ. Nó giảm blocking đọc/ghi nhưng tăng version-store cost và không loại bỏ mọi write conflict.",
+      "keyPoints": [
+        "Read dùng row versions",
+        "Giảm reader-writer blocking",
+        "Có version-store overhead"
+      ],
+      "followUps": [
+        {
+          "question": "RCSI có thay optimistic concurrency token ở application không?",
+          "answer": "Không. RCSI kiểm soát visibility của read; lost-update/business conflict vẫn có thể cần rowversion hoặc concurrency rule ở application."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-026",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "`effect()` trong Angular Signals dễ bị lạm dụng như thế nào?",
+      "answer": "`effect` phù hợp side effect khi dependency signal thay đổi, nhưng không nên dùng để đồng bộ state có thể biểu diễn bằng `computed`. Effect chain có thể tạo vòng lặp, timing khó đoán và state flow khó debug.",
+      "keyPoints": [
+        "Effect dành cho side effect",
+        "Derived state nên dùng computed",
+        "Tránh effect chain"
+      ],
+      "followUps": [
+        {
+          "question": "Ví dụ nào hợp với effect hơn computed?",
+          "answer": "Ghi telemetry, đồng bộ localStorage hoặc gọi imperative API khi state thay đổi là side effect; tính tổng từ hai signal nên dùng computed."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-027",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "`toSignal` và `toObservable` giúp bridge Signals với RxJS như thế nào?",
+      "answer": "`toSignal` chuyển Observable thành Signal để template/computed đọc reactive state; `toObservable` expose Signal thành Observable để dùng operator RxJS. Boundary nên rõ để tránh chuyển qua lại liên tục làm flow khó hiểu.",
+      "keyPoints": [
+        "Bridge RxJS ↔ Signals",
+        "toSignal cho signal consumer",
+        "toObservable cho RxJS pipeline"
+      ],
+      "followUps": [
+        {
+          "question": "Khi dùng toSignal với Observable async cần chú ý initial value gì?",
+          "answer": "Signal cần giá trị đọc được trước emission trừ khi source bảo đảm emit đồng bộ; thường phải cung cấp initial value hoặc handle undefined."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-028",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Router preloading strategy dùng để làm gì?",
+      "answer": "Preloading tải trước lazy route sau khi app đã khởi động để lần điều hướng sau nhanh hơn. Preload tất cả giúp navigation tốt nhưng tốn bandwidth; custom strategy có thể ưu tiên feature có xác suất dùng cao.",
+      "keyPoints": [
+        "Tải trước lazy routes",
+        "Đổi bandwidth lấy navigation speed",
+        "Có thể custom strategy"
+      ],
+      "followUps": [
+        {
+          "question": "Preloading có giống eager loading route không?",
+          "answer": "Không. Route vẫn lazy ở initial bundle; preloader tải nó sau bootstrap theo strategy thay vì ngay trong bundle đầu."
+        }
+      ]
+    },
+    {
+      "id": "MID-TS-004",
+      "level": "Middle",
+      "topic": "TypeScript",
+      "question": "Mapped type dùng để làm gì?",
+      "answer": "Mapped type tạo type mới bằng cách lặp qua key của type khác và biến đổi modifier/value type, là nền tảng cho utility như Partial hoặc Readonly. Nó hữu ích cho reusable type transformation nhưng có thể khó đọc nếu lồng quá sâu.",
+      "keyPoints": [
+        "Transform type theo keys",
+        "Nền tảng nhiều utility types",
+        "Không lạm dụng complexity"
+      ],
+      "followUps": [
+        {
+          "question": "Mapped type khác runtime loop ở điểm nào?",
+          "answer": "Nó chỉ tồn tại trong type system compile time và không tạo hay thay đổi object ở runtime."
+        }
+      ]
+    },
+    {
+      "id": "MID-TEST-012",
+      "level": "Middle",
+      "topic": "Testing",
+      "question": "Chạy integration test song song cần chú ý gì?",
+      "answer": "Mỗi test phải cô lập database/schema, port, queue hoặc resource key để không tranh state. Parallelism giúp CI nhanh hơn nhưng có thể phơi bày race trong test infrastructure nếu fixture và cleanup không được thiết kế cho concurrency.",
+      "keyPoints": [
+        "Cô lập resource",
+        "Fixture phải thread-safe",
+        "Parallelism có thể lộ race"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào nên tắt parallel cho một nhóm test?",
+          "answer": "Khi chúng cố ý dùng shared resource không thể cô lập hợp lý; nhưng nên giới hạn phạm vi thay vì tắt toàn suite."
+        }
+      ]
+    },
+    {
+      "id": "MID-TEST-013",
+      "level": "Middle",
+      "topic": "Testing",
+      "question": "Architecture test giúp bảo vệ codebase như thế nào?",
+      "answer": "Architecture test kiểm tra rule cấu trúc như Domain không phụ thuộc Infrastructure, controller không gọi DbContext trực tiếp hoặc namespace layer đúng hướng. Nó biến convention quan trọng thành quality gate tự động.",
+      "keyPoints": [
+        "Enforce dependency rules",
+        "Ngăn architecture drift",
+        "Chạy trong CI"
+      ],
+      "followUps": [
+        {
+          "question": "Architecture test có thay code review không?",
+          "answer": "Không. Nó bắt rule có thể tự động hóa; review vẫn cần đánh giá design, naming và trade-off không thể biểu diễn hết bằng rule."
+        }
+      ]
+    },
+    {
+      "id": "MID-SEC-007",
+      "level": "Middle",
+      "topic": "Security",
+      "question": "SPA dùng cookie authentication nên chống CSRF thế nào?",
+      "answer": "Cookie auth khiến browser tự gửi credential, nên state-changing request cần SameSite phù hợp và antiforgery token hoặc double-submit pattern theo framework. Server phải validate token chứ không chỉ dựa vào custom header client tự đặt.",
+      "keyPoints": [
+        "Cookie tạo CSRF surface",
+        "Dùng antiforgery/SameSite",
+        "Validate server-side"
+      ],
+      "followUps": [
+        {
+          "question": "CORS có tự chống CSRF không?",
+          "answer": "Không đầy đủ. Một số cross-site request vẫn có thể được gửi; CORS kiểm soát browser đọc response, không thay antiforgery validation."
+        }
+      ]
+    },
+    {
+      "id": "MID-AZR-007",
+      "level": "Middle",
+      "topic": "Cloud/Azure",
+      "question": "Application Insights và OpenTelemetry nên phối hợp thế nào?",
+      "answer": "Ứng dụng có thể instrument bằng OpenTelemetry API/SDK rồi export traces, metrics hoặc logs tới Azure Monitor/Application Insights. Cách này giảm coupling instrumentation với vendor nhưng vẫn tận dụng dashboard và analytics của Azure.",
+      "keyPoints": [
+        "OTel cho instrumentation chuẩn",
+        "Azure Monitor làm backend",
+        "Giảm vendor coupling"
+      ],
+      "followUps": [
+        {
+          "question": "Có cần instrument thủ công mọi HTTP/SQL call không?",
+          "answer": "Không. Nhiều framework/library có auto-instrumentation; custom span nên dành cho business operation hoặc gap có ý nghĩa."
+        }
+      ]
+    },
+    {
+      "id": "MID-AZR-008",
+      "level": "Middle",
+      "topic": "Cloud/Azure",
+      "question": "Service Bus message lock và dead-lettering cần hiểu thế nào?",
+      "answer": "Ở receive-and-delete/peek-lock phù hợp, consumer có thời gian lock để xử lý rồi complete message. Nếu xử lý quá lâu cần renew lock; message lỗi nhiều lần có thể vào dead-letter queue để không chặn luồng chính.",
+      "keyPoints": [
+        "Peek-lock cho xử lý đáng tin",
+        "Có lock timeout/renew",
+        "DLQ cho poison message"
+      ],
+      "followUps": [
+        {
+          "question": "Complete message trước khi commit database có rủi ro gì?",
+          "answer": "Nếu DB commit sau đó fail, broker đã mất message và business side effect không xảy ra; cần chọn ordering/idempotency hoặc outbox/inbox strategy phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "MID-DEV-010",
+      "level": "Middle",
+      "topic": "DevOps",
+      "question": "Blue-green và canary deployment khác nhau thế nào?",
+      "answer": "Blue-green duy trì hai môi trường hoàn chỉnh rồi switch traffic gần như một lần; canary đưa một phần nhỏ traffic sang version mới và tăng dần. Canary quan sát risk tốt hơn nhưng routing/metrics phức tạp hơn.",
+      "keyPoints": [
+        "Blue-green switch environment",
+        "Canary tăng traffic dần",
+        "Canary cần metrics/routing tốt"
+      ],
+      "followUps": [
+        {
+          "question": "Khi database schema breaking thì cả hai strategy có tự giải quyết không?",
+          "answer": "Không. App version cũ và mới vẫn có thể cùng tồn tại; schema cần backward-compatible migration hoặc staged rollout."
+        }
+      ]
+    },
+    {
+      "id": "MID-ARCH-012",
+      "level": "Middle",
+      "topic": "Architecture",
+      "question": "Backend for Frontend (BFF) pattern giải quyết vấn đề gì?",
+      "answer": "BFF tạo backend API riêng tối ưu cho từng loại client như web hoặc mobile, giúp aggregate dữ liệu và contract phù hợp UX thay vì ép mọi client dùng một API shape chung. Đổi lại có thêm service và duplication cần quản lý.",
+      "keyPoints": [
+        "API tối ưu theo client",
+        "Có thể aggregate downstream",
+        "Tăng service/duplication"
+      ],
+      "followUps": [
+        {
+          "question": "Khi chỉ có một Angular SPA thì có cần BFF không?",
+          "answer": "Không mặc định. Nếu API hiện tại đã phục vụ tốt và không có auth/aggregation concern riêng, thêm BFF có thể chỉ tăng complexity."
         }
       ]
     }
