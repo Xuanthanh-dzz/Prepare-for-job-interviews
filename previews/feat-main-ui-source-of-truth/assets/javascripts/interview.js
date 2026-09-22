@@ -93,9 +93,10 @@
     select.value = topics.includes(current) ? current : '';
   }
 
-  /* --- Question Bank Controller (Enhanced with Topic Pills & Bookmarks) --- */
+  /* --- Question Bank Controller (LPV Layout: Sidebar Topics + Flat Header) --- */
   const BOOKMARK_STORAGE_KEY = 'interview-bookmarked-questions';
   let onlyBookmarkedFilter = false;
+  let currentSelectedTopic = '';
 
   function getBookmarkedSet() {
     try {
@@ -109,13 +110,13 @@
     localStorage.setItem(BOOKMARK_STORAGE_KEY, JSON.stringify([...set]));
   }
 
-  function renderTopicPills() {
-    const container = byId('qb-topic-pills');
-    if (!container) return;
+  function renderSidebarTopics() {
+    const listContainer = byId('lpv-topic-list');
+    if (!listContainer) return;
 
-    const currentTopic = byId('qb-topic')?.value || '';
     const level = byId('qb-level')?.value || '';
     const bookmarks = getBookmarkedSet();
+    const topicFilterText = (byId('lpv-topic-filter')?.value || '').trim().toLowerCase();
 
     const pool = questions.filter(q => {
       if (onlyBookmarkedFilter && !bookmarks.has(q.id)) return false;
@@ -123,38 +124,54 @@
       return true;
     });
 
+    const totalEl = byId('lpv-sidebar-total');
+    if (totalEl) {
+      totalEl.textContent = String(pool.length);
+    }
+
     const topicCounts = {};
     pool.forEach(q => {
       topicCounts[q.topic] = (topicCounts[q.topic] || 0) + 1;
     });
 
     const sortedTopics = Object.keys(topicCounts).sort();
+    const matchedTopics = topicFilterText
+      ? sortedTopics.filter(t => t.toLowerCase().includes(topicFilterText))
+      : sortedTopics;
 
-    let html = `
-      <button type="button" class="topic-pill ${currentTopic === '' ? 'active' : ''}" data-topic="">
-        <span>Tất cả</span>
-        <span class="pill-count">${pool.length}</span>
-      </button>
-    `;
-
-    sortedTopics.forEach(topic => {
-      const activeClass = currentTopic === topic ? 'active' : '';
+    let html = '';
+    // "Tất cả" item
+    if (!topicFilterText || 'tất cả'.includes(topicFilterText)) {
+      const isAllActive = currentSelectedTopic === '';
       html += `
-        <button type="button" class="topic-pill ${activeClass}" data-topic="${esc(topic)}">
-          <span>${esc(topic)}</span>
-          <span class="pill-count">${topicCounts[topic]}</span>
+        <button type="button" class="lpv-topic-item ${isAllActive ? 'active' : ''}" data-topic="">
+          <span class="topic-title">Tất cả câu hỏi</span>
+          <span class="topic-count">${pool.length}</span>
+        </button>
+      `;
+    }
+
+    matchedTopics.forEach(topic => {
+      const isActive = currentSelectedTopic === topic;
+      html += `
+        <button type="button" class="lpv-topic-item ${isActive ? 'active' : ''}" data-topic="${esc(topic)}">
+          <span class="topic-title">${esc(topic)}</span>
+          <span class="topic-count">${topicCounts[topic] || 0}</span>
         </button>
       `;
     });
 
-    container.innerHTML = html;
+    if (matchedTopics.length === 0 && topicFilterText) {
+      html = `<div class="lpv-no-topics">Không tìm thấy chủ đề</div>`;
+    }
+
+    listContainer.innerHTML = html;
   }
 
   function renderQuestionBank() {
     const root = byId('question-bank');
     if (!root) return;
     const level = byId('qb-level')?.value || '';
-    const topic = byId('qb-topic')?.value || '';
     const text = (byId('qb-search')?.value || '').trim().toLowerCase();
     const bookmarks = getBookmarkedSet();
 
@@ -168,10 +185,11 @@
       bookmarkFilterBtn.classList.toggle('active', onlyBookmarkedFilter);
     }
 
+    // Filter questions
     const filtered = questions.filter(q => {
       if (onlyBookmarkedFilter && !bookmarks.has(q.id)) return false;
       if (level && q.level !== level) return false;
-      if (topic && q.topic !== topic) return false;
+      if (currentSelectedTopic && q.topic !== currentSelectedTopic) return false;
       if (text) {
         const hay = (q.question + ' ' + q.answer + ' ' + q.topic + ' ' + q.id).toLowerCase();
         if (!hay.includes(text)) return false;
@@ -179,14 +197,22 @@
       return true;
     });
 
-    // Update topic pills
-    renderTopicPills();
+    // Update sidebar topics
+    renderSidebarTopics();
 
-    const countEl = byId('qb-count');
+    // Update header topic title and count
+    const titleEl = byId('lpv-active-topic-title');
+    if (titleEl) {
+      titleEl.textContent = currentSelectedTopic || 'Tất cả câu hỏi';
+    }
+
+    const countEl = byId('lpv-active-topic-count');
     if (countEl) {
-      const topicLabel = topic ? ` · <em>${esc(topic)}</em>` : '';
-      const bookmarkLabel = onlyBookmarkedFilter ? ' · <strong>Đã lưu</strong>' : '';
-      countEl.innerHTML = `Hiển thị <strong>${filtered.length}</strong> / ${questions.length} câu hỏi${topicLabel}${bookmarkLabel}`;
+      if (text || level || onlyBookmarkedFilter) {
+        countEl.textContent = `Hiển thị ${filtered.length} / ${questions.length} câu`;
+      } else {
+        countEl.textContent = `${filtered.length} câu hỏi`;
+      }
     }
 
     if (!filtered.length) {
@@ -248,7 +274,7 @@
             copyBtn.classList.remove('copied');
             copyBtn.setAttribute('title', 'Sao chép câu hỏi');
           }, 1500);
-        });
+        }).catch(() => {});
       }
       return;
     }
@@ -258,13 +284,13 @@
     if (bookmarkBtn) {
       e.preventDefault();
       e.stopPropagation();
-      const id = bookmarkBtn.getAttribute('data-id');
-      if (id) {
+      const qId = bookmarkBtn.getAttribute('data-id');
+      if (qId) {
         const bookmarks = getBookmarkedSet();
-        if (bookmarks.has(id)) {
-          bookmarks.delete(id);
+        if (bookmarks.has(qId)) {
+          bookmarks.delete(qId);
         } else {
-          bookmarks.add(id);
+          bookmarks.add(qId);
         }
         setBookmarkedSet(bookmarks);
         renderQuestionBank();
@@ -289,15 +315,11 @@
       return;
     }
 
-    // Topic pill click
-    const topicPill = e.target.closest('.topic-pill');
-    if (topicPill) {
+    // Topic item click in sidebar
+    const topicItem = e.target.closest('.lpv-topic-item');
+    if (topicItem) {
       e.preventDefault();
-      const topic = topicPill.getAttribute('data-topic') || '';
-      const topicSelect = byId('qb-topic');
-      if (topicSelect) {
-        topicSelect.value = topic;
-      }
+      currentSelectedTopic = topicItem.getAttribute('data-topic') || '';
       renderQuestionBank();
       return;
     }
@@ -326,20 +348,21 @@
     const resetBtn = e.target.closest('#qb-reset');
     if (resetBtn) {
       e.preventDefault();
-      const lvl = byId('qb-level');
-      const top = byId('qb-topic');
-      const src = byId('qb-search');
-      if (lvl) lvl.value = '';
-      if (top) top.value = '';
-      if (src) src.value = '';
+      currentSelectedTopic = '';
       onlyBookmarkedFilter = false;
+      const lvl = byId('qb-level');
+      const src = byId('qb-search');
+      const topFilter = byId('lpv-topic-filter');
+      if (lvl) lvl.value = '';
+      if (src) src.value = '';
+      if (topFilter) topFilter.value = '';
       renderQuestionBank();
       return;
     }
   });
 
   document.addEventListener('change', (e) => {
-    if (e.target && (e.target.id === 'qb-level' || e.target.id === 'qb-topic')) {
+    if (e.target && e.target.id === 'qb-level') {
       renderQuestionBank();
     }
   });
@@ -348,11 +371,24 @@
     if (e.target && e.target.id === 'qb-search') {
       renderQuestionBank();
     }
+    if (e.target && e.target.id === 'lpv-topic-filter') {
+      renderSidebarTopics();
+    }
   });
 
   function initQuestionBank() {
     if (!byId('question-bank')) return;
-    fillTopics(byId('qb-topic'), questions);
+    if (byId('qb-topic')) {
+      fillTopics(byId('qb-topic'), questions);
+    }
+    // Check URL parameters for initial topic
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const t = params.get('topic');
+      if (t) {
+        currentSelectedTopic = t;
+      }
+    } catch {}
     renderQuestionBank();
   }
 
@@ -533,7 +569,7 @@
     const backendTopics = new Set([
       'C#', '.NET', 'Collections/LINQ', 'Async/Concurrency', 'Memory/GC',
       'ASP.NET Core', 'EF Core', 'SQL', 'HTTP/API', 'Security',
-      'Testing', 'Architecture', 'Reliability', 'Observability', 'DevOps'
+      'Testing', 'Architecture', 'Reliability', 'Observability', 'DevOps', 'Redis'
     ]);
     const frontendTopics = new Set([
       'JavaScript', 'TypeScript', 'HTML', 'CSS', 'Web Platform', 'Angular'
