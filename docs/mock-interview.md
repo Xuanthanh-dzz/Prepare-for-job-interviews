@@ -11,11 +11,17 @@ Hãy trả lời **thành tiếng** trước khi xem đáp án. Một lượt n�
       <option>Senior</option>
     </select>
   </label>
+  <label>Chủ đề
+    <select id="mock-topic">
+      <option value="">Tất cả</option>
+    </select>
+  </label>
   <label>Số câu
     <select id="mock-count">
       <option>5</option>
       <option selected>8</option>
       <option>10</option>
+      <option>12</option>
     </select>
   </label>
   <button id="mock-start" type="button">Bắt đầu phỏng vấn</button>
@@ -25,14 +31,20 @@ Hãy trả lời **thành tiếng** trước khi xem đáp án. Một lượt n�
   <div id="mock-progress"></div>
   <h2 id="mock-question"></h2>
   <div id="mock-meta" class="muted"></div>
+
   <button id="mock-reveal" type="button">Xem đáp án mẫu</button>
+
   <div id="mock-answer" class="mock-answer" hidden></div>
-  <div class="mock-actions">
-    <button id="mock-next" type="button">Câu tiếp theo →</button>
+
+  <div id="mock-score" class="mock-actions" hidden>
+    <button id="mock-review" type="button">Cần ôn</button>
+    <button id="mock-pass" type="button">Đạt</button>
+    <button id="mock-strong" type="button">Tốt</button>
+    <button id="mock-next" type="button">Bỏ qua →</button>
   </div>
 </div>
 
 <div id="mock-result" class="mock-panel" hidden></div>
 
-!!! note "Tự chấm theo 3 tiêu chí"
-    Sau mỗi câu, tự hỏi: **đúng bản chất chưa**, **có nói được trade-off không**, và **có ví dụ thực tế không**. Không cần nói giống đáp án mẫu từng chữ.
+!!! note "Cách tự chấm"
+    **Cần ôn**: sai bản chất hoặc không trả lời được. **Đạt**: đúng ý chính nhưng còn thiếu trade-off/ví dụ. **Tốt**: trả lời đúng, có trade-off và xử lý được follow-up. Không cần nói giống đáp án mẫu từng chữ.

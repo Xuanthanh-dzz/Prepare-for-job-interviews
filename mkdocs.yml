@@ -33,6 +33,8 @@ theme:
 
 nav:
   - Trang chủ: index.md
+  - Modules:
+      - C# / .NET: modules/csharp-dotnet.md
   - Ngân hàng câu hỏi: question-bank.md
   - Flashcards: flashcards.md
   - Mock Interview: mock-interview.md
