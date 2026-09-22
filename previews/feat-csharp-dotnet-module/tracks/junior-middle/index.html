@@ -728,6 +728,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#scenario-drill-ot-luyen-moi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario drill — đợt luyện mới
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scenario drill — đợt luyện mới">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#junior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Junior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#middle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Middle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1116,6 +1155,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#scenario-drill-ot-luyen-moi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario drill — đợt luyện mới
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scenario drill — đợt luyện mới">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#junior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Junior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#middle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Middle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1278,6 +1356,35 @@
 <div class="admonition warning">
 <p class="admonition-title">Đừng học thuộc câu chữ</p>
 <p>Một câu trả lời Middle tốt thường bắt đầu từ <strong>context/constraint</strong>, sau đó mới nói solution và trade-off.</p>
+</div>
+<hr />
+<h2 id="scenario-drill-ot-luyen-moi">Scenario drill — đợt luyện mới</h2>
+<p>Sau khi học lý thuyết, hãy luyện các tình huống sau mà <strong>không mở đáp án ngay</strong>:</p>
+<h3 id="junior">Junior</h3>
+<ul>
+<li>API bind đúng nhưng business rule fail: trả status nào?</li>
+<li>Client hủy request: CancellationToken đi đến EF Core/HttpClient thế nào?</li>
+<li>EF Core phát hàng chục query trong một loop: nghi vấn gì?</li>
+<li>JOIN làm số dòng tăng bất thường: kiểm tra gì trước khi dùng DISTINCT?</li>
+<li>Angular HttpClient lỗi: loading/error state đặt ở đâu?</li>
+<li>Reactive Form invalid: khi nào nên hiện message?</li>
+<li>XSS và CSRF khác nhau ra sao?</li>
+</ul>
+<h3 id="middle">Middle</h3>
+<ul>
+<li>Endpoint chậm vì hàng trăm query giống nhau: debug từ đâu?</li>
+<li>POST payment bị retry hai lần: thiết kế idempotency thế nào?</li>
+<li>Distributed cache stale: invalidation strategy ra sao?</li>
+<li>Query plan ước lượng sai row: statistics ảnh hưởng thế nào?</li>
+<li>Angular component bị check quá nhiều: profile và xử lý gì?</li>
+<li>RxJS stream chết sau một request lỗi: kiểm tra vị trí catchError ở đâu?</li>
+<li>Form lớn lag khi gõ: validator/valueChanges/updateOn ảnh hưởng thế nào?</li>
+<li>Outbox worker test bị flaky: làm sao chờ eventual consistency mà không sleep cố định?</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Cách trả lời scenario</p>
+<p>Dùng cấu trúc: <strong>triệu chứng → giả thuyết → cách đo/xác nhận → cách sửa → trade-off</strong>.<br />
+Với Middle, nếu chỉ nhảy thẳng vào solution mà không nói cách xác nhận nguyên nhân thì câu trả lời vẫn chưa mạnh.</p>
 </div>
 
 
