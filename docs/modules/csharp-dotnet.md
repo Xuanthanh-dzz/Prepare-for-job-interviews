@@ -41,8 +41,16 @@ Trọng tâm:
 - nullable reference types
 - IDisposable / IAsyncDisposable
 - DateTime / DateTimeOffset
+- CLR và managed/unmanaged code
+- assembly / namespace
+- SDK vs Runtime
+- TFM và RID
+- framework-dependent vs self-contained
+- dotnet build / publish / restore
+- NuGet package vs project reference
+- BCL và luồng Source → IL → JIT → machine code
 
-**Interviewer mong đợi:** không chỉ nói “là gì” mà phải biết khi nào dùng và lỗi phổ biến.
+**Interviewer mong đợi:** không chỉ nói “là gì” mà phải biết khi nào dùng, app được build/chạy/deploy ra sao và các lỗi phổ biến.
 
 ## Middle — trade-off và performance
 
@@ -62,8 +70,19 @@ Trọng tâm:
 - managed memory leak
 - ArrayPool
 - reflection và source generator
+- tiered compilation
+- ReadyToRun
+- trimming
+- single-file publish
+- AssemblyLoadContext
+- runtimeconfig.json / deps.json
+- dotnet-counters / dotnet-trace / dotnet-dump
+- deployment runtime strategy
+- Server GC / Workstation GC
+- Dynamic PGO
+- target-framework upgrade strategy
 
-**Interviewer mong đợi:** giải thích được trade-off, performance implication và failure mode.
+**Interviewer mong đợi:** giải thích được trade-off, performance implication, runtime/deployment behavior và failure mode.
 
 ## Senior — runtime, operability và API design
 
