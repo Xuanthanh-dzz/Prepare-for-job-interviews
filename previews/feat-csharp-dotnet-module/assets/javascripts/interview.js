@@ -569,7 +569,7 @@
     const backendTopics = new Set([
       'C#', '.NET', 'Collections/LINQ', 'Async/Concurrency', 'Memory/GC',
       'ASP.NET Core', 'EF Core', 'SQL', 'HTTP/API', 'Security',
-      'Testing', 'Architecture', 'Reliability', 'Observability', 'DevOps', 'Redis', 'Messaging'
+      'Testing', 'Architecture', 'Reliability', 'Observability', 'DevOps', 'Redis', 'Messaging', 'Cloud/Azure'
     ]);
     const frontendTopics = new Set([
       'JavaScript', 'TypeScript', 'HTML', 'CSS', 'Web Platform', 'Angular'

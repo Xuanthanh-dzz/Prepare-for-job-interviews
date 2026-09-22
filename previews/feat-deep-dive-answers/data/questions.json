@@ -1,5 +1,5 @@
 {
-  "version": 12,
+  "version": 13,
   "questions": [
     {
       "id": "INT-CS-001",
@@ -8512,6 +8512,654 @@
         {
           "question": "Queue lớn có phải luôn tốt vì hấp thụ burst không?",
           "answer": "Không. Queue quá lớn làm latency tăng và che overload lâu, khiến recovery chậm và tài nguyên bị giữ nhiều."
+        }
+      ]
+    },
+    {
+      "id": "JUN-AZR-001",
+      "level": "Junior",
+      "topic": "Cloud/Azure",
+      "question": "Azure App Service phù hợp với loại ứng dụng .NET nào?",
+      "answer": "Azure App Service là PaaS phù hợp để chạy web app và REST API mà không phải tự quản lý VM, patch hệ điều hành hay web server. Team tập trung vào code, cấu hình, scale và observability của ứng dụng.",
+      "keyPoints": [
+        "PaaS cho web/API",
+        "Giảm quản lý hạ tầng",
+        "Hỗ trợ deploy và scale"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào App Service đơn giản hơn AKS?",
+          "answer": "Khi ứng dụng chủ yếu là web/API tiêu chuẩn và chưa cần orchestration container phức tạp, App Service thường ít operational overhead hơn AKS."
+        }
+      ]
+    },
+    {
+      "id": "JUN-AZR-002",
+      "level": "Junior",
+      "topic": "Cloud/Azure",
+      "question": "Azure Functions phù hợp cho bài toán nào?",
+      "answer": "Azure Functions phù hợp workload event-driven hoặc task ngắn như xử lý queue message, timer job, webhook hay file upload. Nó giúp scale theo event nhưng cần chú ý execution time, cold start và state không nên giữ trong memory process.",
+      "keyPoints": [
+        "Event-driven/serverless",
+        "Hợp queue/timer/webhook",
+        "Không giữ business state trong process"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên dùng Function cho một monolith API lớn không?",
+          "answer": "Không mặc định. Function hợp workload nhỏ, event-driven; API lớn có domain/lifecycle phức tạp thường dễ quản lý hơn bằng App Service, Container Apps hoặc hosting phù hợp khác."
+        }
+      ]
+    },
+    {
+      "id": "JUN-AZR-003",
+      "level": "Junior",
+      "topic": "Cloud/Azure",
+      "question": "Azure Key Vault dùng để làm gì?",
+      "answer": "Azure Key Vault lưu và quản lý secret, key và certificate tập trung thay vì hard-code trong source hoặc config file. Ứng dụng có thể truy cập Key Vault bằng Managed Identity để giảm nhu cầu lưu credential.",
+      "keyPoints": [
+        "Lưu secret/key/certificate",
+        "Không hard-code secret",
+        "Có thể kết hợp Managed Identity"
+      ],
+      "followUps": [
+        {
+          "question": "Key Vault có thay thế authorization trong ứng dụng không?",
+          "answer": "Không. Nó bảo vệ secret và key; authorization nghiệp vụ của user/resource vẫn phải được ứng dụng enforce riêng."
+        }
+      ]
+    },
+    {
+      "id": "JUN-AZR-004",
+      "level": "Junior",
+      "topic": "Cloud/Azure",
+      "question": "Managed Identity giúp ứng dụng .NET truy cập Azure resource như thế nào?",
+      "answer": "Managed Identity cung cấp identity do Azure quản lý cho app để lấy token truy cập resource hỗ trợ Microsoft Entra ID như Key Vault, Azure SQL hoặc Storage. Ứng dụng không phải lưu client secret và Azure chịu trách nhiệm lifecycle credential.",
+      "keyPoints": [
+        "Identity do Azure quản lý",
+        "Không cần lưu client secret",
+        "Dùng Entra token tới resource"
+      ],
+      "followUps": [
+        {
+          "question": "Có Managed Identity rồi có cần cấp quyền nữa không?",
+          "answer": "Có. Identity chỉ xác định app là ai; resource đích vẫn phải cấp role hoặc permission phù hợp theo principle of least privilege."
+        }
+      ]
+    },
+    {
+      "id": "JUN-AZR-005",
+      "level": "Junior",
+      "topic": "Cloud/Azure",
+      "question": "Azure Blob Storage phù hợp lưu loại dữ liệu nào?",
+      "answer": "Blob Storage phù hợp dữ liệu object như ảnh, video, file upload, backup hoặc static asset. Nó không thay relational database cho query quan hệ và transaction nghiệp vụ phức tạp.",
+      "keyPoints": [
+        "Object/file storage",
+        "Scale tốt cho binary/static data",
+        "Không thay relational DB"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên lưu file lớn trực tiếp trong SQL database không?",
+          "answer": "Có thể trong vài trường hợp, nhưng thường object storage phù hợp hơn về chi phí, scale và delivery; database chỉ giữ metadata/reference nếu business cho phép."
+        }
+      ]
+    },
+    {
+      "id": "JUN-AZR-006",
+      "level": "Junior",
+      "topic": "Cloud/Azure",
+      "question": "Azure SQL Database khác việc tự chạy SQL Server trên VM ở điểm nào?",
+      "answer": "Azure SQL Database là dịch vụ database PaaS nên Azure quản lý nhiều phần như patching, backup và high availability nền tảng. Chạy SQL Server trên VM cho nhiều quyền kiểm soát hơn nhưng team phải chịu thêm trách nhiệm vận hành.",
+      "keyPoints": [
+        "Azure SQL là PaaS",
+        "Giảm patch/backup overhead",
+        "VM cho control nhiều hơn"
+      ],
+      "followUps": [
+        {
+          "question": "PaaS có nghĩa không cần quan tâm index và query performance nữa không?",
+          "answer": "Không. Azure quản hạ tầng database, còn schema, index, query, transaction và workload design vẫn là trách nhiệm của ứng dụng/team."
+        }
+      ]
+    },
+    {
+      "id": "MID-AZR-001",
+      "level": "Middle",
+      "topic": "Cloud/Azure",
+      "question": "Azure Service Bus Queue và Topic khác nhau thế nào?",
+      "answer": "Queue phân phối message cho một consumer trong nhóm xử lý, còn Topic cho phép nhiều subscription nhận cùng một message theo mô hình pub/sub. Chọn Queue cho work distribution và Topic khi nhiều downstream cần phản ứng độc lập.",
+      "keyPoints": [
+        "Queue cho competing consumers",
+        "Topic cho fan-out",
+        "Có subscription riêng"
+      ],
+      "followUps": [
+        {
+          "question": "Service Bus có loại bỏ nhu cầu idempotent consumer không?",
+          "answer": "Không. Redelivery vẫn có thể xảy ra trong nhiều failure mode, nên consumer vẫn cần chịu được duplicate nếu side effect quan trọng."
+        }
+      ]
+    },
+    {
+      "id": "MID-AZR-002",
+      "level": "Middle",
+      "topic": "Cloud/Azure",
+      "question": "Deployment slot trong Azure App Service giúp release an toàn thế nào?",
+      "answer": "Deployment slot cho phép deploy phiên bản mới vào slot riêng, warm-up và kiểm tra trước khi swap sang production. Nó giảm downtime và cho rollback nhanh hơn, nhưng config nào là slot setting phải được thiết kế rõ.",
+      "keyPoints": [
+        "Deploy vào slot riêng",
+        "Warm-up trước swap",
+        "Rollback/swap nhanh"
+      ],
+      "followUps": [
+        {
+          "question": "Database migration breaking có được giải quyết chỉ bằng deployment slot không?",
+          "answer": "Không. Hai version app có thể chạy gần nhau trong lúc swap, nên schema vẫn cần backward-compatible expand-and-contract."
+        }
+      ]
+    },
+    {
+      "id": "MID-AZR-003",
+      "level": "Middle",
+      "topic": "Cloud/Azure",
+      "question": "App Service autoscale nên dựa trên metric nào?",
+      "answer": "Có thể scale theo CPU, memory hoặc metric/request signal phù hợp, nhưng rule nên dựa workload và SLO thay vì một threshold chung. Cần thêm cooldown để tránh scale lên xuống liên tục và kiểm tra downstream capacity.",
+      "keyPoints": [
+        "Scale theo workload signal",
+        "Có cooldown",
+        "Downstream phải chịu được scale-out"
+      ],
+      "followUps": [
+        {
+          "question": "Tăng instance web có thể làm database chậm hơn không?",
+          "answer": "Có. Nhiều instance tạo thêm connection và concurrent query; scale application mà không xét database có thể chỉ chuyển bottleneck xuống data layer."
+        }
+      ]
+    },
+    {
+      "id": "MID-AZR-004",
+      "level": "Middle",
+      "topic": "Cloud/Azure",
+      "question": "Azure App Configuration và Key Vault nên chia trách nhiệm thế nào?",
+      "answer": "App Configuration phù hợp configuration và feature flag không nhạy cảm cần quản lý tập trung; Key Vault phù hợp secret, key và certificate. Tách hai loại giúp permission, rotation và audit rõ hơn.",
+      "keyPoints": [
+        "App Configuration cho config/feature flag",
+        "Key Vault cho secret/key",
+        "Tách theo sensitivity"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên lưu mọi config thường vào Key Vault không?",
+          "answer": "Không cần. Nó làm secret store bị lạm dụng và permission phức tạp; config không nhạy cảm phù hợp App Configuration hoặc config provider thông thường hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-AZR-005",
+      "level": "Middle",
+      "topic": "Cloud/Azure",
+      "question": "Bạn chọn App Service, Container Apps hay AKS dựa trên gì?",
+      "answer": "App Service đơn giản cho web/API PaaS; Container Apps phù hợp containerized workload cần scale/event behavior nhưng không muốn quản cluster; AKS phù hợp khi cần Kubernetes control, ecosystem hoặc orchestration phức tạp. Chọn mức đơn giản nhất đáp ứng requirement.",
+      "keyPoints": [
+        "App Service đơn giản cho web/API",
+        "Container Apps giảm cluster ops",
+        "AKS cho Kubernetes control"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao không nên mặc định chọn AKS cho mọi microservice?",
+          "answer": "AKS thêm cluster security, networking, upgrade và operational cost; nếu requirement không cần mức control đó thì complexity vượt lợi ích."
+        }
+      ]
+    },
+    {
+      "id": "MID-AZR-006",
+      "level": "Middle",
+      "topic": "Cloud/Azure",
+      "question": "System-assigned và user-assigned Managed Identity khác nhau thế nào?",
+      "answer": "System-assigned identity gắn lifecycle với một Azure resource; khi resource bị xóa identity cũng mất. User-assigned identity là resource độc lập có thể gán cho nhiều app, phù hợp khi muốn chia sẻ hoặc quản lifecycle identity riêng.",
+      "keyPoints": [
+        "System-assigned gắn lifecycle resource",
+        "User-assigned tồn tại độc lập",
+        "User-assigned có thể reuse"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên dùng một user-assigned identity cho mọi service không?",
+          "answer": "Không mặc định. Dùng chung quá rộng làm permission và blast radius lớn; identity nên tách theo security boundary và least privilege."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TEST-008",
+      "level": "Junior",
+      "topic": "Testing",
+      "question": "Parameterized test hữu ích khi nào?",
+      "answer": "Parameterized test cho phép chạy cùng một behavior với nhiều input/output mà không copy nhiều test gần giống nhau. Nó phù hợp validation, boundary value hoặc mapping rule có nhiều case.",
+      "keyPoints": [
+        "Một test logic nhiều input",
+        "Giảm duplication",
+        "Hợp boundary cases"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên gom mọi scenario vào một parameterized test rất lớn không?",
+          "answer": "Không. Nếu các case có setup hoặc behavior khác nhau nhiều thì tách test sẽ dễ đọc và chẩn đoán failure hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TEST-009",
+      "level": "Junior",
+      "topic": "Testing",
+      "question": "Code coverage có nói lên chất lượng test không?",
+      "answer": "Coverage cho biết code nào được thực thi khi test chạy, nhưng coverage cao không đảm bảo assertion đúng hoặc scenario quan trọng đã được kiểm tra. Nó là tín hiệu hỗ trợ chứ không phải mục tiêu duy nhất.",
+      "keyPoints": [
+        "Coverage đo code được chạy",
+        "Không đo chất lượng assertion",
+        "Dùng như một signal"
+      ],
+      "followUps": [
+        {
+          "question": "100% coverage có thể vẫn có bug không?",
+          "answer": "Có. Test có thể chạy qua branch nhưng không assert behavior đúng, hoặc bỏ sót interaction và requirement thực tế."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TEST-010",
+      "level": "Junior",
+      "topic": "Testing",
+      "question": "Vì sao boundary value thường đáng test?",
+      "answer": "Bug thường xuất hiện ở ranh giới như 0, 1, max length, ngày hết hạn hoặc giá trị vừa vượt ngưỡng. Test boundary giúp bắt off-by-one và validation rule tốt hơn chỉ test giá trị trung bình.",
+      "keyPoints": [
+        "Bug hay ở ranh giới",
+        "Bắt off-by-one",
+        "Hợp validation rule"
+      ],
+      "followUps": [
+        {
+          "question": "Một field cho phép 1–100 nên test những giá trị nào?",
+          "answer": "Ít nhất nên có case 1, 100, dưới 1, trên 100 và một giá trị hợp lệ ở giữa nếu behavior cần xác nhận."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TEST-011",
+      "level": "Junior",
+      "topic": "Testing",
+      "question": "Test dùng DateTime.Now trực tiếp có thể gây vấn đề gì?",
+      "answer": "Test phụ thuộc thời gian thật dễ flaky ở timezone, midnight hoặc khi cần giả lập ngày trong tương lai. Nên inject clock/time provider hoặc truyền thời gian vào logic để test deterministic.",
+      "keyPoints": [
+        "Time thật gây flaky",
+        "Khó test future/past cases",
+        "Dùng clock abstraction"
+      ],
+      "followUps": [
+        {
+          "question": "Thread.Sleep có phải cách tốt để test timeout không?",
+          "answer": "Không. Nó làm test chậm và phụ thuộc timing; fake clock hoặc controllable scheduler thường đáng tin hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-TEST-008",
+      "level": "Middle",
+      "topic": "Testing",
+      "question": "Mutation testing giúp đánh giá test suite thế nào?",
+      "answer": "Mutation testing cố tình thay đổi nhỏ code như đảo điều kiện rồi chạy test. Nếu test vẫn pass, suite có thể thiếu assertion mạnh. Nó đo khả năng phát hiện bug tốt hơn chỉ nhìn coverage nhưng tốn thời gian hơn.",
+      "keyPoints": [
+        "Chèn mutation có chủ đích",
+        "Đo khả năng test bắt lỗi",
+        "Tốn compute hơn coverage"
+      ],
+      "followUps": [
+        {
+          "question": "Mutation score thấp có nghĩa phải test mọi line không?",
+          "answer": "Không. Cần ưu tiên domain logic và mutation có ý nghĩa; generated/trivial code có thể không đáng đầu tư tương đương."
+        }
+      ]
+    },
+    {
+      "id": "MID-TEST-009",
+      "level": "Middle",
+      "topic": "Testing",
+      "question": "Test Data Builder giúp gì trong test suite lớn?",
+      "answer": "Builder tạo object test với default hợp lệ rồi cho từng test override field quan trọng. Nó giảm setup lặp lại và giúp test tập trung vào dữ liệu liên quan, nhưng builder quá magic có thể che điều kiện quan trọng.",
+      "keyPoints": [
+        "Giảm test setup duplication",
+        "Có sensible defaults",
+        "Override field quan trọng"
+      ],
+      "followUps": [
+        {
+          "question": "Factory method đơn giản có thể đủ thay builder không?",
+          "answer": "Có. Nếu object nhỏ và ít biến thể, factory rõ ràng thường đơn giản hơn; builder hữu ích khi object graph hoặc variation lớn."
+        }
+      ]
+    },
+    {
+      "id": "MID-TEST-010",
+      "level": "Middle",
+      "topic": "Testing",
+      "question": "Snapshot testing có trade-off gì?",
+      "answer": "Snapshot test hữu ích khi output lớn cần phát hiện thay đổi ngoài ý muốn, nhưng dễ biến thành 'approve cho pass' nếu review diff không kỹ. Nó nên bổ sung assertion semantic chứ không thay toàn bộ test behavior.",
+      "keyPoints": [
+        "Phát hiện output diff",
+        "Review snapshot phải nghiêm túc",
+        "Không thay semantic assertions"
+      ],
+      "followUps": [
+        {
+          "question": "Snapshot rất lớn gây vấn đề gì?",
+          "answer": "Reviewer khó biết thay đổi nào quan trọng, nên snapshot nên đủ nhỏ hoặc chia theo contract có ý nghĩa."
+        }
+      ]
+    },
+    {
+      "id": "MID-TEST-011",
+      "level": "Middle",
+      "topic": "Testing",
+      "question": "Bạn test retry policy mà không làm test chậm như thế nào?",
+      "answer": "Inject hoặc cấu hình delay strategy/clock để retry chạy với delay giả hoặc rất ngắn trong test, rồi assert số lần call và final outcome. Không nên sleep theo backoff thật vài giây trong unit test.",
+      "keyPoints": [
+        "Control delay/clock",
+        "Assert attempt count",
+        "Không sleep backoff thật"
+      ],
+      "followUps": [
+        {
+          "question": "Chỉ assert cuối cùng thành công có đủ không?",
+          "answer": "Không nếu retry behavior là requirement; nên assert số attempt, loại lỗi được retry và lỗi permanent không bị retry."
+        }
+      ]
+    },
+    {
+      "id": "JUN-DEV-006",
+      "level": "Junior",
+      "topic": "DevOps",
+      "question": "CI và CD khác nhau thế nào?",
+      "answer": "Continuous Integration tự động build và test thay đổi thường xuyên để phát hiện lỗi sớm. Continuous Delivery/Deployment đưa artifact đã kiểm tra tới môi trường tiếp theo; deployment tự động production hay không tùy mức CD áp dụng.",
+      "keyPoints": [
+        "CI = build/test liên tục",
+        "CD = đưa artifact qua môi trường",
+        "Production deploy có thể tự động"
+      ],
+      "followUps": [
+        {
+          "question": "CI có nên chạy chỉ khi merge main không?",
+          "answer": "Không. Chạy trên pull request/branch giúp bắt lỗi trước khi merge và bảo vệ main tốt hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-DEV-007",
+      "level": "Junior",
+      "topic": "DevOps",
+      "question": "Build artifact là gì?",
+      "answer": "Artifact là output đã build như package, container image hoặc publish folder được tạo từ source ở một commit cụ thể. Pipeline nên biết artifact nào đã qua test để deploy đúng bản thay vì build lại tùy môi trường.",
+      "keyPoints": [
+        "Output của build",
+        "Gắn với commit/version",
+        "Dùng để deploy"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao không nên copy source lên server rồi build thủ công?",
+          "answer": "Khó tái tạo, audit và đảm bảo production dùng đúng dependency/config như CI đã test."
+        }
+      ]
+    },
+    {
+      "id": "JUN-DEV-008",
+      "level": "Junior",
+      "topic": "DevOps",
+      "question": "Secret trong CI/CD nên được quản lý thế nào?",
+      "answer": "Secret nên nằm trong secret store của CI/CD hoặc vault, chỉ cấp cho job/môi trường cần thiết và không in ra log. Credential production không nên dùng ở pipeline test hoặc lưu plaintext trong repository.",
+      "keyPoints": [
+        "Dùng secret store",
+        "Least privilege theo environment",
+        "Không log secret"
+      ],
+      "followUps": [
+        {
+          "question": "Mask secret trong log có đủ an toàn không?",
+          "answer": "Không hoàn toàn. Vẫn cần hạn chế quyền đọc secret, rotation và tránh truyền secret qua command/output không cần thiết."
+        }
+      ]
+    },
+    {
+      "id": "JUN-DEV-009",
+      "level": "Junior",
+      "topic": "DevOps",
+      "question": "Pipeline nên chạy những bước cơ bản nào cho một ASP.NET Core app?",
+      "answer": "Một pipeline cơ bản thường restore dependency, build, chạy test, validate/lint phù hợp, tạo artifact và chỉ deploy nếu các quality gate pass. Các bước security scan hoặc migration có thể thêm theo mức độ hệ thống.",
+      "keyPoints": [
+        "Restore/build/test",
+        "Tạo artifact",
+        "Deploy sau quality gate"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên deploy nếu unit test fail nhưng build vẫn pass không?",
+          "answer": "Không theo pipeline bình thường; test fail là quality gate báo behavior chưa đạt và nên chặn release."
+        }
+      ]
+    },
+    {
+      "id": "MID-DEV-006",
+      "level": "Middle",
+      "topic": "DevOps",
+      "question": "Build once, promote the same artifact có lợi gì?",
+      "answer": "Cùng một artifact được promote từ test/staging lên production giúp bảo đảm production chạy đúng binary/image đã được kiểm tra. Build lại ở mỗi môi trường có thể tạo dependency hoặc output khác nhau.",
+      "keyPoints": [
+        "Một artifact qua nhiều environment",
+        "Giảm drift",
+        "Tăng reproducibility"
+      ],
+      "followUps": [
+        {
+          "question": "Config khác môi trường nên xử lý thế nào nếu artifact giống nhau?",
+          "answer": "Inject configuration/secret tại runtime hoặc deployment layer thay vì bake environment-specific secret vào artifact."
+        }
+      ]
+    },
+    {
+      "id": "MID-DEV-007",
+      "level": "Middle",
+      "topic": "DevOps",
+      "question": "Database migration nên được tích hợp CI/CD thế nào?",
+      "answer": "Migration phải được review/test trước, chạy theo strategy có kiểm soát và backward-compatible với app version đang rollout. Migration dài hoặc destructive thường nên tách khỏi app startup và có observability/rollback plan.",
+      "keyPoints": [
+        "Review/test migration",
+        "Backward compatibility",
+        "Không chạy destructive migration mù"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao auto-migrate khi mọi pod startup có thể nguy hiểm?",
+          "answer": "Nhiều instance có thể cùng chạy migration, startup bị block và schema change dài có thể làm toàn deployment thất bại."
+        }
+      ]
+    },
+    {
+      "id": "MID-DEV-008",
+      "level": "Middle",
+      "topic": "DevOps",
+      "question": "Feature flag giúp giảm rủi ro deployment thế nào?",
+      "answer": "Feature flag tách việc deploy code khỏi việc bật tính năng, cho phép rollout dần, tắt nhanh khi có lỗi và thử theo cohort. Flag cần owner và cleanup để tránh code path cũ tồn tại vô thời hạn.",
+      "keyPoints": [
+        "Tách deploy khỏi release",
+        "Rollout/rollback nhanh",
+        "Cần lifecycle cleanup"
+      ],
+      "followUps": [
+        {
+          "question": "Feature flag có thay rollback artifact không?",
+          "answer": "Không. Flag chỉ giúp với behavior đã được bao bởi flag; crash, migration hoặc lỗi hạ tầng vẫn có thể cần rollback/roll-forward artifact."
+        }
+      ]
+    },
+    {
+      "id": "MID-DEV-009",
+      "level": "Middle",
+      "topic": "DevOps",
+      "question": "Pipeline caching nên dùng thế nào để không làm build sai?",
+      "answer": "Cache dependency hoặc build layer theo key có version/hash phù hợp để tăng tốc, nhưng không cache artifact mutable mơ hồ. Khi lock file hoặc toolchain đổi, cache key phải thay để tránh dùng dependency cũ.",
+      "keyPoints": [
+        "Cache để tăng tốc CI",
+        "Cache key phải phản ánh dependency",
+        "Tránh stale mutable artifact"
+      ],
+      "followUps": [
+        {
+          "question": "Cache NuGet theo branch name בלבד có đủ không?",
+          "answer": "Không lý tưởng. Nên gắn key với OS/toolchain và lock/project dependency để thay đổi package làm cache invalidation đúng hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-GIT-001",
+      "level": "Junior",
+      "topic": "Git",
+      "question": "Git merge và rebase khác nhau thế nào?",
+      "answer": "Merge tạo commit kết hợp hai lịch sử và giữ nguyên topology; rebase viết lại commit của branch lên base mới để lịch sử tuyến tính hơn. Rebase thay commit hash nên cần cẩn thận với branch đã chia sẻ.",
+      "keyPoints": [
+        "Merge giữ history topology",
+        "Rebase rewrite commits",
+        "Không rebase shared history tùy tiện"
+      ],
+      "followUps": [
+        {
+          "question": "Rebase có làm mất code không?",
+          "answer": "Không nếu resolve đúng, nhưng vì rewrite history nên thao tác sai/force push có thể làm đồng đội khó đồng bộ."
+        }
+      ]
+    },
+    {
+      "id": "JUN-GIT-002",
+      "level": "Junior",
+      "topic": "Git",
+      "question": "git revert khác git reset ở điểm nào?",
+      "answer": "`git revert` tạo commit mới đảo thay đổi của commit cũ nên an toàn hơn cho branch đã chia sẻ. `git reset` di chuyển branch pointer và có thể thay đổi working tree/history, phù hợp hơn khi chỉnh lịch sử local.",
+      "keyPoints": [
+        "Revert tạo commit đảo",
+        "Reset di chuyển branch pointer",
+        "Shared branch ưu tiên revert"
+      ],
+      "followUps": [
+        {
+          "question": "Đã push commit xấu lên main nên dùng cách nào?",
+          "answer": "Thường dùng revert để giữ lịch sử nhất quán và không force-rewrite main."
+        }
+      ]
+    },
+    {
+      "id": "MID-GIT-001",
+      "level": "Middle",
+      "topic": "Git",
+      "question": "Khi nào `git bisect` hữu ích?",
+      "answer": "`git bisect` dùng binary search qua lịch sử commit để tìm commit đầu tiên gây regression. Nó đặc biệt hiệu quả khi có test hoặc script có thể tự động xác định một commit là good hay bad.",
+      "keyPoints": [
+        "Binary search commit history",
+        "Tìm regression nhanh",
+        "Có thể tự động bằng test/script"
+      ],
+      "followUps": [
+        {
+          "question": "Bisect có thay thế observability production không?",
+          "answer": "Không. Nó giúp khoanh commit sau khi đã biết symptom/regression; telemetry vẫn cần để phát hiện và hiểu lỗi runtime."
+        }
+      ]
+    },
+    {
+      "id": "MID-GIT-002",
+      "level": "Middle",
+      "topic": "Git",
+      "question": "Trunk-based development và GitFlow trade-off thế nào?",
+      "answer": "Trunk-based ưu tiên branch ngắn và integrate thường xuyên, phù hợp CI/CD nhanh nhưng cần test/feature flag tốt. GitFlow có branch release/develop rõ hơn nhưng dễ tạo merge debt và chu kỳ tích hợp dài nếu lạm dụng.",
+      "keyPoints": [
+        "Trunk branch ngắn/integrate sớm",
+        "GitFlow nhiều branch hơn",
+        "Chọn theo release model"
+      ],
+      "followUps": [
+        {
+          "question": "Team deploy nhiều lần mỗi ngày thường hợp hướng nào hơn?",
+          "answer": "Thường trunk-based hoặc biến thể branch ngắn phù hợp hơn vì giảm divergence và hỗ trợ continuous delivery tốt."
+        }
+      ]
+    },
+    {
+      "id": "JUN-HTTP-005",
+      "level": "Junior",
+      "topic": "HTTP/API",
+      "question": "Cache-Control header dùng để làm gì?",
+      "answer": "Cache-Control cho browser/proxy biết response có được cache không và trong bao lâu, ví dụ `max-age`, `no-store` hoặc `private`. Cache sai policy có thể trả dữ liệu cũ hoặc làm lộ response user-specific.",
+      "keyPoints": [
+        "Điều khiển HTTP caching",
+        "Có max-age/private/no-store",
+        "User-specific data cần cẩn thận"
+      ],
+      "followUps": [
+        {
+          "question": "`no-store` khác `no-cache` thế nào?",
+          "answer": "`no-store` yêu cầu không lưu response; `no-cache` cho phép lưu nhưng phải revalidate trước khi reuse theo HTTP semantics."
+        }
+      ]
+    },
+    {
+      "id": "JUN-HTTP-006",
+      "level": "Junior",
+      "topic": "HTTP/API",
+      "question": "Secure, HttpOnly và SameSite trên cookie giúp gì?",
+      "answer": "`Secure` chỉ gửi cookie qua HTTPS; `HttpOnly` ngăn JavaScript đọc cookie; `SameSite` kiểm soát gửi cookie trong cross-site request. Chúng giảm một số rủi ro nhưng không thay authentication và CSRF/XSS defense đầy đủ.",
+      "keyPoints": [
+        "Secure yêu cầu HTTPS",
+        "HttpOnly chặn JS đọc cookie",
+        "SameSite hạn chế cross-site send"
+      ],
+      "followUps": [
+        {
+          "question": "HttpOnly có ngăn attacker dùng session nếu đã có XSS không?",
+          "answer": "Không hoàn toàn. Script không đọc cookie nhưng vẫn có thể gửi request từ page đang bị compromise bằng credential của user."
+        }
+      ]
+    },
+    {
+      "id": "MID-HTTP-001",
+      "level": "Middle",
+      "topic": "HTTP/API",
+      "question": "ETag và If-Match có thể dùng cho optimistic concurrency thế nào?",
+      "answer": "Server trả ETag đại diện version của resource; client gửi `If-Match` khi update. Nếu version không còn khớp, server từ chối thay vì ghi đè thay đổi mới hơn, thường bằng 412 Precondition Failed.",
+      "keyPoints": [
+        "ETag biểu diễn version",
+        "If-Match bảo vệ update",
+        "Tránh lost update"
+      ],
+      "followUps": [
+        {
+          "question": "ETag có nhất thiết là hash toàn bộ response không?",
+          "answer": "Không. Nó chỉ cần đại diện version theo semantics server; có thể dựa trên rowversion hoặc version token phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "MID-HTTP-002",
+      "level": "Middle",
+      "topic": "HTTP/API",
+      "question": "HTTP/2 cải thiện nhiều request song song so với HTTP/1.1 thế nào?",
+      "answer": "HTTP/2 multiplex nhiều stream trên một connection và nén header, giảm nhu cầu mở nhiều TCP connection cho request đồng thời. Nó không tự sửa API chậm do database hoặc business logic; bottleneck application vẫn cần xử lý riêng.",
+      "keyPoints": [
+        "Multiplex trên một connection",
+        "Header compression",
+        "Không thay app optimization"
+      ],
+      "followUps": [
+        {
+          "question": "HTTP/2 có loại bỏ head-of-line blocking hoàn toàn không?",
+          "answer": "Không ở tầng TCP; packet loss vẫn có thể ảnh hưởng các stream trên cùng connection, dù nó cải thiện blocking ở tầng HTTP so với HTTP/1.1."
         }
       ]
     }
