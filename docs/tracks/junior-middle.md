@@ -32,6 +32,10 @@ Sau core stack, nên biết đủ để chạy/debug ứng dụng:
 - Docker Compose cho local dependencies
 - HTTP headers, Content-Type/Accept, HTTPS, reverse proxy
 - Security: SQL injection, least privilege, CSP
+- Azure basics: App Service, Functions, Key Vault, Managed Identity, Blob Storage, Azure SQL
+- CI/CD: CI vs CD, artifact, secret trong pipeline, quality gate
+- Testing discipline: parameterized test, boundary value, code coverage, controllable time
+- Git: merge vs rebase, revert vs reset
 
 ### Frontend Angular
 
@@ -91,6 +95,10 @@ Middle nên hiểu thêm behavior production:
 - rolling deployment
 - PostgreSQL row locking, EXPLAIN ANALYZE, MVCC, connection pooling
 - load balancer và CDN
+- Azure production: Service Bus, deployment slots, autoscale, App Configuration, hosting trade-off
+- CI/CD: build-once/promote, migration strategy, feature flag, pipeline cache
+- Testing depth: mutation testing, data builder, snapshot trade-off, retry-policy testing
+- Git: bisect, trunk-based vs GitFlow
 - Messaging: queue vs pub/sub, at-least-once, DLQ, ordering, retry, idempotent consumer
 - Observability: logs/metrics/traces, correlation ID, cardinality, OpenTelemetry
 - Reliability: retry đúng lỗi, bulkhead, load shedding, graceful degradation

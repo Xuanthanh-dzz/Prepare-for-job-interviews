@@ -36,7 +36,7 @@ Component, DI, Router, Forms, Signals, RxJS, performance, testing và architectu
 - Testing
 - Docker
 - CI/CD
-- Azure / cloud fundamentals
+- Azure / cloud fundamentals — đang triển khai thành topic Cloud/Azure
 - Redis / caching
 - Messaging
 - Observability
@@ -59,7 +59,7 @@ Component, DI, Router, Forms, Signals, RxJS, performance, testing và architectu
 
 **Frontend:** JavaScript → TypeScript → HTML/CSS/Web Platform → Angular
 
-**Full Stack:** HTTP/API → Security → Testing → Docker/CI-CD → Architecture
+**Full Stack:** HTTP/API → Security → Testing → Docker/CI-CD → Azure/Cloud → Architecture
 
 ## Market expansion sau core track
 
