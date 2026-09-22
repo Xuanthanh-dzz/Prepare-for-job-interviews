@@ -33,8 +33,10 @@ theme:
 
 nav:
   - Trang chủ: index.md
+  - Stack ưu tiên: roadmap.md
   - Modules:
-      - C# / .NET: modules/csharp-dotnet.md
+      - Backend — C# / .NET: modules/csharp-dotnet.md
+      - Frontend — JS / TS / Angular: modules/frontend-angular.md
   - Ngân hàng câu hỏi: question-bank.md
   - Flashcards: flashcards.md
   - Mock Interview: mock-interview.md
