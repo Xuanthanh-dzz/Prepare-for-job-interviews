@@ -33,6 +33,10 @@
       (!topic || q.topic === topic) &&
       (!text || (q.question + ' ' + q.answer + ' ' + q.topic).toLowerCase().includes(text))
     );
+
+    const count = byId('qb-count');
+    if (count) count.textContent = `${filtered.length} / ${questions.length} câu hỏi`;
+
     root.innerHTML = filtered.length ? filtered.map(q => `
       <details class="question-card">
         <summary>
@@ -99,7 +103,10 @@
     }
 
     fillTopics(topicEl, questions);
-    levelEl.addEventListener('change', () => { fillTopics(topicEl, questions.filter(q => !levelEl.value || q.level === levelEl.value)); rebuild(); });
+    levelEl.addEventListener('change', () => {
+      fillTopics(topicEl, questions.filter(q => !levelEl.value || q.level === levelEl.value));
+      rebuild();
+    });
     topicEl.addEventListener('change', () => rebuild());
     byId('fc-shuffle').addEventListener('click', () => rebuild(true));
     byId('fc-prev').addEventListener('click', () => move(-1));
@@ -107,51 +114,102 @@
     byId('fc-known').addEventListener('click', () => mark('Đã biết'));
     byId('fc-unknown').addEventListener('click', () => mark('Cần ôn'));
     card.addEventListener('click', flip);
-    card.addEventListener('keydown', e => { if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); flip(); } });
+    card.addEventListener('keydown', e => {
+      if (e.code === 'Space' || e.code === 'Enter') {
+        e.preventDefault();
+        flip();
+      }
+    });
     rebuild(true);
   }
 
   function initMock() {
     if (!byId('mock-start')) return;
-    let session = [], index = 0;
-    const sessionEl = byId('mock-session'), resultEl = byId('mock-result'), answerEl = byId('mock-answer');
+
+    const levelEl = byId('mock-level');
+    const topicEl = byId('mock-topic');
+    const sessionEl = byId('mock-session');
+    const resultEl = byId('mock-result');
+    const answerEl = byId('mock-answer');
+    const scoreEl = byId('mock-score');
+
+    let session = [];
+    let index = 0;
+    let scores = { review: 0, pass: 0, strong: 0, skipped: 0 };
+
+    function refreshTopics() {
+      fillTopics(topicEl, questions.filter(q => q.level === levelEl.value));
+    }
 
     function showQuestion() {
       const q = session[index];
       if (!q) return;
+
       byId('mock-progress').textContent = `Câu ${index + 1} / ${session.length}`;
       byId('mock-question').textContent = q.question;
-      byId('mock-meta').textContent = `${q.level} · ${q.topic}`;
+      byId('mock-meta').textContent = `${q.level} · ${q.topic} · ${q.id}`;
       answerEl.innerHTML = `<strong>Trả lời mẫu</strong><p>${esc(q.answer)}</p><strong>Key points</strong><ul>${q.keyPoints.map(x => `<li>${esc(x)}</li>`).join('')}</ul><strong>Follow-up</strong><ul>${q.followUps.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
       answerEl.hidden = true;
+      scoreEl.hidden = true;
       byId('mock-reveal').hidden = false;
     }
 
+    function finish() {
+      sessionEl.hidden = true;
+      resultEl.hidden = false;
+      resultEl.innerHTML = `
+        <div>
+          <h2>Hoàn thành lượt phỏng vấn</h2>
+          <p><strong>${session.length} câu</strong> · Cần ôn: <strong>${scores.review}</strong> · Đạt: <strong>${scores.pass}</strong> · Tốt: <strong>${scores.strong}</strong> · Bỏ qua: <strong>${scores.skipped}</strong></p>
+          <p>Hãy đưa các câu “Cần ôn” về Flashcards, sau đó tạo một đề mới cùng topic để kiểm tra lại khả năng recall.</p>
+        </div>`;
+    }
+
+    function advance(score) {
+      if (score && Object.prototype.hasOwnProperty.call(scores, score)) scores[score]++;
+      index++;
+      if (index >= session.length) {
+        finish();
+        return;
+      }
+      showQuestion();
+    }
+
+    levelEl.addEventListener('change', refreshTopics);
+    refreshTopics();
+
     byId('mock-start').addEventListener('click', () => {
-      const level = byId('mock-level').value;
+      const level = levelEl.value;
+      const topic = topicEl.value;
       const count = Number(byId('mock-count').value);
-      session = shuffle(questions.filter(q => q.level === level)).slice(0, count);
+      const pool = questions.filter(q => q.level === level && (!topic || q.topic === topic));
+
+      session = shuffle(pool).slice(0, count);
       index = 0;
+      scores = { review: 0, pass: 0, strong: 0, skipped: 0 };
       resultEl.hidden = true;
+
+      if (!session.length) {
+        sessionEl.hidden = true;
+        resultEl.hidden = false;
+        resultEl.innerHTML = '<p>Không có câu hỏi phù hợp với bộ lọc này.</p>';
+        return;
+      }
+
       sessionEl.hidden = false;
       showQuestion();
     });
 
     byId('mock-reveal').addEventListener('click', () => {
       answerEl.hidden = false;
+      scoreEl.hidden = false;
       byId('mock-reveal').hidden = true;
     });
 
-    byId('mock-next').addEventListener('click', () => {
-      index++;
-      if (index >= session.length) {
-        sessionEl.hidden = true;
-        resultEl.hidden = false;
-        resultEl.innerHTML = '<h2>Hoàn thành lượt phỏng vấn</h2><p>Ôn lại những câu bạn chưa trả lời được bằng Flashcards, rồi tạo một đề mới. Hãy ưu tiên giải thích bằng lời của chính bạn thay vì học thuộc đáp án mẫu.</p>';
-        return;
-      }
-      showQuestion();
-    });
+    byId('mock-review').addEventListener('click', () => advance('review'));
+    byId('mock-pass').addEventListener('click', () => advance('pass'));
+    byId('mock-strong').addEventListener('click', () => advance('strong'));
+    byId('mock-next').addEventListener('click', () => advance('skipped'));
   }
 
   async function main() {
