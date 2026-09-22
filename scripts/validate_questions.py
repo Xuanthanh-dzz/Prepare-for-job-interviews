@@ -84,8 +84,24 @@ for index, item in enumerate(questions, start=1):
 
     if not isinstance(follow_ups, list) or not (1 <= len(follow_ups) <= 5):
         errors.append(f"{qid or where}: followUps must contain 1-5 items")
-    elif any(not isinstance(x, str) or not x.strip() for x in follow_ups):
-        errors.append(f"{qid or where}: followUps contains an empty/non-string item")
+    else:
+        for follow_index, follow_up in enumerate(follow_ups, start=1):
+            follow_where = f"{qid or where}.followUps[{follow_index}]"
+
+            if not isinstance(follow_up, dict):
+                errors.append(f"{follow_where}: must be an object with question and answer")
+                continue
+
+            follow_question = follow_up.get("question", "")
+            follow_answer = follow_up.get("answer", "")
+
+            if not isinstance(follow_question, str) or len(follow_question.strip()) < 8:
+                errors.append(f"{follow_where}: question is missing or too short")
+
+            if not isinstance(follow_answer, str) or len(follow_answer.strip()) < 40:
+                errors.append(f"{follow_where}: answer should be at least 40 chars")
+            elif len(follow_answer) > 700:
+                errors.append(f"{follow_where}: answer is too long ({len(follow_answer)} chars)")
 
 duplicate_ids = [qid for qid, count in Counter(ids).items() if count > 1]
 for qid in duplicate_ids:
