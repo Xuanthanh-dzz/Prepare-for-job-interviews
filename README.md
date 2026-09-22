@@ -49,7 +49,7 @@ Quy ước deploy:
 - Câu hỏi
 - Câu trả lời mẫu ngắn gọn
 - Key points interviewer mong đợi
-- Câu hỏi đào sâu + câu trả lời mẫu
+- Câu hỏi đào sâu + câu trả lời mẫu riêng
 - Level và topic
 
 Cấu trúc dữ liệu này được tái sử dụng cho **website học**, **flashcard** và **mock interview**.
