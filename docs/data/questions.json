@@ -5042,7 +5042,7 @@
       "id": "JUN-SEC-005",
       "level": "Junior",
       "topic": "Security",
-      "question": "XSS và CSRF khác nhau thế nào?",
+      "question": "Một SPA bị XSS và một API dùng cookie bị CSRF: hai kiểu tấn công này khác nhau ở đâu?",
       "answer": "XSS xảy ra khi attacker chạy script trong context của ứng dụng; CSRF lợi dụng browser tự gửi credential để thực hiện request ngoài ý muốn. Defense khác nhau: XSS tập trung escaping/CSP, CSRF tập trung SameSite/anti-forgery và request design.",
       "keyPoints": [
         "XSS = chạy script độc hại",
