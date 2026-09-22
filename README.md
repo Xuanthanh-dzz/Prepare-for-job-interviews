@@ -4,6 +4,22 @@ Kho kiến thức luyện phỏng vấn Full Stack .NET từ **Intern → Junior
 
 Mục tiêu của repo không phải học thuộc đáp án, mà là luyện cách trả lời đúng trọng tâm, giải thích được trade-off và xử lý câu hỏi follow-up như trong phỏng vấn thật.
 
+## Website
+
+- Production (`main`): https://xuanthanh-dzz.github.io/Prepare-for-job-interviews/
+- Branch preview: `https://xuanthanh-dzz.github.io/Prepare-for-job-interviews/previews/<branch-slug>/`
+
+Ví dụ branch `feat/interview-prep-platform` có preview tại:
+
+`https://xuanthanh-dzz.github.io/Prepare-for-job-interviews/previews/feat-interview-prep-platform/`
+
+Quy ước deploy:
+
+- `main` luôn là bản production dành cho người dùng cuối.
+- Mọi branch khác được deploy vào thư mục `previews/` và không được ghi đè production.
+- Pull request phải build MkDocs thành công trước khi merge.
+- Branch `gh-pages` chỉ dùng để lưu snapshot site đã build, không dùng để phát triển nội dung.
+
 ## Nội dung dự kiến
 
 - C# / .NET
@@ -36,6 +52,6 @@ Mục tiêu của repo không phải học thuộc đáp án, mà là luyện c�
 - Follow-up thường gặp
 - Level và topic
 
-Cấu trúc dữ liệu này sẽ được tái sử dụng cho **website học**, **flashcard** và **mock interview**.
+Cấu trúc dữ liệu này được tái sử dụng cho **website học**, **flashcard** và **mock interview**.
 
-> Repo đang được xây dựng theo từng module. Nội dung ưu tiên chất lượng câu hỏi và cách trả lời thực chiến hơn số lượng.
+> Nội dung ưu tiên chất lượng câu hỏi và cách trả lời thực chiến hơn số lượng.

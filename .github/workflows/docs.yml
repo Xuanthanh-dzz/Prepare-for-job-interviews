@@ -1,0 +1,158 @@
+name: Interview prep website
+
+on:
+  pull_request:
+  push:
+    branches-ignore:
+      - gh-pages
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: interview-prep-pages
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current ref
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install docs dependencies
+        run: pip install -r requirements-docs.txt
+
+      - name: Validate MkDocs build
+        run: mkdocs build --strict
+
+  deploy:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: validate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v4
+        with:
+          path: source
+
+      - name: Checkout production branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: production-source
+
+      - name: Checkout Pages storage branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: publish
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install docs dependencies
+        run: pip install -r source/requirements-docs.txt
+
+      - name: Build production from main
+        run: |
+          mkdocs build --strict             -f production-source/mkdocs.yml             -d "$GITHUB_WORKSPACE/build-production"
+
+      - name: Build current branch
+        run: |
+          mkdocs build --strict             -f source/mkdocs.yml             -d "$GITHUB_WORKSPACE/build-current"
+
+      - name: Prepare production and preview site
+        id: paths
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          BRANCH_SLUG="$(printf '%s' "$GITHUB_REF_NAME"             | sed 's#[/ ]#-#g'             | tr -cd 'A-Za-z0-9._-')"
+
+          if [ -z "$BRANCH_SLUG" ]; then
+            echo "Could not derive branch preview slug."
+            exit 1
+          fi
+
+          mkdir -p "$GITHUB_WORKSPACE/preview-backup"
+
+          if [ -d publish/previews ]; then
+            cp -a publish/previews "$GITHUB_WORKSPACE/preview-backup/"
+          fi
+
+          find publish -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          cp -a "$GITHUB_WORKSPACE/build-production/." publish/
+
+          if [ -d "$GITHUB_WORKSPACE/preview-backup/previews" ]; then
+            cp -a "$GITHUB_WORKSPACE/preview-backup/previews" publish/
+          fi
+
+          if [ "$GITHUB_REF_NAME" != "main" ]; then
+            rm -rf "publish/previews/$BRANCH_SLUG"
+            mkdir -p "publish/previews/$BRANCH_SLUG"
+            cp -a "$GITHUB_WORKSPACE/build-current/." "publish/previews/$BRANCH_SLUG/"
+          fi
+
+          echo "branch_slug=$BRANCH_SLUG" >> "$GITHUB_OUTPUT"
+
+      - name: Save generated site snapshot
+        shell: bash
+        working-directory: publish
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No generated site changes to commit."
+          else
+            git commit -m "deploy: $GITHUB_REF_NAME"
+            git push origin HEAD:gh-pages
+          fi
+
+      - name: Prepare Pages artifact
+        run: |
+          mkdir -p pages-artifact
+          rsync -a --delete --exclude='.git' publish/ pages-artifact/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages-artifact
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
+
+      - name: Publish URLs
+        shell: bash
+        run: |
+          OWNER="${GITHUB_REPOSITORY%%/*}"
+          REPO="${GITHUB_REPOSITORY#*/}"
+          BASE_URL="https://${OWNER}.github.io/${REPO}/"
+
+          {
+            echo "### Website URLs"
+            echo ""
+            echo "- Production: ${BASE_URL}"
+
+            if [ "$GITHUB_REF_NAME" != "main" ]; then
+              echo "- Preview: ${BASE_URL}previews/${{ steps.paths.outputs.branch_slug }}/"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

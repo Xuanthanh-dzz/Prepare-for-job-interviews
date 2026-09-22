@@ -1,0 +1,56 @@
+site_name: Full Stack .NET Interview Prep
+site_description: Luyện phỏng vấn Full Stack .NET từ Intern đến Senior
+repo_url: https://github.com/Xuanthanh-dzz/Prepare-for-job-interviews
+repo_name: Xuanthanh-dzz/Prepare-for-job-interviews
+docs_dir: docs
+
+theme:
+  name: material
+  language: vi
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Chuyển sang nền tối
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Chuyển sang nền sáng
+
+nav:
+  - Trang chủ: index.md
+  - Ngân hàng câu hỏi: question-bank.md
+  - Flashcards: flashcards.md
+  - Mock Interview: mock-interview.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+extra_javascript:
+  - assets/javascripts/interview.js
+
+plugins:
+  - search
