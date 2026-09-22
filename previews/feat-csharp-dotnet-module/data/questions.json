@@ -1208,7 +1208,7 @@
       "id": "MID-LINQ-001",
       "level": "Middle",
       "topic": "Collections/LINQ",
-      "question": "ToList quá sớm và ToList quá sớm khác nhau về thiết kế query như thế nào?",
+      "question": "Materialize query bằng ToList quá sớm hoặc quá muộn có vấn đề gì?",
       "answer": "ToList quá sớm materialize dữ liệu trước khi filter/projection cần thiết, có thể kéo nhiều dữ liệu hơn và chuyển công việc sang memory. Nhưng trì hoãn materialization quá lâu cũng có thể giữ resource hoặc tạo query khó kiểm soát. Boundary materialization nên đặt nơi đã xây xong query cần thiết nhưng trước khi rời lifetime của data source.",
       "keyPoints": [
         "Materialize quá sớm gây over-fetch",
