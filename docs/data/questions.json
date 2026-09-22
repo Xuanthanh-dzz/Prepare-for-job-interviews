@@ -1,5 +1,5 @@
 {
-  "version": 8,
+  "version": 9,
   "questions": [
     {
       "id": "INT-CS-001",
@@ -6386,6 +6386,403 @@
         {
           "question": "Có nên đưa business-specific component vào design system chung không?",
           "answer": "Thường không. Design system nên generic và dùng được rộng; component gắn domain nên ở feature/domain library phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "JUN-NET-005",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": "CLR là gì và vai trò của nó trong .NET?",
+      "answer": "CLR là runtime thực thi managed code của .NET. Nó chịu trách nhiệm cho các việc như JIT compilation, garbage collection, exception handling, type safety và quản lý thread/runtime services khi ứng dụng chạy.",
+      "keyPoints": [
+        "Runtime thực thi managed code",
+        "Quản lý JIT/GC/exception",
+        "Cung cấp runtime services"
+      ],
+      "followUps": [
+        {
+          "question": ".NET Runtime và CLR có hoàn toàn giống nhau không?",
+          "answer": "Không hoàn toàn. CLR là execution engine cốt lõi, còn .NET Runtime còn bao gồm các runtime libraries và thành phần cần thiết khác để ứng dụng chạy."
+        }
+      ]
+    },
+    {
+      "id": "JUN-NET-006",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": "Managed code và unmanaged code khác nhau thế nào?",
+      "answer": "Managed code chạy dưới sự quản lý của .NET runtime nên được hưởng GC, metadata, type safety và runtime services. Unmanaged code chạy ngoài CLR, thường là native code và resource lifetime phải được quản lý rõ ràng hơn.",
+      "keyPoints": [
+        "Managed code chạy dưới CLR",
+        "Unmanaged code thường là native",
+        "Resource management khác nhau"
+      ],
+      "followUps": [
+        {
+          "question": "P/Invoke dùng để làm gì?",
+          "answer": "P/Invoke cho phép managed .NET code gọi hàm từ native library như DLL hoặc shared library khi cần tích hợp unmanaged API."
+        }
+      ]
+    },
+    {
+      "id": "JUN-NET-007",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": "Assembly manifest và metadata trong .NET dùng để làm gì?",
+      "answer": "Manifest mô tả identity, version và dependency của assembly; metadata mô tả type, member và signature bên trong. Runtime và tooling dùng thông tin này để load assembly, resolve type/dependency và hỗ trợ reflection.",
+      "keyPoints": [
+        "Manifest chứa assembly identity/version",
+        "Metadata mô tả type/member",
+        "Runtime/tooling dùng để load và inspect"
+      ],
+      "followUps": [
+        {
+          "question": "Reflection dựa vào metadata như thế nào?",
+          "answer": "Reflection đọc metadata runtime để khám phá type, method, property hoặc attribute mà không cần biết toàn bộ chúng ở compile time."
+        }
+      ]
+    },
+    {
+      "id": "JUN-NET-008",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": ".NET SDK và .NET Runtime khác nhau thế nào?",
+      "answer": ".NET Runtime cung cấp những gì cần để chạy ứng dụng đã build. .NET SDK bao gồm runtime cùng compiler, CLI và build tooling để tạo, build, test và publish ứng dụng.",
+      "keyPoints": [
+        "Runtime để chạy app",
+        "SDK để phát triển/build",
+        "SDK bao gồm tooling"
+      ],
+      "followUps": [
+        {
+          "question": "Máy production có bắt buộc cài SDK không?",
+          "answer": "Không nếu chỉ chạy ứng dụng framework-dependent; thông thường runtime phù hợp là đủ, còn self-contained app có thể đóng gói runtime cùng ứng dụng."
+        }
+      ]
+    },
+    {
+      "id": "JUN-NET-009",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": "Target Framework Moniker (TFM) là gì?",
+      "answer": "TFM xác định framework API surface mà project target, ví dụ một phiên bản .NET cụ thể. Nó ảnh hưởng compile-time reference, compatibility và cách package/library được resolve khi build.",
+      "keyPoints": [
+        "Xác định framework target",
+        "Ảnh hưởng API khả dụng",
+        "Dùng trong project file"
+      ],
+      "followUps": [
+        {
+          "question": "Một project có thể target nhiều framework không?",
+          "answer": "Có. Có thể dùng `TargetFrameworks` để multi-target, thường gặp ở library cần hỗ trợ nhiều runtime/framework khác nhau."
+        }
+      ]
+    },
+    {
+      "id": "JUN-NET-010",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": "Runtime Identifier (RID) dùng để làm gì?",
+      "answer": "RID mô tả platform đích gồm hệ điều hành và architecture, ví dụ Linux x64 hoặc Windows x64. Nó được dùng khi publish ứng dụng phụ thuộc platform hoặc cần chọn native asset phù hợp.",
+      "keyPoints": [
+        "Mô tả OS + architecture",
+        "Dùng khi publish platform-specific",
+        "Giúp chọn native dependencies"
+      ],
+      "followUps": [
+        {
+          "question": "TFM và RID khác nhau thế nào?",
+          "answer": "TFM mô tả framework API target; RID mô tả platform runtime cụ thể như OS và CPU architecture."
+        }
+      ]
+    },
+    {
+      "id": "JUN-NET-011",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": "Framework-dependent và self-contained deployment khác nhau thế nào?",
+      "answer": "Framework-dependent deployment cần .NET runtime tương thích có sẵn trên máy đích và artifact thường nhỏ hơn. Self-contained đóng gói runtime cùng app nên dễ kiểm soát runtime version hơn nhưng artifact lớn hơn và phải tự redeploy để cập nhật runtime.",
+      "keyPoints": [
+        "Framework-dependent cần runtime cài sẵn",
+        "Self-contained kèm runtime",
+        "Trade-off size và update"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào self-contained deployment phù hợp?",
+          "answer": "Khi muốn kiểm soát runtime đi cùng ứng dụng hoặc môi trường đích không đảm bảo có đúng runtime, đổi lại phải chấp nhận artifact lớn hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-NET-012",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": "`dotnet build` và `dotnet publish` khác nhau thế nào?",
+      "answer": "`dotnet build` biên dịch project và tạo output phục vụ development/test. `dotnet publish` chuẩn bị artifact để triển khai, bao gồm dependency và các tùy chọn deployment như runtime target hoặc self-contained.",
+      "keyPoints": [
+        "build để compile",
+        "publish để deploy",
+        "Publish gom dependency/artifact"
+      ],
+      "followUps": [
+        {
+          "question": "Có phải publish luôn build lại project không?",
+          "answer": "Thông thường có, trừ khi dùng tùy chọn như `--no-build`; khi đó bạn phải bảo đảm output build trước đó phù hợp với cấu hình publish."
+        }
+      ]
+    },
+    {
+      "id": "JUN-NET-013",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": "NuGet package và project reference khác nhau thế nào?",
+      "answer": "Project reference trỏ trực tiếp tới project khác trong cùng solution/repository và build theo source hiện tại. NuGet package là artifact được đóng gói, version hóa và restore từ package source, phù hợp chia sẻ dependency độc lập hơn.",
+      "keyPoints": [
+        "Project reference dùng source trực tiếp",
+        "NuGet có version/package artifact",
+        "NuGet phù hợp chia sẻ độc lập"
+      ],
+      "followUps": [
+        {
+          "question": "`dotnet restore` làm gì?",
+          "answer": "Nó resolve và tải các package dependency cần thiết theo project/package configuration để build có đủ dependency."
+        }
+      ]
+    },
+    {
+      "id": "JUN-NET-014",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": "Base Class Library (BCL) là gì?",
+      "answer": "BCL là tập thư viện nền tảng của .NET cung cấp các API phổ biến như collection, file I/O, networking, text, threading và nhiều primitive khác. Ứng dụng .NET sử dụng các API này thay vì tự xây lại chức năng nền tảng.",
+      "keyPoints": [
+        "Thư viện nền tảng của .NET",
+        "Có collection/I-O/networking",
+        "Dùng chung cho nhiều loại app"
+      ],
+      "followUps": [
+        {
+          "question": "BCL có phải chỉ dành cho ASP.NET Core không?",
+          "answer": "Không. Đây là thư viện nền tảng dùng cho nhiều loại ứng dụng .NET như console, worker, desktop, web và library."
+        }
+      ]
+    },
+    {
+      "id": "MID-NET-004",
+      "level": "Middle",
+      "topic": ".NET",
+      "question": "Tiered compilation trong .NET hoạt động theo ý tưởng nào?",
+      "answer": "Tiered compilation cho phép method ban đầu được compile nhanh để giảm startup cost, sau đó các method chạy nhiều có thể được JIT lại với mức tối ưu cao hơn. Mục tiêu là cân bằng startup time và steady-state performance.",
+      "keyPoints": [
+        "Compile nhanh ở tier đầu",
+        "Optimize hot methods về sau",
+        "Cân bằng startup và throughput"
+      ],
+      "followUps": [
+        {
+          "question": "Tiered compilation có nghĩa mọi method đều được compile hai lần không?",
+          "answer": "Không. Runtime quyết định dựa trên execution behavior; chỉ những method phù hợp hoặc đủ nóng mới có thể được nâng lên tier tối ưu hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-NET-005",
+      "level": "Middle",
+      "topic": ".NET",
+      "question": "ReadyToRun khác JIT compilation thế nào?",
+      "answer": "ReadyToRun chứa một phần native code được precompile để giảm JIT work lúc startup. Runtime vẫn có thể dùng JIT cho phần chưa có native code hoặc để tối ưu thêm, nên ReadyToRun không đồng nghĩa loại bỏ JIT hoàn toàn.",
+      "keyPoints": [
+        "Precompile một phần native code",
+        "Giảm startup JIT cost",
+        "Runtime vẫn có thể JIT"
+      ],
+      "followUps": [
+        {
+          "question": "ReadyToRun có trade-off gì?",
+          "answer": "Artifact thường lớn hơn và precompiled code không phải lúc nào tối ưu bằng code JIT dựa trên runtime thực tế; cần đo startup và size trước khi bật."
+        }
+      ]
+    },
+    {
+      "id": "MID-NET-006",
+      "level": "Middle",
+      "topic": ".NET",
+      "question": "Trimming trong .NET publish giải quyết bài toán gì?",
+      "answer": "Trimming loại bỏ code không được phân tích là cần thiết khỏi ứng dụng publish để giảm kích thước deployment. Reflection hoặc dynamic access khó phân tích có thể làm code cần thiết bị bỏ nhầm, vì vậy trim warning phải được xử lý nghiêm túc.",
+      "keyPoints": [
+        "Giảm deployment size",
+        "Static analysis xác định code cần giữ",
+        "Reflection/dynamic dễ gây vấn đề"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên bỏ qua trim warning nếu app vẫn chạy local không?",
+          "answer": "Không. Warning thường báo pattern runtime có thể bị break sau trimming; cần sửa annotation/code hoặc xác nhận dependency tương thích thay vì bỏ qua."
+        }
+      ]
+    },
+    {
+      "id": "MID-NET-007",
+      "level": "Middle",
+      "topic": ".NET",
+      "question": "Single-file publish có lợi và hạn chế gì?",
+      "answer": "Single-file publish gom ứng dụng và dependency thành một file để phân phối dễ hơn. Đổi lại file có thể lớn, platform-specific và một số API hoặc native dependency có behavior khác, nên cần test đúng môi trường deploy.",
+      "keyPoints": [
+        "Phân phối đơn giản",
+        "Có thể tăng file size",
+        "Platform-specific"
+      ],
+      "followUps": [
+        {
+          "question": "Single-file có đồng nghĩa self-contained không?",
+          "answer": "Không bắt buộc. Single-file có thể kết hợp với framework-dependent hoặc self-contained tùy cấu hình publish."
+        }
+      ]
+    },
+    {
+      "id": "MID-NET-008",
+      "level": "Middle",
+      "topic": ".NET",
+      "question": "AssemblyLoadContext dùng để làm gì?",
+      "answer": "AssemblyLoadContext kiểm soát cách assembly được load và resolve trong một context riêng. Nó hữu ích cho plugin hoặc isolation scenario, và collectible context có thể hỗ trợ unload nếu không còn reference giữ assembly/object sống.",
+      "keyPoints": [
+        "Kiểm soát assembly loading",
+        "Hữu ích cho plugin/isolation",
+        "Có thể hỗ trợ unload"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao collectible AssemblyLoadContext không unload được?",
+          "answer": "Nếu static cache, event, thread hoặc object bên ngoài vẫn giữ reference tới type/object trong context thì GC chưa thể thu hồi context đó."
+        }
+      ]
+    },
+    {
+      "id": "MID-NET-009",
+      "level": "Middle",
+      "topic": ".NET",
+      "question": "`dotnet-counters`, `dotnet-trace` và `dotnet-dump` khác nhau khi chẩn đoán production thế nào?",
+      "answer": "`dotnet-counters` phù hợp quan sát nhanh metric runtime, `dotnet-trace` thu event/trace để phân tích performance chi tiết hơn, còn `dotnet-dump` thu và phân tích memory/process dump cho leak, deadlock hoặc crash investigation.",
+      "keyPoints": [
+        "Counters cho health/perf nhanh",
+        "Trace cho timeline/event",
+        "Dump cho memory/process state"
+      ],
+      "followUps": [
+        {
+          "question": "Khi API CPU cao bạn nên bắt đầu bằng tool nào?",
+          "answer": "Thường bắt đầu bằng counters để xác nhận symptom và runtime metrics, sau đó dùng trace/profiler để tìm hot path nếu cần."
+        }
+      ]
+    },
+    {
+      "id": "MID-NET-010",
+      "level": "Middle",
+      "topic": ".NET",
+      "question": "`runtimeconfig.json` và `.deps.json` có vai trò gì?",
+      "answer": "`runtimeconfig.json` mô tả runtime/framework configuration của ứng dụng, còn `.deps.json` mô tả dependency graph và asset cần để host/runtime resolve dependency. Hai file thường xuất hiện trong output framework-dependent.",
+      "keyPoints": [
+        "runtimeconfig cho runtime settings",
+        "deps.json cho dependency graph",
+        "Được host dùng khi chạy app"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên chỉnh tay các file này ở production không?",
+          "answer": "Thường không. Nên cấu hình qua project/build/runtime settings để artifact có thể tái tạo và tránh drift giữa môi trường."
+        }
+      ]
+    },
+    {
+      "id": "MID-NET-011",
+      "level": "Middle",
+      "topic": ".NET",
+      "question": "Bạn chọn framework-dependent hay self-contained deployment dựa trên những yếu tố nào?",
+      "answer": "Tôi cân nhắc quyền kiểm soát runtime trên host, kích thước artifact, chiến lược patch security, số platform phải hỗ trợ và quy trình deployment. Framework-dependent cập nhật runtime tập trung dễ hơn; self-contained cho app tự mang runtime nhưng phải redeploy để nhận runtime patch.",
+      "keyPoints": [
+        "Runtime ownership",
+        "Artifact size",
+        "Security patch strategy",
+        "Platform targeting"
+      ],
+      "followUps": [
+        {
+          "question": "Self-contained có tự động nhận runtime security patch từ máy host không?",
+          "answer": "Không. Runtime được đóng gói cùng ứng dụng, nên muốn nâng runtime/security patch bạn phải publish và deploy lại app."
+        }
+      ]
+    },
+    {
+      "id": "MID-NET-012",
+      "level": "Middle",
+      "topic": ".NET",
+      "question": "Server GC và Workstation GC khác nhau ở mục tiêu sử dụng nào?",
+      "answer": "Workstation GC ưu tiên responsiveness cho workload nhỏ hoặc client-style, còn Server GC tối ưu throughput cho workload server nhiều core bằng các heap/GC worker phù hợp. Không nên đổi mode chỉ theo tên; cần đo latency, throughput và memory.",
+      "keyPoints": [
+        "Workstation thiên responsiveness",
+        "Server thiên throughput",
+        "Chọn dựa trên workload/measurement"
+      ],
+      "followUps": [
+        {
+          "question": "Bật Server GC có luôn làm Web API nhanh hơn không?",
+          "answer": "Không. Hiệu quả phụ thuộc CPU, memory limit và workload; container nhỏ hoặc latency-sensitive workload có thể không hưởng lợi như mong đợi."
+        }
+      ]
+    },
+    {
+      "id": "MID-NET-013",
+      "level": "Middle",
+      "topic": ".NET",
+      "question": "Dynamic PGO trong .NET giúp tối ưu runtime thế nào?",
+      "answer": "Dynamic Profile-Guided Optimization thu thông tin về type và code path thường chạy rồi dùng dữ liệu đó cùng tiered compilation để JIT tối ưu hot code tốt hơn theo workload thực tế.",
+      "keyPoints": [
+        "Profile runtime behavior",
+        "Tối ưu hot code",
+        "Phối hợp tiered compilation"
+      ],
+      "followUps": [
+        {
+          "question": "PGO có thay thế profiling ứng dụng không?",
+          "answer": "Không. PGO tối ưu code generation; developer vẫn cần profiling để tìm bottleneck ở query, allocation, lock, I/O hoặc architecture."
+        }
+      ]
+    },
+    {
+      "id": "MID-NET-014",
+      "level": "Middle",
+      "topic": ".NET",
+      "question": "Khi nâng target framework của một service, bạn cần kiểm tra gì ngoài việc build thành công?",
+      "answer": "Cần kiểm tra package compatibility, breaking behavior/runtime changes, container/base image, deployment runtime, test coverage, performance regression và observability. Nâng TFM là thay đổi runtime platform chứ không chỉ đổi một dòng trong project file.",
+      "keyPoints": [
+        "Package/runtime compatibility",
+        "Test behavior và performance",
+        "Kiểm tra deployment environment"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao CI pass chưa đủ để kết luận upgrade an toàn?",
+          "answer": "Một số khác biệt chỉ xuất hiện với workload, OS/native dependency, production config hoặc performance thực tế, nên vẫn cần staging/canary và telemetry."
+        }
+      ]
+    },
+    {
+      "id": "JUN-NET-015",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": "Từ source code C# đến lúc chạy trên CPU, .NET đi qua các bước chính nào?",
+      "answer": "C# compiler biên dịch source thành IL cùng metadata trong assembly. Khi ứng dụng chạy, .NET runtime load assembly và JIT compile những method cần thiết thành machine code để CPU thực thi; một số deployment mode có thể precompile một phần hoặc toàn bộ code.",
+      "keyPoints": [
+        "Source -> IL + metadata",
+        "Runtime load assembly",
+        "JIT -> machine code"
+      ],
+      "followUps": [
+        {
+          "question": "IL có phải machine code không?",
+          "answer": "Không. IL là mã trung gian độc lập hơn với CPU; JIT hoặc AOT sẽ chuyển nó thành native machine code phù hợp platform đích."
         }
       ]
     }
