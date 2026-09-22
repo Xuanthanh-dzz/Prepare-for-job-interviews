@@ -3,9 +3,17 @@
 Học để **trả lời như một kỹ sư**, không học thuộc một câu văn mẫu.
 
 <div class="hero-grid">
+  <a class="hero-card" href="roadmap/">
+    <strong>Stack ưu tiên</strong>
+    <span>Backend: C#/.NET/EF/SQL · Frontend: JavaScript/TypeScript/Angular.</span>
+  </a>
   <a class="hero-card" href="modules/csharp-dotnet/">
-    <strong>Module C# / .NET</strong>
-    <span>Học theo level: language, LINQ, async, concurrency, memory/GC và runtime.</span>
+    <strong>Backend — C# / .NET</strong>
+    <span>C#, runtime, LINQ, async/concurrency, memory/GC và nền tảng .NET.</span>
+  </a>
+  <a class="hero-card" href="modules/frontend-angular/">
+    <strong>Frontend — Angular</strong>
+    <span>JavaScript, TypeScript, HTML/CSS, browser, Angular, RxJS và frontend architecture.</span>
   </a>
   <a class="hero-card" href="question-bank/">
     <strong>Ngân hàng câu hỏi</strong>
@@ -21,12 +29,21 @@ Học để **trả lời như một kỹ sư**, không học thuộc một câu
   </a>
 </div>
 
+## Track chính
+
+**Backend:** C# → .NET → ASP.NET Core → EF Core → SQL
+
+**Frontend:** JavaScript → TypeScript → HTML/CSS/Web Platform → Angular
+
+Repo ưu tiên làm sâu các công nghệ gắn trực tiếp với vị trí **.NET Full Stack** trước khi mở rộng sang framework khác.
+
 ## Cách dùng
 
-1. Chọn module và level gần với vị trí bạn chuẩn bị ứng tuyển.
-2. Học theo **Question Bank** để hiểu bản chất.
-3. Chuyển sang **Flashcards** để luyện nhớ chủ động.
-4. Cuối cùng làm **Mock Interview** theo topic và tự trả lời thành tiếng trước khi mở đáp án.
+1. Xem **Stack ưu tiên** để biết thứ tự học.
+2. Chọn module và level gần với vị trí bạn chuẩn bị ứng tuyển.
+3. Học theo **Question Bank** để hiểu bản chất.
+4. Chuyển sang **Flashcards** để luyện nhớ chủ động.
+5. Cuối cùng làm **Mock Interview** theo topic và tự trả lời thành tiếng trước khi mở đáp án.
 
 ## Chuẩn câu trả lời
 
