@@ -62,3 +62,5 @@ Quy ước deploy:
 Cấu trúc dữ liệu này được tái sử dụng cho **website học**, **flashcard** và **mock interview**.
 
 > Core track hiện tại: **Backend C#/.NET/EF Core/SQL** và **Frontend JavaScript/TypeScript/Angular**. Nội dung ưu tiên chất lượng câu hỏi và cách trả lời thực chiến hơn số lượng.
+>
+> Platform depth đang được mở rộng có chọn lọc: **Redis, Docker/Kubernetes, HTTP/Security, Testing và System Design fundamentals**.
