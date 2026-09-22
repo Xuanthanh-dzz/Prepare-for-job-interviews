@@ -26,39 +26,60 @@ jobs:
   validate:
     if: github.event_name != 'workflow_dispatch' || github.event.inputs.deploy_only != 'true'
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout current ref
         uses: actions/checkout@v4
+        with:
+          path: source
+
+      - name: Checkout main UI source
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: production-source
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
 
-      - name: Install docs dependencies
-        run: pip install -r requirements-docs.txt
+      - name: Install docs dependencies from main
+        run: pip install -r production-source/requirements-docs.txt
 
       - name: Validate interview question bank
-        run: python scripts/validate_questions.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd source
+          python ../production-source/scripts/validate_questions.py
 
-      - name: Validate MkDocs build
-        run: mkdocs build --strict
+      - name: Compose preview with main UI
+        run: |
+          python production-source/scripts/compose_preview.py             --main production-source             --branch source             --output composed-preview
+
+      - name: Validate composed MkDocs build
+        run: |
+          mkdocs build --strict             -f composed-preview/mkdocs.yml             -d "$GITHUB_WORKSPACE/build-validation"
 
   publish-snapshot:
     if: github.event_name == 'push'
     needs: validate
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout current branch
         uses: actions/checkout@v4
         with:
           path: source
 
-      - name: Checkout production branch
+      - name: Checkout main UI source
         uses: actions/checkout@v4
         with:
           ref: main
           path: production-source
+          fetch-depth: 0
 
       - name: Checkout Pages storage branch
         uses: actions/checkout@v4
@@ -71,56 +92,87 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install docs dependencies
-        run: |
-          pip install -r production-source/requirements-docs.txt
-          pip install -r source/requirements-docs.txt
+      - name: Install docs dependencies from main
+        run: pip install -r production-source/requirements-docs.txt
 
       - name: Build production from main
         run: |
-          mkdocs build --strict \
-            -f production-source/mkdocs.yml \
-            -d "$GITHUB_WORKSPACE/build-production"
+          mkdocs build --strict             -f production-source/mkdocs.yml             -d "$GITHUB_WORKSPACE/build-production"
 
-      - name: Build current branch
-        run: |
-          mkdocs build --strict \
-            -f source/mkdocs.yml \
-            -d "$GITHUB_WORKSPACE/build-current"
-
-      - name: Prepare production and branch preview
-        id: paths
+      - name: Backup existing previews
         shell: bash
         run: |
           set -euo pipefail
-
-          BRANCH_SLUG="$(printf '%s' "$GITHUB_REF_NAME" \
-            | sed 's#[/ ]#-#g' \
-            | tr -cd 'A-Za-z0-9._-')"
-
-          if [ -z "$BRANCH_SLUG" ]; then
-            echo "Could not derive branch preview slug."
-            exit 1
-          fi
-
           mkdir -p "$GITHUB_WORKSPACE/preview-backup"
-
           if [ -d publish/previews ]; then
             cp -a publish/previews "$GITHUB_WORKSPACE/preview-backup/"
           fi
 
+      - name: Prepare production root
+        shell: bash
+        run: |
+          set -euo pipefail
           find publish -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
           cp -a "$GITHUB_WORKSPACE/build-production/." publish/
+          mkdir -p publish/previews
+
+      - name: Rebuild every branch preview from main UI
+        if: github.ref_name == 'main'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git -C production-source fetch origin             '+refs/heads/*:refs/remotes/origin/*'
+
+          while IFS= read -r BRANCH; do
+            if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "gh-pages" ]; then
+              continue
+            fi
+
+            BRANCH_SLUG="$(printf '%s' "$BRANCH"               | sed 's#[/ ]#-#g'               | tr -cd 'A-Za-z0-9._-')"
+
+            echo "Rebuilding preview for $BRANCH -> $BRANCH_SLUG"
+
+            rm -rf branch-source preview-source preview-build
+            mkdir -p branch-source
+
+            git -C production-source archive "origin/$BRANCH" | tar -x -C branch-source
+
+            if python production-source/scripts/compose_preview.py                 --main production-source                 --branch branch-source                 --output preview-source               && mkdocs build --strict                 -f preview-source/mkdocs.yml                 -d "$GITHUB_WORKSPACE/preview-build"; then
+              rm -rf "publish/previews/$BRANCH_SLUG"
+              mkdir -p "publish/previews/$BRANCH_SLUG"
+              cp -a "$GITHUB_WORKSPACE/preview-build/." "publish/previews/$BRANCH_SLUG/"
+            else
+              echo "::warning::Could not rebuild $BRANCH. Keeping its previous preview if available."
+              if [ -d "$GITHUB_WORKSPACE/preview-backup/previews/$BRANCH_SLUG" ]; then
+                rm -rf "publish/previews/$BRANCH_SLUG"
+                cp -a "$GITHUB_WORKSPACE/preview-backup/previews/$BRANCH_SLUG" "publish/previews/$BRANCH_SLUG"
+              fi
+            fi
+          done < <(
+            git -C production-source for-each-ref               --format='%(refname:strip=3)'               'refs/remotes/origin/*'               | grep -v '^HEAD$'
+          )
+
+      - name: Build current branch preview from main UI
+        id: branch-preview
+        if: github.ref_name != 'main'
+        shell: bash
+        run: |
+          set -euo pipefail
 
           if [ -d "$GITHUB_WORKSPACE/preview-backup/previews" ]; then
-            cp -a "$GITHUB_WORKSPACE/preview-backup/previews" publish/
+            cp -a "$GITHUB_WORKSPACE/preview-backup/previews/." publish/previews/
           fi
 
-          if [ "$GITHUB_REF_NAME" != "main" ]; then
-            rm -rf "publish/previews/$BRANCH_SLUG"
-            mkdir -p "publish/previews/$BRANCH_SLUG"
-            cp -a "$GITHUB_WORKSPACE/build-current/." "publish/previews/$BRANCH_SLUG/"
-          fi
+          BRANCH_SLUG="$(printf '%s' "$GITHUB_REF_NAME"             | sed 's#[/ ]#-#g'             | tr -cd 'A-Za-z0-9._-')"
+
+          python production-source/scripts/compose_preview.py             --main production-source             --branch source             --output preview-source
+
+          mkdocs build --strict             -f preview-source/mkdocs.yml             -d "$GITHUB_WORKSPACE/preview-build"
+
+          rm -rf "publish/previews/$BRANCH_SLUG"
+          mkdir -p "publish/previews/$BRANCH_SLUG"
+          cp -a "$GITHUB_WORKSPACE/preview-build/." "publish/previews/$BRANCH_SLUG/"
 
           echo "branch_slug=$BRANCH_SLUG" >> "$GITHUB_OUTPUT"
 
@@ -140,21 +192,16 @@ jobs:
             git push origin HEAD:gh-pages
           fi
 
-      - name: Request preview deployment through main
+      - name: Request branch preview deployment through main
         if: github.ref_name != 'main'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          curl --fail-with-body -L -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/docs.yml/dispatches" \
-            -d '{"ref":"main","inputs":{"deploy_only":"true"}}'
+          curl --fail-with-body -L -X POST             -H "Accept: application/vnd.github+json"             -H "Authorization: Bearer $GH_TOKEN"             -H "X-GitHub-Api-Version: 2022-11-28"             "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/docs.yml/dispatches"             -d '{"ref":"main","inputs":{"deploy_only":"true"}}'
 
-      - name: Publish preview URL
+      - name: Publish branch preview URL
         if: github.ref_name != 'main'
         shell: bash
         run: |
@@ -163,7 +210,9 @@ jobs:
           {
             echo "### Branch preview"
             echo ""
-            echo "https://${OWNER}.github.io/${REPO}/previews/${{ steps.paths.outputs.branch_slug }}/"
+            echo "UI source: main"
+            echo ""
+            echo "https://${OWNER}.github.io/${REPO}/previews/${{ steps.branch-preview.outputs.branch_slug }}/"
           } >> "$GITHUB_STEP_SUMMARY"
 
   deploy-production:
@@ -173,6 +222,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Checkout Pages snapshot
         uses: actions/checkout@v4
@@ -207,6 +257,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Checkout Pages snapshot
         uses: actions/checkout@v4
