@@ -47,13 +47,6 @@ jobs:
       - name: Install docs dependencies from main
         run: pip install -r production-source/requirements-docs.txt
 
-      - name: Validate interview question bank
-        shell: bash
-        run: |
-          set -euo pipefail
-          cd source
-          python ../production-source/scripts/validate_questions.py
-
       - name: Compose preview with main UI
         shell: bash
         run: |
@@ -61,6 +54,13 @@ jobs:
           COMPOSER="production-source/scripts/compose_preview.py"
           if [ ! -f "$COMPOSER" ]; then COMPOSER="source/scripts/compose_preview.py"; fi
           python "$COMPOSER" --main production-source --branch source --output composed-preview
+
+      - name: Validate composed question bank
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd composed-preview
+          python ../production-source/scripts/validate_questions.py
 
       - name: Validate composed MkDocs build
         run: mkdocs build --strict -f composed-preview/mkdocs.yml -d "$GITHUB_WORKSPACE/build-validation"
