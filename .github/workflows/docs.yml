@@ -141,8 +141,7 @@ jobs:
               fi
             fi
           done < <(git -C production-source for-each-ref --format='%(refname:strip=3)' 'refs/remotes/origin/*' | grep -v '^HEAD$')
-
-      - name: Build current branch preview from main UI
+       name: Build current branch preview from main UI
         id: branch-preview
         if: github.ref_name != 'main'
         shell: bash
