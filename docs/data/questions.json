@@ -6767,6 +6767,24 @@
           "answer": "Một số khác biệt chỉ xuất hiện với workload, OS/native dependency, production config hoặc performance thực tế, nên vẫn cần staging/canary và telemetry."
         }
       ]
+    },
+    {
+      "id": "JUN-NET-015",
+      "level": "Junior",
+      "topic": ".NET",
+      "question": "Từ source code C# đến lúc chạy trên CPU, .NET đi qua các bước chính nào?",
+      "answer": "C# compiler biên dịch source thành IL cùng metadata trong assembly. Khi ứng dụng chạy, .NET runtime load assembly và JIT compile những method cần thiết thành machine code để CPU thực thi; một số deployment mode có thể precompile một phần hoặc toàn bộ code.",
+      "keyPoints": [
+        "Source -> IL + metadata",
+        "Runtime load assembly",
+        "JIT -> machine code"
+      ],
+      "followUps": [
+        {
+          "question": "IL có phải machine code không?",
+          "answer": "Không. IL là mã trung gian độc lập hơn với CPU; JIT hoặc AOT sẽ chuyển nó thành native machine code phù hợp platform đích."
+        }
+      ]
     }
   ]
 }
