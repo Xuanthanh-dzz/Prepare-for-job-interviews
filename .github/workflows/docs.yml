@@ -140,7 +140,9 @@ jobs:
                 cp -a "$GITHUB_WORKSPACE/preview-backup/previews/$BRANCH_SLUG" "publish/previews/$BRANCH_SLUG"
               fi
             fi
-          done < <(git -C production-source ls-remote --heads origin | awk '{ref=$2; sub("refs/heads/", "", ref); print ref}')
+
+          done < <(git -C production-source for-each-ref --format='%(refname:strip=3)' 'refs/remotes/origin/*' | grep -v '^HEAD$')
+
 
       - name: Build current branch preview from main UI
         id: branch-preview
