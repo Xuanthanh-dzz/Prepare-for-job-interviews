@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 5,
   "questions": [
     {
       "id": "INT-CS-001",
@@ -2026,6 +2026,1303 @@
         {
           "question": "Polymorphic serialization có rủi ro gì?",
           "answer": "Nếu cho phép type discriminator quá rộng hoặc deserialize type tùy ý, có thể tạo security risk và contract khó kiểm soát. Nên whitelist subtype, version discriminator rõ và tránh deserialize arbitrary runtime type."
+        }
+      ]
+    },
+    {
+      "id": "INT-JS-001",
+      "level": "Intern",
+      "topic": "JavaScript",
+      "question": "var, let và const khác nhau thế nào?",
+      "answer": "`let` và `const` có block scope, còn `var` có function scope và hành vi hoisting dễ gây nhầm hơn. `const` không cho gán lại binding, nhưng object bên trong vẫn có thể bị mutate. Code hiện đại thường ưu tiên `const`, chỉ dùng `let` khi cần gán lại.",
+      "keyPoints": [
+        "Block scope vs function scope",
+        "const không đồng nghĩa immutable object",
+        "Ưu tiên const/let trong code hiện đại"
+      ],
+      "followUps": [
+        {
+          "question": "Hoisting là gì?",
+          "answer": "Hoisting là cách declaration được xử lý trước khi code thực thi. `var` được khởi tạo với `undefined`, còn `let`/`const` tồn tại trong temporal dead zone cho tới dòng khai báo."
+        }
+      ]
+    },
+    {
+      "id": "INT-JS-002",
+      "level": "Intern",
+      "topic": "JavaScript",
+      "question": "== và === khác nhau thế nào trong JavaScript?",
+      "answer": "`===` so sánh mà không ép kiểu, còn `==` có type coercion trước khi so sánh. Vì coercion có nhiều rule khó đoán, code production thường ưu tiên `===` và chỉ dùng `==` khi hiểu rất rõ semantics cần thiết.",
+      "keyPoints": [
+        "=== không coercion",
+        "== có type coercion",
+        "Ưu tiên explicit comparison"
+      ],
+      "followUps": [
+        {
+          "question": "`null == undefined` có đúng không?",
+          "answer": "Có, với loose equality thì `null == undefined` là true, nhưng `null === undefined` là false vì chúng là hai type khác nhau."
+        }
+      ]
+    },
+    {
+      "id": "INT-JS-003",
+      "level": "Intern",
+      "topic": "JavaScript",
+      "question": "null và undefined khác nhau thế nào?",
+      "answer": "`undefined` thường biểu diễn giá trị chưa được gán hoặc property không tồn tại; `null` thường là giá trị được gán có chủ đích để biểu diễn không có dữ liệu. API nên thống nhất convention để tránh phải xử lý cả hai tùy tiện.",
+      "keyPoints": [
+        "undefined thường là missing/uninitialized",
+        "null thường là explicit absence",
+        "Cần convention nhất quán"
+      ],
+      "followUps": [
+        {
+          "question": "`typeof null` trả về gì?",
+          "answer": "Nó trả về `\"object\"`, đây là một quirk lịch sử của JavaScript và không có nghĩa null là một object thực sự."
+        }
+      ]
+    },
+    {
+      "id": "INT-JS-004",
+      "level": "Intern",
+      "topic": "JavaScript",
+      "question": "Closure là gì?",
+      "answer": "Closure xảy ra khi function giữ quyền truy cập tới biến trong lexical scope nơi nó được tạo, kể cả sau khi scope ngoài đã kết thúc. Closure hữu ích cho encapsulation và callback nhưng cũng có thể giữ memory lâu hơn dự kiến.",
+      "keyPoints": [
+        "Giữ lexical environment",
+        "Dùng trong callback/encapsulation",
+        "Có thể kéo dài lifetime của dữ liệu"
+      ],
+      "followUps": [
+        {
+          "question": "Closure có thể gây memory leak thế nào?",
+          "answer": "Nếu callback hoặc listener sống lâu và capture object lớn, object đó vẫn reachable qua closure nên GC chưa thể thu hồi."
+        }
+      ]
+    },
+    {
+      "id": "INT-JS-005",
+      "level": "Intern",
+      "topic": "JavaScript",
+      "question": "Promise là gì?",
+      "answer": "Promise đại diện cho kết quả của một operation bất đồng bộ trong tương lai với ba trạng thái chính: pending, fulfilled hoặc rejected. `async/await` là syntax giúp làm việc với Promise dễ đọc hơn chứ không thay đổi bản chất Promise.",
+      "keyPoints": [
+        "Pending/Fulfilled/Rejected",
+        "Dùng cho async result",
+        "async/await xây trên Promise"
+      ],
+      "followUps": [
+        {
+          "question": "`await` có block toàn bộ browser không?",
+          "answer": "Không. `await` chỉ tạm dừng async function hiện tại; main thread vẫn có thể tiếp tục xử lý event khác nếu không có synchronous work nặng đang chạy."
+        }
+      ]
+    },
+    {
+      "id": "INT-JS-006",
+      "level": "Intern",
+      "topic": "JavaScript",
+      "question": "Event loop là gì?",
+      "answer": "Event loop điều phối call stack và các queue để JavaScript có thể xử lý callback bất đồng bộ dù execution model chính là single-threaded. Microtask như Promise callback thường được xử lý trước task tiếp theo như timer.",
+      "keyPoints": [
+        "Call stack + queues",
+        "JS main execution là single-threaded",
+        "Microtask có priority trước task tiếp theo"
+      ],
+      "followUps": [
+        {
+          "question": "setTimeout(fn, 0) có chạy ngay không?",
+          "answer": "Không. Callback chỉ được đưa vào task queue và phải đợi call stack cùng microtask hiện tại xử lý xong."
+        }
+      ]
+    },
+    {
+      "id": "INT-JS-007",
+      "level": "Intern",
+      "topic": "JavaScript",
+      "question": "Arrow function khác function thường ở điểm nào quan trọng?",
+      "answer": "Arrow function không có `this` riêng mà capture `this` theo lexical scope. Nó cũng không có `arguments` riêng và không dùng làm constructor với `new`. Vì vậy arrow phù hợp cho callback nhưng không thay thế mọi function.",
+      "keyPoints": [
+        "Lexical this",
+        "Không có arguments riêng",
+        "Không dùng với new"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào không nên dùng arrow function?",
+          "answer": "Khi method cần `this` động theo object/caller hoặc khi cần constructor, function thường sẽ phù hợp hơn."
+        }
+      ]
+    },
+    {
+      "id": "INT-TS-001",
+      "level": "Intern",
+      "topic": "TypeScript",
+      "question": "TypeScript giúp gì so với JavaScript?",
+      "answer": "TypeScript thêm static type checking và tooling trên JavaScript, giúp phát hiện nhiều lỗi trước runtime và hỗ trợ refactor tốt hơn. Sau build, type information chủ yếu bị xóa và code chạy vẫn là JavaScript.",
+      "keyPoints": [
+        "Static type checking",
+        "Tooling/refactor tốt hơn",
+        "Compile thành JavaScript"
+      ],
+      "followUps": [
+        {
+          "question": "TypeScript có đảm bảo dữ liệu API đúng type ở runtime không?",
+          "answer": "Không. TypeScript chỉ kiểm tra lúc compile; dữ liệu từ API vẫn cần runtime validation nếu không tin cậy."
+        }
+      ]
+    },
+    {
+      "id": "INT-TS-002",
+      "level": "Intern",
+      "topic": "TypeScript",
+      "question": "Type và interface trong TypeScript khác nhau thế nào?",
+      "answer": "Cả hai đều mô tả shape của dữ liệu. `interface` hỗ trợ declaration merging và thường phù hợp cho object contract public; `type` linh hoạt hơn với union, intersection và alias primitive. Không cần cực đoan chọn một cho mọi trường hợp.",
+      "keyPoints": [
+        "Đều mô tả type shape",
+        "interface có declaration merging",
+        "type mạnh với union/intersection"
+      ],
+      "followUps": [
+        {
+          "question": "Interface có thể extend type alias không?",
+          "answer": "Có nếu type alias biểu diễn object type phù hợp; ngược lại type cũng có thể kết hợp interface bằng intersection."
+        }
+      ]
+    },
+    {
+      "id": "INT-TS-003",
+      "level": "Intern",
+      "topic": "TypeScript",
+      "question": "any và unknown khác nhau thế nào?",
+      "answer": "`any` gần như tắt type checking cho giá trị đó. `unknown` vẫn nhận được mọi giá trị nhưng buộc code phải narrow hoặc validate trước khi sử dụng, nên an toàn hơn ở boundary không biết trước type.",
+      "keyPoints": [
+        "any bỏ qua type safety",
+        "unknown cần narrowing",
+        "Ưu tiên unknown ở untrusted boundary"
+      ],
+      "followUps": [
+        {
+          "question": "never dùng để làm gì?",
+          "answer": "`never` biểu diễn trường hợp không thể xảy ra, hữu ích cho exhaustive checking trong union hoặc function luôn throw."
+        }
+      ]
+    },
+    {
+      "id": "INT-TS-004",
+      "level": "Intern",
+      "topic": "TypeScript",
+      "question": "Union type và intersection type khác nhau thế nào?",
+      "answer": "Union `A | B` nghĩa là giá trị có thể thuộc một trong các type; code phải narrow trước khi dùng member riêng. Intersection `A & B` yêu cầu giá trị thỏa cả hai type cùng lúc.",
+      "keyPoints": [
+        "Union = một trong nhiều type",
+        "Intersection = kết hợp nhiều contract",
+        "Union thường cần narrowing"
+      ],
+      "followUps": [
+        {
+          "question": "Discriminated union là gì?",
+          "answer": "Đó là union có một field phân biệt như `kind`, giúp TypeScript narrow chính xác từng case và hỗ trợ exhaustive checking."
+        }
+      ]
+    },
+    {
+      "id": "INT-TS-005",
+      "level": "Intern",
+      "topic": "TypeScript",
+      "question": "Generic trong TypeScript dùng để làm gì?",
+      "answer": "Generic giúp viết function hoặc type tái sử dụng mà vẫn giữ quan hệ type giữa input và output. Ví dụ `identity<T>(value: T): T` giữ chính xác type của giá trị truyền vào thay vì trả `any`.",
+      "keyPoints": [
+        "Reusable nhưng vẫn type-safe",
+        "Giữ quan hệ input/output",
+        "Có generic constraints"
+      ],
+      "followUps": [
+        {
+          "question": "`T extends U` có ý nghĩa gì?",
+          "answer": "Nó giới hạn generic T phải phù hợp với contract U, nhờ đó code bên trong được phép dùng các member mà U đảm bảo."
+        }
+      ]
+    },
+    {
+      "id": "INT-HTML-001",
+      "level": "Intern",
+      "topic": "HTML",
+      "question": "Semantic HTML là gì và vì sao quan trọng?",
+      "answer": "Semantic HTML dùng element theo ý nghĩa nội dung như `header`, `nav`, `main`, `button`, `form` thay vì chỉ dùng `div`. Nó cải thiện accessibility, SEO và khả năng bảo trì vì browser và assistive technology hiểu cấu trúc tốt hơn.",
+      "keyPoints": [
+        "Dùng element theo meaning",
+        "Tốt cho accessibility",
+        "Cải thiện SEO/maintainability"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao không nên dùng div có click thay cho button?",
+          "answer": "`button` có keyboard behavior, focus và semantics accessibility sẵn; dùng div phải tự tái tạo các behavior đó và dễ làm sai."
+        }
+      ]
+    },
+    {
+      "id": "INT-HTML-002",
+      "level": "Intern",
+      "topic": "HTML",
+      "question": "Block element và inline element khác nhau thế nào?",
+      "answer": "Block element thường chiếm chiều ngang khả dụng và bắt đầu dòng mới, còn inline element nằm trong flow của text. CSS `display` có thể thay đổi behavior nên đây là default formatting chứ không phải rule bất biến.",
+      "keyPoints": [
+        "Default layout behavior",
+        "Block thường xuống dòng",
+        "CSS display có thể thay đổi"
+      ],
+      "followUps": [
+        {
+          "question": "`display: inline-block` dùng khi nào?",
+          "answer": "Khi muốn element nằm cùng dòng như inline nhưng vẫn nhận width/height và box model giống block tốt hơn."
+        }
+      ]
+    },
+    {
+      "id": "INT-CSS-001",
+      "level": "Intern",
+      "topic": "CSS",
+      "question": "CSS box model gồm những phần nào?",
+      "answer": "Box model gồm content, padding, border và margin. Với `box-sizing: border-box`, width/height đã bao gồm padding và border, thường giúp layout dễ kiểm soát hơn.",
+      "keyPoints": [
+        "Content/Padding/Border/Margin",
+        "Hiểu box-sizing",
+        "border-box dễ quản lý kích thước"
+      ],
+      "followUps": [
+        {
+          "question": "Margin có nằm trong width của border-box không?",
+          "answer": "Không. `border-box` chỉ tính content, padding và border vào width/height; margin vẫn nằm bên ngoài."
+        }
+      ]
+    },
+    {
+      "id": "INT-CSS-002",
+      "level": "Intern",
+      "topic": "CSS",
+      "question": "Flexbox và Grid nên dùng khi nào?",
+      "answer": "Flexbox phù hợp cho layout một chiều theo row hoặc column; Grid mạnh cho layout hai chiều gồm cả hàng và cột. Nhiều UI thực tế dùng Grid ở layout lớn và Flexbox bên trong component.",
+      "keyPoints": [
+        "Flexbox thiên 1 chiều",
+        "Grid thiên 2 chiều",
+        "Có thể kết hợp"
+      ],
+      "followUps": [
+        {
+          "question": "Flexbox có thay thế hoàn toàn Grid không?",
+          "answer": "Không. Cả hai giải quyết layout khác nhau; chọn theo cấu trúc thay vì cố dùng một công cụ cho mọi trường hợp."
+        }
+      ]
+    },
+    {
+      "id": "INT-WEB-003",
+      "level": "Intern",
+      "topic": "Web Platform",
+      "question": "LocalStorage, SessionStorage và cookie khác nhau thế nào?",
+      "answer": "LocalStorage tồn tại lâu theo origin, SessionStorage gắn với tab/session, còn cookie có thể được browser tự gửi kèm HTTP request theo rule domain/path/SameSite. Dữ liệu auth nhạy cảm cần cân nhắc security chứ không chỉ tiện lưu ở đâu.",
+      "keyPoints": [
+        "Khác lifetime",
+        "Cookie có thể tự gửi với request",
+        "Storage choice liên quan security"
+      ],
+      "followUps": [
+        {
+          "question": "HttpOnly cookie có lợi gì?",
+          "answer": "JavaScript không đọc được HttpOnly cookie, giúp giảm nguy cơ token bị lấy trực tiếp khi có XSS; nó không tự loại bỏ mọi rủi ro XSS/CSRF."
+        }
+      ]
+    },
+    {
+      "id": "INT-WEB-004",
+      "level": "Intern",
+      "topic": "Web Platform",
+      "question": "DOM là gì?",
+      "answer": "DOM là representation dạng cây của document HTML mà JavaScript có thể đọc và thay đổi. Framework như Angular cuối cùng vẫn tạo/cập nhật DOM, nhưng cung cấp abstraction để quản lý state và rendering có cấu trúc hơn.",
+      "keyPoints": [
+        "Tree representation của document",
+        "JS có thể thao tác DOM",
+        "Framework vẫn render ra DOM"
+      ],
+      "followUps": [
+        {
+          "question": "Virtual DOM có phải Angular dùng mặc định không?",
+          "answer": "Không. Angular không dựa trên Virtual DOM theo mô hình React; Angular có cơ chế change detection và rendering riêng."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-001",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Angular component gồm những phần chính nào?",
+      "answer": "Một component gồm TypeScript class, template và metadata qua `@Component`; style là phần thường đi kèm. Component quản lý một phần UI và nên có responsibility tương đối rõ.",
+      "keyPoints": [
+        "Class + template + metadata",
+        "@Component cấu hình component",
+        "Giữ responsibility rõ"
+      ],
+      "followUps": [
+        {
+          "question": "Standalone component là gì?",
+          "answer": "Standalone component tự khai báo dependencies qua `imports` và không cần được declare trong NgModule; đây là hướng mặc định cho Angular mới."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-002",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Data binding trong Angular có những dạng nào?",
+      "answer": "Phổ biến gồm interpolation `{{ }}`, property binding `[value]`, event binding `(click)` và two-way binding `[(...)]`. Nên chọn binding thể hiện đúng luồng dữ liệu thay vì dùng two-way binding ở mọi nơi.",
+      "keyPoints": [
+        "Interpolation",
+        "Property/Event binding",
+        "Two-way binding có chủ đích"
+      ],
+      "followUps": [
+        {
+          "question": "`[(ngModel)]` thực chất kết hợp gì?",
+          "answer": "Nó là cú pháp banana-in-a-box kết hợp property binding và event binding cho value thay đổi hai chiều."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-003",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Directive và component khác nhau thế nào?",
+      "answer": "Component là directive có template riêng; directive thường thay đổi behavior hoặc appearance của element mà không sở hữu view riêng theo cách component làm. Angular có attribute directive và structural/control-flow mechanisms cho các mục đích khác nhau.",
+      "keyPoints": [
+        "Component có template",
+        "Directive bổ sung behavior",
+        "Không dùng component cho mọi behavior nhỏ"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào nên viết custom directive?",
+          "answer": "Khi behavior DOM lặp lại ở nhiều nơi, ví dụ permission, focus, tooltip hoặc interaction, mà chưa đủ lớn để thành component riêng."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-004",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Service trong Angular thường dùng để làm gì?",
+      "answer": "Service chứa logic hoặc state cần chia sẻ và được cung cấp qua Dependency Injection. Nó phù hợp cho API client, domain/application logic hoặc shared state; component nên tập trung vào presentation và interaction.",
+      "keyPoints": [
+        "Shared logic/state",
+        "Dùng DI",
+        "Giảm logic nặng trong component"
+      ],
+      "followUps": [
+        {
+          "question": "`providedIn: 'root'` có ý nghĩa gì?",
+          "answer": "Service được đăng ký ở root injector và thường có một instance dùng toàn app, đồng thời hỗ trợ tree-shaking tốt khi không được dùng."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-005",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Dependency Injection trong Angular hoạt động ở mức khái niệm thế nào?",
+      "answer": "Angular injector resolve dependency dựa trên token và provider. Injector có hierarchy, nên provider ở scope component có thể tạo instance khác với provider ở root. Hiểu scope rất quan trọng khi service giữ state.",
+      "keyPoints": [
+        "Token + provider",
+        "Hierarchical injectors",
+        "Scope ảnh hưởng instance lifetime"
+      ],
+      "followUps": [
+        {
+          "question": "`inject()` khác constructor injection thế nào?",
+          "answer": "Cả hai dùng Angular DI; `inject()` cho phép lấy dependency trong injection context và tiện cho field initializer/function, còn constructor injection làm dependency hiện rõ trong constructor."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-006",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Angular Router dùng để làm gì?",
+      "answer": "Router ánh xạ URL tới component/view, hỗ trợ nested routes, params, guards, resolvers và lazy loading. URL nên phản ánh state điều hướng quan trọng để app có thể bookmark và deep-link.",
+      "keyPoints": [
+        "URL -> view",
+        "Params/guards/lazy loading",
+        "Hỗ trợ deep link"
+      ],
+      "followUps": [
+        {
+          "question": "Route param và query param khác nhau khi dùng?",
+          "answer": "Route param thường xác định resource trong path như `/users/:id`; query param phù hợp filter/sort/page hoặc option không làm thay đổi identity của route."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-007",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Lazy loading có lợi gì?",
+      "answer": "Lazy loading tách một phần code thành chunk chỉ tải khi cần, giúp giảm JavaScript initial load. Không nên chia quá vụn vì tăng request/chunk overhead và complexity.",
+      "keyPoints": [
+        "Giảm initial bundle",
+        "Tải theo nhu cầu",
+        "Có trade-off chunking"
+      ],
+      "followUps": [
+        {
+          "question": "Standalone route lazy load component thế nào?",
+          "answer": "Có thể dùng `loadComponent` với dynamic import để tải standalone component khi route được kích hoạt."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-008",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Reactive Forms và Template-driven Forms khác nhau thế nào?",
+      "answer": "Reactive Forms khai báo form model trong TypeScript, dễ test và phù hợp form phức tạp; Template-driven Forms dựa nhiều vào directive trong template và đơn giản cho form nhỏ. Với enterprise Angular, Reactive Forms thường phổ biến hơn.",
+      "keyPoints": [
+        "Reactive: explicit model",
+        "Template-driven: template-centric",
+        "Reactive tốt cho form phức tạp/test"
+      ],
+      "followUps": [
+        {
+          "question": "FormGroup và FormControl khác nhau thế nào?",
+          "answer": "FormControl đại diện một control/value; FormGroup gom nhiều control thành một object form và aggregate status/validation."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-009",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Observable khác Promise ở điểm nào?",
+      "answer": "Promise biểu diễn một kết quả tương lai, còn Observable có thể phát nhiều value theo thời gian và hỗ trợ operator/cancellation qua unsubscribe. Angular/RxJS dùng Observable nhiều cho event stream và HttpClient.",
+      "keyPoints": [
+        "Promise thường một result",
+        "Observable nhiều emissions",
+        "Observable có operators/unsubscribe"
+      ],
+      "followUps": [
+        {
+          "question": "HttpClient Observable có chạy request ngay khi tạo không?",
+          "answer": "Không; HttpClient Observable là cold và request thường bắt đầu khi có subscription."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-010",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "subscribe và async pipe khác nhau thế nào?",
+      "answer": "`subscribe` cho code imperative nhận emissions và cần quản lý lifecycle; `async` pipe subscribe/unsubscribe tự động trong template. Nếu chỉ hiển thị Observable, async pipe thường giảm boilerplate và leak risk.",
+      "keyPoints": [
+        "subscribe = imperative",
+        "async pipe quản lifecycle",
+        "Ưu tiên template subscription khi phù hợp"
+      ],
+      "followUps": [
+        {
+          "question": "Subscribe thủ công có thể gây memory leak khi nào?",
+          "answer": "Khi subscription sống lâu hơn component và không complete/unsubscribe, nó có thể giữ component hoặc tiếp tục side effect sau khi view đã destroy."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-011",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Signal trong Angular là gì?",
+      "answer": "Signal là reactive value mà Angular theo dõi khi được đọc. Writable signal cập nhật bằng `set`/`update`; `computed` tạo derived state. Signal phù hợp cho local/reactive state và tích hợp trực tiếp với change detection.",
+      "keyPoints": [
+        "Reactive primitive",
+        "set/update",
+        "computed cho derived state"
+      ],
+      "followUps": [
+        {
+          "question": "computed khác effect thế nào?",
+          "answer": "`computed` tạo giá trị dẫn xuất và nên pure; `effect` chạy side effect khi dependency signal đổi và không nên dùng để thay cho derived state."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-012",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Lifecycle hook như ngOnInit và ngOnDestroy dùng khi nào?",
+      "answer": "`ngOnInit` dùng cho initialization cần chạy sau khi Angular thiết lập input cơ bản; `ngOnDestroy` dùng cleanup resource/subscription thủ công. Không nên nhồi mọi logic vào lifecycle hook nếu có thể tách service hoặc reactive flow rõ hơn.",
+      "keyPoints": [
+        "Init và cleanup",
+        "Cleanup subscription/resource",
+        "Giữ lifecycle logic gọn"
+      ],
+      "followUps": [
+        {
+          "question": "Constructor có thay ngOnInit được không?",
+          "answer": "Không hoàn toàn. Constructor chủ yếu cho DI/khởi tạo object; logic phụ thuộc Angular bindings/input thường phù hợp hơn ở lifecycle tương ứng."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TS-001",
+      "level": "Junior",
+      "topic": "TypeScript",
+      "question": "Optional property và optional chaining khác nhau thế nào?",
+      "answer": "`prop?: T` mô tả property có thể không tồn tại; `obj?.prop` là runtime syntax để truy cập an toàn khi receiver null/undefined. Một cái thuộc type contract, một cái thuộc expression execution.",
+      "keyPoints": [
+        "Optional property = type contract",
+        "Optional chaining = runtime access",
+        "Không nhầm hai khái niệm"
+      ],
+      "followUps": [
+        {
+          "question": "`??` khác `||` thế nào?",
+          "answer": "`??` chỉ fallback khi null hoặc undefined; `||` fallback với mọi falsy value như 0, false và chuỗi rỗng."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TS-002",
+      "level": "Junior",
+      "topic": "TypeScript",
+      "question": "Readonly trong TypeScript bảo vệ đến mức nào?",
+      "answer": "`readonly` ngăn assignment qua type checker ở property đó nhưng không tự làm object graph immutable sâu. Nó cũng không phải security/runtime enforcement vì type bị erase sau compile.",
+      "keyPoints": [
+        "Compile-time protection",
+        "Không deep immutable mặc định",
+        "Không runtime enforcement"
+      ],
+      "followUps": [
+        {
+          "question": "Làm sao tạo readonly sâu?",
+          "answer": "Có thể dùng recursive utility type hoặc immutable data pattern, nhưng cần cân nhắc library/API vì deep readonly phức tạp hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-JS-001",
+      "level": "Junior",
+      "topic": "JavaScript",
+      "question": "Map và Object khác nhau khi dùng làm dictionary thế nào?",
+      "answer": "`Map` hỗ trợ key ở mọi type, có API size/iteration rõ và không dính prototype key theo cách object thường. Object vẫn phù hợp cho record JSON-like với key string/symbol.",
+      "keyPoints": [
+        "Map hỗ trợ arbitrary keys",
+        "API iteration/size rõ",
+        "Object tốt cho data shape"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào WeakMap hữu ích?",
+          "answer": "Khi muốn metadata gắn với object key mà không giữ key sống chỉ vì nằm trong map; key không còn reference khác thì có thể được GC."
+        }
+      ]
+    },
+    {
+      "id": "JUN-WEB-003",
+      "level": "Junior",
+      "topic": "Web Platform",
+      "question": "CORS và SOP liên quan nhau thế nào?",
+      "answer": "Same-Origin Policy hạn chế script truy cập resource cross-origin; CORS là cơ chế server dùng response header để nới lỏng một phần giới hạn đó cho origin được phép. CORS là browser policy, không phải authentication.",
+      "keyPoints": [
+        "SOP là default restriction",
+        "CORS cho phép có kiểm soát",
+        "Không thay authentication"
+      ],
+      "followUps": [
+        {
+          "question": "Preflight xảy ra khi nào?",
+          "answer": "Browser gửi OPTIONS trước các request cross-origin không thuộc nhóm simple request, ví dụ method/header/content-type nhất định."
+        }
+      ]
+    },
+    {
+      "id": "JUN-WEB-004",
+      "level": "Junior",
+      "topic": "Web Platform",
+      "question": "Reflow và repaint là gì?",
+      "answer": "Reflow/layout xảy ra khi browser phải tính lại geometry; repaint vẽ lại pixel mà có thể không cần tính layout. Thao tác DOM/style lặp lại thiếu kiểm soát có thể làm UI chậm.",
+      "keyPoints": [
+        "Layout tính geometry",
+        "Paint vẽ pixels",
+        "Batch DOM work khi có thể"
+      ],
+      "followUps": [
+        {
+          "question": "Đọc rồi ghi layout liên tục có vấn đề gì?",
+          "answer": "Có thể tạo layout thrashing vì browser phải flush layout nhiều lần trong cùng frame."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-001",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "OnPush change detection giúp gì?",
+      "answer": "OnPush giảm số subtree phải kiểm tra bằng cách chỉ đánh dấu component khi có trigger phù hợp như input reference đổi, event, signal update hoặc explicit mark. Nó khuyến khích immutable/reactive data flow nhưng không tự sửa code mutate state sai.",
+      "keyPoints": [
+        "Giảm unnecessary checks",
+        "Khuyến khích immutable flow",
+        "Vẫn cần hiểu trigger"
+      ],
+      "followUps": [
+        {
+          "question": "Mutate object input với OnPush có thể gây gì?",
+          "answer": "Nếu reference không đổi và không có trigger khác, child có thể không được check như kỳ vọng; thay object bằng reference mới thường rõ hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-002",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Signals và RxJS nên phối hợp thế nào?",
+      "answer": "Signals phù hợp state đồng bộ mà UI đọc trực tiếp; RxJS mạnh cho async stream, cancellation và composition theo thời gian. Không cần thay toàn bộ RxJS bằng signals; có thể chuyển ở boundary với `toSignal`/`toObservable` khi hợp lý.",
+      "keyPoints": [
+        "Signals cho sync reactive state",
+        "RxJS mạnh cho async streams",
+        "Interop thay vì loại trừ"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào Observable tốt hơn Signal?",
+          "answer": "Khi cần sequence theo thời gian, cancellation, backpressure-like composition, retry/debounce hoặc event stream nhiều nguồn."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-003",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "switchMap, mergeMap, concatMap và exhaustMap khác nhau thế nào?",
+      "answer": "`switchMap` hủy inner cũ khi có value mới; `mergeMap` chạy song song; `concatMap` xếp hàng tuần tự; `exhaustMap` bỏ input mới khi inner hiện tại chưa xong. Chọn operator theo concurrency semantics của nghiệp vụ.",
+      "keyPoints": [
+        "switchMap = latest",
+        "mergeMap = concurrent",
+        "concatMap = ordered",
+        "exhaustMap = ignore while busy"
+      ],
+      "followUps": [
+        {
+          "question": "Search-as-you-type thường dùng operator nào?",
+          "answer": "Thường dùng debounce + distinctUntilChanged + switchMap để bỏ request cũ khi query mới xuất hiện."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-004",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "shareReplay có thể gây vấn đề gì?",
+      "answer": "`shareReplay` cache emissions để nhiều subscriber chia sẻ source, nhưng cấu hình/lifecycle không đúng có thể giữ subscription hoặc dữ liệu lâu hơn cần thiết. Phải hiểu `refCount`, buffer size và lifetime của source.",
+      "keyPoints": [
+        "Share source",
+        "Replay cached values",
+        "Có retention/lifecycle risk"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào nên cache HTTP bằng shareReplay?",
+          "answer": "Khi request/result được nhiều consumer dùng và cache lifetime rõ; nếu data cần invalidation phức tạp thì nên có cache strategy rõ thay vì shareReplay tùy tiện."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-005",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "takeUntilDestroyed giải quyết vấn đề gì?",
+      "answer": "Nó giúp Observable subscription tự kết thúc khi Angular destroy context tương ứng, giảm boilerplate subject/unsubscribe thủ công. Đây là lựa chọn tốt cho subscription gắn với lifecycle component/directive.",
+      "keyPoints": [
+        "Auto cleanup theo lifecycle",
+        "Giảm unsubscribe boilerplate",
+        "Dùng với DestroyRef/injection context"
+      ],
+      "followUps": [
+        {
+          "question": "Có phải mọi Observable đều cần takeUntilDestroyed không?",
+          "answer": "Không. Observable tự complete như nhiều HttpClient call không nhất thiết cần; cần tập trung vào stream sống dài."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-006",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Resolver và Guard nên dùng cho mục đích gì?",
+      "answer": "Guard quyết định hoặc redirect navigation theo rule truy cập; Resolver tải dữ liệu trước khi route activate. Không nên biến guard thành security boundary duy nhất vì authorization thật vẫn phải enforce ở backend.",
+      "keyPoints": [
+        "Guard điều khiển navigation",
+        "Resolver preload route data",
+        "Backend vẫn enforce auth"
+      ],
+      "followUps": [
+        {
+          "question": "Resolver có thể làm navigation chậm thế nào?",
+          "answer": "Router chờ resolver hoàn thành trước activate, nên request chậm trực tiếp tăng time-to-view; skeleton/loading sau navigation đôi khi UX tốt hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-007",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "HTTP interceptor dùng khi nào?",
+      "answer": "Interceptor phù hợp cho cross-cutting concern của HTTP client như auth header, correlation ID, logging hoặc xử lý error thống nhất. Không nên nhét business-specific branching phức tạp vào interceptor.",
+      "keyPoints": [
+        "Cross-cutting HTTP concerns",
+        "Auth/logging/correlation",
+        "Tránh business logic nặng"
+      ],
+      "followUps": [
+        {
+          "question": "Refresh token trong interceptor dễ gặp race nào?",
+          "answer": "Nhiều request cùng nhận 401 có thể đồng thời refresh token; cần single-flight/queue để chỉ một refresh chạy và các request khác chờ kết quả."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-008",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "ControlValueAccessor dùng để làm gì?",
+      "answer": "CVA cho custom component giao tiếp như một Angular form control bằng contract writeValue/registerOnChange/registerOnTouched. Nó hữu ích cho reusable input như date picker hoặc rich select.",
+      "keyPoints": [
+        "Bridge custom control với forms",
+        "Implement form control contract",
+        "Reusable custom input"
+      ],
+      "followUps": [
+        {
+          "question": "Lỗi CVA phổ biến là gì?",
+          "answer": "Gọi onChange trong writeValue gây loop, không propagate touched/disabled state hoặc trộn internal state với external form state."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-009",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "TrackBy hoặc track expression giúp gì cho list rendering?",
+      "answer": "Nó giúp Angular nhận diện item ổn định giữa các lần render để tái sử dụng DOM thay vì recreate không cần thiết. Key nên ổn định và unique theo item identity.",
+      "keyPoints": [
+        "Stable identity",
+        "Giảm DOM recreate",
+        "Key phải unique/stable"
+      ],
+      "followUps": [
+        {
+          "question": "Dùng index làm key có rủi ro gì?",
+          "answer": "Khi insert/reorder, index thay đổi nên Angular có thể reuse DOM cho item sai identity hoặc recreate nhiều hơn cần thiết."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-010",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Standalone architecture thay đổi cách tổ chức app thế nào?",
+      "answer": "Standalone giảm vai trò NgModule và cho component/route import dependency trực tiếp. App vẫn cần boundary theo feature/domain; standalone không có nghĩa gom mọi thứ vào một folder phẳng.",
+      "keyPoints": [
+        "Giảm NgModule ceremony",
+        "Import dependency trực tiếp",
+        "Vẫn cần feature boundaries"
+      ],
+      "followUps": [
+        {
+          "question": "NgModule còn cần biết không?",
+          "answer": "Có, vì nhiều enterprise codebase cũ và library vẫn dùng NgModule; ứng viên cần đọc, maintain và migrate dần."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-011",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Angular Signals computed nên giữ tính chất gì?",
+      "answer": "`computed` nên là pure derivation từ signal khác, không thực hiện side effect. Nó lazy và memoized, nên thích hợp cho derived state thay vì lưu hai nguồn state có thể lệch nhau.",
+      "keyPoints": [
+        "Pure derived state",
+        "Lazy/memoized",
+        "Tránh duplicate state"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao không set signal bên trong computed?",
+          "answer": "Nó trộn derivation với side effect, dễ tạo cycle và flow khó đoán; side effect nên tách sang effect hoặc action rõ ràng."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-012",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Deferrable views dùng để làm gì?",
+      "answer": "`@defer` cho phép trì hoãn tải/render phần UI không cần ngay, giúp giảm initial bundle/work. Cần chọn trigger và placeholder/loading state phù hợp để không làm UX nhấp nháy hoặc chậm tương tác.",
+      "keyPoints": [
+        "Defer non-critical UI",
+        "Giảm initial work",
+        "Cần loading/trigger strategy"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào không nên defer?",
+          "answer": "Không nên defer content quan trọng cho first interaction/LCP hoặc phần người dùng gần như luôn cần ngay."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-013",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Reactive form lớn nên tổ chức validation thế nào?",
+      "answer": "Tách validator sync/async theo domain rule, tránh đặt logic business phức tạp trực tiếp trong template. Form model nên có typed controls, error mapping nhất quán và cross-field validator ở group phù hợp.",
+      "keyPoints": [
+        "Typed forms",
+        "Validator tách rõ",
+        "Cross-field ở group"
+      ],
+      "followUps": [
+        {
+          "question": "Async validator cần chú ý gì?",
+          "answer": "Debounce/cancellation và race request; validator nên tránh gọi backend trên mỗi keystroke không kiểm soát."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-014",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "State management toàn app khi nào cần store library?",
+      "answer": "Khi state được chia sẻ rộng, có nhiều event/update flow, cần devtools/time-travel hoặc quy ước team rõ, store library có thể đáng giá. Với state local/feature đơn giản, service + signals/RxJS thường đủ và ít ceremony hơn.",
+      "keyPoints": [
+        "Chọn theo complexity",
+        "Không dùng store vì trend",
+        "Local state giữ local khi có thể"
+      ],
+      "followUps": [
+        {
+          "question": "Server state có nên copy hết vào global store không?",
+          "answer": "Không nhất thiết. Server state có lifecycle/cache/invalidation riêng; copy tất cả vào store dễ tạo duplicate source of truth."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-015",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Angular component test nên test gì?",
+      "answer": "Nên test behavior người dùng nhìn thấy: input, output, DOM state, interaction và integration với dependency quan trọng. Tránh test private method hoặc internal implementation quá chi tiết vì refactor sẽ làm test brittle.",
+      "keyPoints": [
+        "Test observable behavior",
+        "Không bám private implementation",
+        "Mock boundary có chủ đích"
+      ],
+      "followUps": [
+        {
+          "question": "Unit test và integration component test khác nhau thế nào?",
+          "answer": "Unit cô lập component/service nhỏ; integration render cùng template/dependency thật hơn để bắt lỗi binding, DI và interaction giữa nhiều phần."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-016",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "SSR và hydration giải quyết vấn đề gì?",
+      "answer": "SSR tạo HTML trên server giúp first render/SEO tốt hơn; hydration gắn Angular behavior vào HTML đã render thay vì dựng lại toàn bộ. Phải tránh code giả định `window`/DOM luôn tồn tại trên server.",
+      "keyPoints": [
+        "SSR cho initial HTML/SEO",
+        "Hydration reuse server DOM",
+        "Code phải platform-aware"
+      ],
+      "followUps": [
+        {
+          "question": "SSR có luôn làm app nhanh hơn không?",
+          "answer": "Không. Nó chuyển thêm work sang server và tăng complexity/cache; lợi ích phụ thuộc content, network, SEO và latency server."
+        }
+      ]
+    },
+    {
+      "id": "MID-TS-001",
+      "level": "Middle",
+      "topic": "TypeScript",
+      "question": "Utility types như Partial, Pick, Omit nên dùng thế nào?",
+      "answer": "Chúng giúp dẫn xuất type mới từ source contract, giảm duplicate declaration. Tuy nhiên lạm dụng có thể tạo API khó đọc; domain model và DTO quan trọng đôi khi nên có type tên riêng rõ semantics.",
+      "keyPoints": [
+        "Derive types",
+        "Giảm duplication",
+        "Không hy sinh readability"
+      ],
+      "followUps": [
+        {
+          "question": "Partial có phù hợp cho update DTO mọi lúc không?",
+          "answer": "Không luôn. Update API thường có rule field nào được phép/không được phép sửa; explicit DTO có thể an toàn hơn `Partial<Entity>`."
+        }
+      ]
+    },
+    {
+      "id": "MID-JS-001",
+      "level": "Middle",
+      "topic": "JavaScript",
+      "question": "Debounce và throttle khác nhau thế nào?",
+      "answer": "Debounce chờ một khoảng yên lặng rồi mới chạy, phù hợp search input; throttle giới hạn số lần chạy trong một khoảng thời gian, phù hợp scroll/resize tracking. Chọn theo semantics UX.",
+      "keyPoints": [
+        "Debounce = after quiet period",
+        "Throttle = rate limit",
+        "Chọn theo event semantics"
+      ],
+      "followUps": [
+        {
+          "question": "Debounce search request cần thêm gì ngoài timer?",
+          "answer": "Nên hủy/ignore request cũ và chống response race, ví dụ switchMap trong RxJS."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-001",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn thiết kế boundary cho một Angular enterprise app như thế nào?",
+      "answer": "Tôi chia theo business capability/feature thay vì chỉ theo technical type. Shared layer giữ component/util thật sự generic; data-access và domain logic có dependency direction rõ để tránh mọi feature import lẫn nhau.",
+      "keyPoints": [
+        "Feature/business boundaries",
+        "Shared chỉ chứa generic thật",
+        "Dependency direction rõ"
+      ],
+      "followUps": [
+        {
+          "question": "Dấu hiệu shared module/library đang thành dumping ground?",
+          "answer": "Nó chứa code chỉ một feature dùng, phụ thuộc domain cụ thể hoặc thay đổi kéo theo nhiều feature không liên quan."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-002",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn tiếp cận tối ưu performance Angular production thế nào?",
+      "answer": "Đo trước bằng browser profiler, Angular DevTools và Web Vitals; xác định CPU, network, bundle hay DOM là bottleneck. Sau đó mới áp dụng OnPush/signals, lazy/defer, track identity, giảm bundle hoặc tối ưu API.",
+      "keyPoints": [
+        "Measure first",
+        "Phân loại bottleneck",
+        "Tối ưu theo dữ liệu"
+      ],
+      "followUps": [
+        {
+          "question": "Bundle lớn thì bạn kiểm tra gì đầu tiên?",
+          "answer": "Bundle analyzer, dependency nặng/duplicate, route lazy loading, locale/polyfill và import pattern có phá tree-shaking hay không."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-003",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Zoneless Angular thay đổi điều gì về change detection?",
+      "answer": "Zoneless bỏ phụ thuộc vào Zone.js để đoán async activity và dựa nhiều hơn vào explicit reactive notifications như signals, input/event và framework APIs. Nó giúp model cập nhật rõ hơn nhưng code legacy dựa vào side effect ngoài Angular có thể cần chỉnh.",
+      "keyPoints": [
+        "Không dựa Zone.js",
+        "Explicit reactive notifications",
+        "Legacy integration cần rà"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao zoneless có thể cải thiện maintainability?",
+          "answer": "Update trigger trở nên rõ và ít global monkey-patching hơn, nên debug change detection và third-party integration dễ dự đoán hơn."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-004",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn chọn Signals, RxJS hay store library cho state dựa trên gì?",
+      "answer": "Tôi phân loại state: local synchronous state dùng signals; event/async stream phức tạp dùng RxJS; cross-feature state có nhiều transition/diagnostics mới cân nhắc store. Mục tiêu là ít abstraction nhất nhưng vẫn rõ ownership và flow.",
+      "keyPoints": [
+        "Phân loại state",
+        "Không one-size-fits-all",
+        "Ownership/source of truth rõ"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào combineLatest bị lạm dụng?",
+          "answer": "Khi nó ghép quá nhiều source chỉ vì state bị phân mảnh không cần thiết, tạo emission khó kiểm soát và dependency graph khó hiểu."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-005",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn thiết kế error handling cho Angular app thế nào?",
+      "answer": "Tôi phân tách validation error, expected business error, auth/session error và unexpected technical error. HTTP layer normalize contract; UI feature quyết định message/retry; global handler chủ yếu bắt unexpected error và telemetry.",
+      "keyPoints": [
+        "Phân loại error",
+        "Normalize ở boundary",
+        "UI quyết định UX phù hợp"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao interceptor không nên hiện toast cho mọi lỗi?",
+          "answer": "Vì interceptor không biết context UX; cùng HTTP error có thể cần inline message, silent retry hoặc redirect khác nhau tùy feature."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-006",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn xử lý authentication token trong SPA thế nào?",
+      "answer": "Tôi ưu tiên threat model trước. Nếu backend hỗ trợ, HttpOnly Secure SameSite cookie giảm khả năng JS đọc token; nếu dùng bearer token trong JS thì phải giảm XSS surface, lifetime ngắn và refresh/revocation rõ.",
+      "keyPoints": [
+        "Threat model",
+        "HttpOnly cookie giảm token exposure cho JS",
+        "XSS/CSRF trade-off rõ"
+      ],
+      "followUps": [
+        {
+          "question": "Frontend có thể bảo vệ authorization bằng route guard đủ không?",
+          "answer": "Không. Guard chỉ là UX/navigation control; backend phải kiểm tra authorization cho mọi protected operation."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-007",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn thiết kế refresh token flow tránh race condition thế nào?",
+      "answer": "Chỉ cho một refresh request chạy tại một thời điểm; request gặp 401 khác chờ cùng kết quả rồi retry với token mới. Nếu refresh thất bại, clear session và fail/redirect nhất quán để tránh retry loop.",
+      "keyPoints": [
+        "Single-flight refresh",
+        "Queue waiting requests",
+        "Tránh infinite retry"
+      ],
+      "followUps": [
+        {
+          "question": "Request refresh có nên đi qua cùng auth interceptor không?",
+          "answer": "Thường cần bypass hoặc có marker để tránh interceptor tự bắt chính refresh request và tạo recursion."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-008",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Microfrontend có đáng dùng cho Angular app không?",
+      "answer": "Chỉ khi organizational boundary cần deploy/ownership độc lập đủ lớn để bù chi phí runtime integration, duplicated dependencies, routing, design system và observability. Một monorepo/modular frontend thường đơn giản hơn nếu chỉ có một team.",
+      "keyPoints": [
+        "Organization-driven architecture",
+        "Có runtime/ops cost",
+        "Không dùng vì app lớn đơn thuần"
+      ],
+      "followUps": [
+        {
+          "question": "Module Federation giải quyết gì?",
+          "answer": "Nó cho phép load module/build artifact từ app khác ở runtime, nhưng không tự giải quyết ownership, UX consistency hay dependency governance."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-009",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Monorepo mang lại lợi ích và rủi ro gì?",
+      "answer": "Monorepo giúp chia sẻ tooling, atomic changes và dependency graph thống nhất; đổi lại CI, permission và coupling có thể tăng nếu boundary kém. Cần affected build/test và rule import để scale.",
+      "keyPoints": [
+        "Shared tooling",
+        "Atomic cross-project change",
+        "Cần dependency governance"
+      ],
+      "followUps": [
+        {
+          "question": "Library boundary trong monorepo nên dựa trên gì?",
+          "answer": "Dựa trên business capability, platform/shared concern và dependency direction, không chỉ tách mỗi folder thành một library."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-010",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn lập kế hoạch nâng Angular major version cho app lớn thế nào?",
+      "answer": "Đọc migration guide, inventory dependency, nâng từng bước được hỗ trợ, chạy automated migration rồi test build/unit/e2e. Với codebase cũ, tách migration framework khỏi refactor business để giảm blast radius.",
+      "keyPoints": [
+        "Dependency inventory",
+        "Incremental supported upgrade",
+        "Migration và business refactor tách nhau"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào cần giữ app ở LTS thay vì latest active?",
+          "answer": "Khi stability/dependency compatibility quan trọng hơn feature mới và version đó vẫn còn support/security fix; vẫn cần kế hoạch nâng trước khi hết support."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-011",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn migration NgModule app sang standalone thế nào?",
+      "answer": "Tôi migrate incrementally theo feature: chuyển leaf component trước, route lazy boundary sau, rồi giảm NgModule dần. Giữ build xanh và tránh big-bang rewrite vì standalone có thể coexist với NgModule.",
+      "keyPoints": [
+        "Incremental migration",
+        "Coexist được",
+        "Giữ deployability"
+      ],
+      "followUps": [
+        {
+          "question": "Lợi ích chính của standalone là gì?",
+          "answer": "Dependency của component/route rõ hơn và giảm module ceremony, đặc biệt hỗ trợ lazy loading granular hơn."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-012",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn thiết kế frontend observability thế nào?",
+      "answer": "Thu thập error, Web Vitals, route/API latency và correlation ID nối với backend trace khi có thể. Telemetry phải sampling/redact dữ liệu nhạy cảm và gắn release/version để biết regression bắt đầu từ đâu.",
+      "keyPoints": [
+        "Errors + performance metrics",
+        "Correlate với backend",
+        "Redact PII"
+      ],
+      "followUps": [
+        {
+          "question": "Console.log production có đủ không?",
+          "answer": "Không. Nó không aggregate, query, correlate hay cảnh báo; còn có nguy cơ log dữ liệu nhạy cảm."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-013",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn đảm bảo accessibility cho component library thế nào?",
+      "answer": "Bắt đầu bằng semantic HTML, keyboard interaction, focus management và ARIA chỉ khi native semantics chưa đủ. Dùng automated checks nhưng vẫn cần test keyboard/screen reader cho component phức tạp.",
+      "keyPoints": [
+        "Semantic first",
+        "Keyboard/focus",
+        "Automated + manual testing"
+      ],
+      "followUps": [
+        {
+          "question": "ARIA có thể sửa mọi HTML không semantic không?",
+          "answer": "Không. Native element thường có behavior/accessibility tốt hơn; ARIA sai còn có thể làm trải nghiệm tệ hơn."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-014",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn thiết kế caching phía frontend và HTTP thế nào?",
+      "answer": "Tôi tận dụng HTTP cache header/CDN cho resource phù hợp trước, sau đó mới thêm memory cache/query cache ở app với TTL/invalidation rõ. Tránh cache cùng dữ liệu ở nhiều layer mà không biết source of truth.",
+      "keyPoints": [
+        "HTTP cache trước",
+        "App cache có TTL/invalidation",
+        "Tránh duplicate source of truth"
+      ],
+      "followUps": [
+        {
+          "question": "Cache GET API có rủi ro gì?",
+          "answer": "Stale data, leak dữ liệu giữa user nếu key sai và invalidation khó; auth-dependent response phải có cache policy đúng."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-015",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn đánh giá SSR, SSG và CSR cho một sản phẩm thế nào?",
+      "answer": "CSR phù hợp app nội bộ giàu interaction; SSR hữu ích khi first response/SEO quan trọng và dữ liệu động; SSG tốt cho content ít đổi. Có thể hybrid theo route thay vì chọn một mode cho toàn app.",
+      "keyPoints": [
+        "Chọn theo route/use case",
+        "SEO/TTFB/content freshness",
+        "Hybrid được"
+      ],
+      "followUps": [
+        {
+          "question": "SSR có ảnh hưởng backend capacity không?",
+          "answer": "Có. Render server tiêu CPU/memory và có thể tăng downstream request; cần cache, timeout và capacity planning."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-016",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn ngăn frontend architecture bị coupling với backend DTO thế nào?",
+      "answer": "Tôi tạo boundary mapping giữa transport DTO và model/view model của frontend khi domain đủ phức tạp. Điều này tránh UI phụ thuộc trực tiếp mọi field/naming/version của backend nhưng không cần mapping layer cho CRUD rất đơn giản.",
+      "keyPoints": [
+        "Boundary mapping có chủ đích",
+        "Giảm contract coupling",
+        "Không over-engineer CRUD nhỏ"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào generated API client đáng dùng?",
+          "answer": "Khi backend có OpenAPI contract ổn định và nhiều endpoint; generated client giảm typo/duplication nhưng vẫn cần wrapper cho error/auth/domain semantics nếu cần."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-017",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn chọn test strategy cho Angular enterprise app thế nào?",
+      "answer": "Nhiều unit/component test nhanh cho logic và UI behavior, integration test cho routing/forms/DI quan trọng, và ít E2E cho critical user journeys. Không cố E2E mọi case vì chậm và brittle.",
+      "keyPoints": [
+        "Test pyramid hợp lý",
+        "Critical flows có E2E",
+        "Component/integration bắt nhiều lỗi UI"
+      ],
+      "followUps": [
+        {
+          "question": "Contract test frontend-backend có lợi gì?",
+          "answer": "Nó phát hiện breaking API contract sớm hơn E2E đầy đủ và giảm phụ thuộc môi trường end-to-end."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-018",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn review một Angular PR ở level Senior sẽ nhìn gì ngoài code chạy đúng?",
+      "answer": "Tôi xem boundary, state ownership, subscription lifecycle, accessibility, error/loading state, performance impact, security, testability và mức phù hợp với conventions. Code đúng happy path nhưng tăng coupling hoặc thiếu failure handling vẫn cần chỉnh.",
+      "keyPoints": [
+        "Architecture + lifecycle",
+        "UX failure/loading",
+        "Security/performance/testability"
+      ],
+      "followUps": [
+        {
+          "question": "Dấu hiệu component quá nhiều responsibility là gì?",
+          "answer": "Nó vừa fetch/mutate data, chứa nhiều business rule, quản lý form lớn, navigation và UI detail; thay đổi một concern thường kéo theo sửa nhiều phần không liên quan."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-013",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Input và Output dùng để giao tiếp giữa component như thế nào?",
+      "answer": "Input truyền dữ liệu từ parent xuống child; Output phát event từ child lên parent. Với Angular hiện đại có thể dùng các API signal-based tương ứng, nhưng nguyên tắc vẫn là giữ data flow rõ và tránh child tự sửa state của parent.",
+      "keyPoints": [
+        "Input: parent -> child",
+        "Output: child -> parent event",
+        "Giữ data flow rõ ràng"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào nên dùng shared service thay vì Input/Output?",
+          "answer": "Khi các component không có quan hệ parent-child thuận tiện hoặc cùng cần một state/service theo feature. Tuy nhiên không nên dùng shared service để né thiết kế component tree một cách tùy tiện."
         }
       ]
     }
