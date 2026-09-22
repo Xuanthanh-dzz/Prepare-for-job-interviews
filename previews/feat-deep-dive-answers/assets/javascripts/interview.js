@@ -93,58 +93,216 @@
     select.value = topics.includes(current) ? current : '';
   }
 
-  /* --- Question Bank Controller --- */
+  /* --- Question Bank Controller (Enhanced with Topic Pills & Bookmarks) --- */
+  const BOOKMARK_STORAGE_KEY = 'interview-bookmarked-questions';
+  let onlyBookmarkedFilter = false;
+
+  function getBookmarkedSet() {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(BOOKMARK_STORAGE_KEY) || '[]'));
+    } catch {
+      return new Set();
+    }
+  }
+
+  function setBookmarkedSet(set) {
+    localStorage.setItem(BOOKMARK_STORAGE_KEY, JSON.stringify([...set]));
+  }
+
+  function renderTopicPills() {
+    const container = byId('qb-topic-pills');
+    if (!container) return;
+
+    const currentTopic = byId('qb-topic')?.value || '';
+    const level = byId('qb-level')?.value || '';
+    const bookmarks = getBookmarkedSet();
+
+    const pool = questions.filter(q => {
+      if (onlyBookmarkedFilter && !bookmarks.has(q.id)) return false;
+      if (level && q.level !== level) return false;
+      return true;
+    });
+
+    const topicCounts = {};
+    pool.forEach(q => {
+      topicCounts[q.topic] = (topicCounts[q.topic] || 0) + 1;
+    });
+
+    const sortedTopics = Object.keys(topicCounts).sort();
+
+    let html = `
+      <button type="button" class="topic-pill ${currentTopic === '' ? 'active' : ''}" data-topic="">
+        <span>Tất cả</span>
+        <span class="pill-count">${pool.length}</span>
+      </button>
+    `;
+
+    sortedTopics.forEach(topic => {
+      const activeClass = currentTopic === topic ? 'active' : '';
+      html += `
+        <button type="button" class="topic-pill ${activeClass}" data-topic="${esc(topic)}">
+          <span>${esc(topic)}</span>
+          <span class="pill-count">${topicCounts[topic]}</span>
+        </button>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
   function renderQuestionBank() {
     const root = byId('question-bank');
     if (!root) return;
     const level = byId('qb-level')?.value || '';
     const topic = byId('qb-topic')?.value || '';
     const text = (byId('qb-search')?.value || '').trim().toLowerCase();
+    const bookmarks = getBookmarkedSet();
 
-    const filtered = questions.filter(q =>
-      (!level || q.level === level) &&
-      (!topic || q.topic === topic) &&
-      (!text || (q.question + ' ' + q.answer + ' ' + q.topic + ' ' + q.id).toLowerCase().includes(text))
-    );
+    // Update bookmark count badge
+    const bookmarkCountEl = byId('qb-bookmark-count');
+    if (bookmarkCountEl) {
+      bookmarkCountEl.textContent = String(bookmarks.size);
+    }
+    const bookmarkFilterBtn = byId('qb-bookmark-filter');
+    if (bookmarkFilterBtn) {
+      bookmarkFilterBtn.classList.toggle('active', onlyBookmarkedFilter);
+    }
+
+    const filtered = questions.filter(q => {
+      if (onlyBookmarkedFilter && !bookmarks.has(q.id)) return false;
+      if (level && q.level !== level) return false;
+      if (topic && q.topic !== topic) return false;
+      if (text) {
+        const hay = (q.question + ' ' + q.answer + ' ' + q.topic + ' ' + q.id).toLowerCase();
+        if (!hay.includes(text)) return false;
+      }
+      return true;
+    });
+
+    // Update topic pills
+    renderTopicPills();
 
     const countEl = byId('qb-count');
     if (countEl) {
-      countEl.innerHTML = `Hiển thị <strong>${filtered.length}</strong> / ${questions.length} câu hỏi`;
+      const topicLabel = topic ? ` · <em>${esc(topic)}</em>` : '';
+      const bookmarkLabel = onlyBookmarkedFilter ? ' · <strong>Đã lưu</strong>' : '';
+      countEl.innerHTML = `Hiển thị <strong>${filtered.length}</strong> / ${questions.length} câu hỏi${topicLabel}${bookmarkLabel}`;
     }
 
     if (!filtered.length) {
       root.innerHTML = `
-        <div style="padding: 2.5rem 1rem; text-align: center; color: var(--md-default-fg-color--light);">
-          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 0.75rem; opacity: 0.6;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <p style="font-size: 1.05rem; font-weight: 600; margin-bottom: 0.25rem;">Không tìm thấy câu hỏi phù hợp</p>
-          <p style="font-size: 0.9rem;">Hãy thử đổi từ khóa tìm kiếm hoặc bỏ chọn các bộ lọc level/chủ đề.</p>
+        <div class="empty-state-card">
+          <svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <p class="empty-title">Không tìm thấy câu hỏi phù hợp</p>
+          <p class="empty-desc">${onlyBookmarkedFilter ? 'Bạn chưa lưu câu hỏi nào hoặc các câu đã lưu không khớp bộ lọc hiện tại.' : 'Hãy thử đổi từ khóa tìm kiếm hoặc chọn lại chủ đề / cấp độ.'}</p>
+          ${onlyBookmarkedFilter ? '<button class="btn btn-secondary btn-sm" id="qb-clear-bookmark-filter" type="button" style="margin-top: 0.6rem;">Xem tất cả câu hỏi</button>' : ''}
         </div>`;
       return;
     }
 
-    root.innerHTML = filtered.map((q, idx) => `
-      <details class="question-card" data-level="${esc(q.level)}">
-        <summary class="question-summary">
-          <div class="question-header-content">
-            <div class="badges">
-              <span class="badge badge-index">#${idx + 1}</span>
-              ${renderBadges(q)}
+    root.innerHTML = filtered.map((q, idx) => {
+      const isBookmarked = bookmarks.has(q.id);
+      const lvlClass = `badge-${(q.level || '').toLowerCase()}`;
+      return `
+        <details class="question-card" data-level="${esc(q.level)}" id="q-${esc(q.id)}">
+          <summary class="question-summary">
+            <div class="card-left">
+              <span class="question-index">#${idx + 1}</span>
+              <span class="question-title">${esc(q.question)}</span>
+              <button class="btn-icon btn-copy-q" type="button" data-q="${esc(q.question)}" title="Sao chép câu hỏi" aria-label="Sao chép câu hỏi">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </button>
             </div>
-            <div class="question-title">${esc(q.question)}</div>
+            <div class="card-right">
+              <span class="badge badge-level ${lvlClass}">${esc(q.level)}</span>
+              <span class="badge badge-topic">${esc(q.topic)}</span>
+              <button class="btn-icon btn-bookmark ${isBookmarked ? 'active' : ''}" type="button" data-id="${esc(q.id)}" title="${isBookmarked ? 'Bỏ lưu câu hỏi' : 'Lưu câu hỏi'}" aria-label="Lưu câu hỏi">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="${isBookmarked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              </button>
+              <span class="accordion-chevron" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </span>
+            </div>
+          </summary>
+          <div class="answer-block">
+            ${renderStructuredAnswer(q)}
           </div>
-          <span class="accordion-chevron" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </span>
-        </summary>
-        <div class="answer-block">
-          ${renderStructuredAnswer(q)}
-        </div>
-      </details>
-    `).join('');
+        </details>
+      `;
+    }).join('');
   }
 
   // Delegated event handling for Question Bank
   document.addEventListener('click', (e) => {
+    // Copy question text
+    const copyBtn = e.target.closest('.btn-copy-q');
+    if (copyBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const text = copyBtn.getAttribute('data-q') || '';
+      if (text) {
+        navigator.clipboard.writeText(text).then(() => {
+          copyBtn.classList.add('copied');
+          copyBtn.setAttribute('title', 'Đã sao chép!');
+          setTimeout(() => {
+            copyBtn.classList.remove('copied');
+            copyBtn.setAttribute('title', 'Sao chép câu hỏi');
+          }, 1500);
+        });
+      }
+      return;
+    }
+
+    // Bookmark toggle
+    const bookmarkBtn = e.target.closest('.btn-bookmark');
+    if (bookmarkBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const id = bookmarkBtn.getAttribute('data-id');
+      if (id) {
+        const bookmarks = getBookmarkedSet();
+        if (bookmarks.has(id)) {
+          bookmarks.delete(id);
+        } else {
+          bookmarks.add(id);
+        }
+        setBookmarkedSet(bookmarks);
+        renderQuestionBank();
+      }
+      return;
+    }
+
+    // Bookmark filter toggle
+    const bookmarkFilterBtn = e.target.closest('#qb-bookmark-filter');
+    if (bookmarkFilterBtn) {
+      e.preventDefault();
+      onlyBookmarkedFilter = !onlyBookmarkedFilter;
+      renderQuestionBank();
+      return;
+    }
+
+    const clearBookmarkFilter = e.target.closest('#qb-clear-bookmark-filter');
+    if (clearBookmarkFilter) {
+      e.preventDefault();
+      onlyBookmarkedFilter = false;
+      renderQuestionBank();
+      return;
+    }
+
+    // Topic pill click
+    const topicPill = e.target.closest('.topic-pill');
+    if (topicPill) {
+      e.preventDefault();
+      const topic = topicPill.getAttribute('data-topic') || '';
+      const topicSelect = byId('qb-topic');
+      if (topicSelect) {
+        topicSelect.value = topic;
+      }
+      renderQuestionBank();
+      return;
+    }
+
+    // Expand all
     const expandBtn = e.target.closest('#qb-expand-all');
     if (expandBtn) {
       e.preventDefault();
@@ -154,6 +312,7 @@
       return;
     }
 
+    // Collapse all
     const collapseBtn = e.target.closest('#qb-collapse-all');
     if (collapseBtn) {
       e.preventDefault();
@@ -163,6 +322,7 @@
       return;
     }
 
+    // Reset filters
     const resetBtn = e.target.closest('#qb-reset');
     if (resetBtn) {
       e.preventDefault();
@@ -172,6 +332,7 @@
       if (lvl) lvl.value = '';
       if (top) top.value = '';
       if (src) src.value = '';
+      onlyBookmarkedFilter = false;
       renderQuestionBank();
       return;
     }
