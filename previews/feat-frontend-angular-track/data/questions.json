@@ -1,5 +1,5 @@
 {
-  "version": 10,
+  "version": 11,
   "questions": [
     {
       "id": "INT-CS-001",
@@ -7216,6 +7216,654 @@
         {
           "question": "Có nên ép index hint ngay khi thấy scan không?",
           "answer": "Không nên trước khi hiểu nguyên nhân. Hint có thể khóa plan xấu khi data distribution thay đổi; trước tiên cần xem actual plan, statistics và query predicate."
+        }
+      ]
+    },
+    {
+      "id": "JUN-REDIS-001",
+      "level": "Junior",
+      "topic": "Redis",
+      "question": "Redis thường được dùng cho những bài toán nào trong ứng dụng .NET?",
+      "answer": "Redis thường được dùng cho cache, session, rate limiting, distributed coordination nhẹ và các cấu trúc dữ liệu truy cập nhanh trong memory. Nó phù hợp khi latency thấp quan trọng, nhưng không nên mặc định coi Redis là source of truth cho mọi dữ liệu.",
+      "keyPoints": [
+        "Cache/session/rate limiting",
+        "In-memory latency thấp",
+        "Không mặc định thay database"
+      ],
+      "followUps": [
+        {
+          "question": "Redis có phải database chính phù hợp cho mọi hệ thống không?",
+          "answer": "Không. Redis mạnh ở dữ liệu truy cập nhanh và một số use case đặc thù; durability, query model và kích thước dữ liệu phải được cân nhắc trước khi dùng làm primary store."
+        }
+      ]
+    },
+    {
+      "id": "JUN-REDIS-002",
+      "level": "Junior",
+      "topic": "Redis",
+      "question": "TTL của cache là gì và vì sao cần nó?",
+      "answer": "TTL là thời gian một key được phép tồn tại trước khi tự hết hạn. TTL giúp giới hạn dữ liệu stale và kiểm soát memory, nhưng đặt quá ngắn làm cache miss nhiều còn quá dài có thể giữ dữ liệu cũ lâu hơn business chấp nhận.",
+      "keyPoints": [
+        "TTL giới hạn lifetime key",
+        "Giảm stale data",
+        "Có trade-off hit rate và freshness"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên đặt cùng một TTL cho mọi key không?",
+          "answer": "Không. TTL nên dựa trên độ biến động dữ liệu, chi phí tái tạo và mức stale mà từng loại dữ liệu có thể chấp nhận."
+        }
+      ]
+    },
+    {
+      "id": "JUN-REDIS-003",
+      "level": "Junior",
+      "topic": "Redis",
+      "question": "Cache hit và cache miss là gì?",
+      "answer": "Cache hit xảy ra khi dữ liệu cần đọc đã có trong cache; cache miss là khi phải lấy từ nguồn khác như database rồi có thể ghi lại cache. Tỷ lệ hit cao thường giảm tải database, nhưng hit rate chỉ có ý nghĩa khi dữ liệu vẫn đủ mới.",
+      "keyPoints": [
+        "Hit = có sẵn trong cache",
+        "Miss = phải đọc source",
+        "Hit rate không thay freshness"
+      ],
+      "followUps": [
+        {
+          "question": "Cache miss có luôn là lỗi không?",
+          "answer": "Không. Miss là behavior bình thường, nhất là key mới hoặc đã hết TTL; vấn đề là miss quá nhiều hoặc miss đồng thời gây tải lớn lên source."
+        }
+      ]
+    },
+    {
+      "id": "JUN-REDIS-004",
+      "level": "Junior",
+      "topic": "Redis",
+      "question": "Redis String và Hash nên dùng khác nhau thế nào?",
+      "answer": "String phù hợp cho một value đơn hoặc object đã serialize; Hash phù hợp khi muốn lưu và cập nhật các field của một object theo key con. Chọn theo access pattern và memory, không chỉ theo việc dữ liệu nhìn giống object hay không.",
+      "keyPoints": [
+        "String cho value đơn/serialized",
+        "Hash cho field-level access",
+        "Chọn theo access pattern"
+      ],
+      "followUps": [
+        {
+          "question": "Lưu JSON string trong Redis có hạn chế gì?",
+          "answer": "Muốn sửa một field thường phải đọc/deserialize/sửa/serialize lại toàn object, và Redis không hiểu cấu trúc bên trong JSON string theo cách Hash hiểu field."
+        }
+      ]
+    },
+    {
+      "id": "JUN-REDIS-005",
+      "level": "Junior",
+      "topic": "Redis",
+      "question": "Cache-aside pattern hoạt động thế nào?",
+      "answer": "Ứng dụng đọc cache trước; nếu miss thì đọc database, trả dữ liệu và ghi kết quả vào cache. Khi dữ liệu thay đổi, ứng dụng thường update source of truth trước rồi invalidate hoặc refresh cache theo strategy đã chọn.",
+      "keyPoints": [
+        "Read cache first",
+        "Miss thì đọc database",
+        "Update source rồi invalidate/refresh cache"
+      ],
+      "followUps": [
+        {
+          "question": "Rủi ro phổ biến của cache-aside là gì?",
+          "answer": "Có thể xảy ra stale data, cache stampede hoặc race giữa update database và invalidate cache nếu không thiết kế consistency window rõ."
+        }
+      ]
+    },
+    {
+      "id": "JUN-DEV-001",
+      "level": "Junior",
+      "topic": "DevOps",
+      "question": "Docker image và container khác nhau thế nào?",
+      "answer": "Image là artifact read-only chứa filesystem và metadata cần để chạy ứng dụng; container là instance đang chạy hoặc đã tạo từ image. Một image có thể dùng để tạo nhiều container với state runtime riêng.",
+      "keyPoints": [
+        "Image là template/artifact",
+        "Container là instance",
+        "Một image tạo nhiều container"
+      ],
+      "followUps": [
+        {
+          "question": "Sửa file trong container có làm thay đổi image gốc không?",
+          "answer": "Không. Thay đổi nằm ở writable layer của container; muốn thay image cần build image mới."
+        }
+      ]
+    },
+    {
+      "id": "JUN-DEV-002",
+      "level": "Junior",
+      "topic": "DevOps",
+      "question": "Dockerfile dùng để làm gì?",
+      "answer": "Dockerfile mô tả các bước tạo image như base image, copy file, restore/build app và command chạy. Nó giúp quá trình build có thể lặp lại và version cùng source code.",
+      "keyPoints": [
+        "Mô tả image build steps",
+        "Có thể version cùng source",
+        "Tạo build reproducible hơn"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao nên pin base image version thay vì luôn dùng latest?",
+          "answer": "Pin version giúp build ổn định và dễ kiểm soát upgrade; `latest` có thể thay đổi nội dung mà không đổi Dockerfile, gây drift khó đoán."
+        }
+      ]
+    },
+    {
+      "id": "JUN-DEV-003",
+      "level": "Junior",
+      "topic": "DevOps",
+      "question": "Multi-stage build trong Docker giúp gì cho ứng dụng .NET?",
+      "answer": "Multi-stage build dùng một stage có SDK để restore/build/publish rồi copy artifact sang stage runtime nhỏ hơn. Kết quả là production image không cần mang compiler, source và nhiều dependency build thừa.",
+      "keyPoints": [
+        "SDK stage để build",
+        "Runtime stage để chạy",
+        "Giảm image size/attack surface"
+      ],
+      "followUps": [
+        {
+          "question": "Có cần cài .NET SDK trong image production không?",
+          "answer": "Thông thường không. Với app framework-dependent chỉ cần runtime/ASP.NET runtime phù hợp; SDK chủ yếu cần ở build stage."
+        }
+      ]
+    },
+    {
+      "id": "JUN-DEV-004",
+      "level": "Junior",
+      "topic": "DevOps",
+      "question": "Docker volume và bind mount khác nhau thế nào?",
+      "answer": "Bind mount ánh xạ trực tiếp một path của host vào container; volume do Docker quản lý và ít phụ thuộc layout host hơn. Bind mount tiện development, còn volume thường phù hợp cho persistent data do container runtime quản lý.",
+      "keyPoints": [
+        "Bind mount dùng host path",
+        "Volume do Docker quản lý",
+        "Chọn theo dev/persistence use case"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên lưu database production trong writable layer của container không?",
+          "answer": "Không nên. Container có thể bị thay thế; dữ liệu cần storage persistent như volume hoặc storage service phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "JUN-DEV-005",
+      "level": "Junior",
+      "topic": "DevOps",
+      "question": "Docker Compose phù hợp cho trường hợp nào?",
+      "answer": "Docker Compose mô tả nhiều container cần chạy cùng nhau như API, database và Redis, rất tiện cho local development hoặc môi trường nhỏ. Nó không thay thế đầy đủ orchestrator production như Kubernetes khi cần scheduling, autoscaling và self-healing ở cluster lớn.",
+      "keyPoints": [
+        "Chạy multi-container local",
+        "Khai báo service/network/volume",
+        "Không phải orchestrator đầy đủ"
+      ],
+      "followUps": [
+        {
+          "question": "Compose có thể giúp onboarding developer mới thế nào?",
+          "answer": "Developer có thể khởi động cùng một bộ dependency bằng một cấu hình versioned thay vì cài đặt thủ công từng service trên máy."
+        }
+      ]
+    },
+    {
+      "id": "JUN-HTTP-001",
+      "level": "Junior",
+      "topic": "HTTP/API",
+      "question": "HTTP header dùng để làm gì?",
+      "answer": "Header mang metadata của request hoặc response như content type, authorization, cache control, correlation ID hoặc thông tin client/server. Header không nên bị dùng để nhét business payload lớn thay cho body.",
+      "keyPoints": [
+        "Mang metadata HTTP",
+        "Có request/response headers",
+        "Không thay body cho payload lớn"
+      ],
+      "followUps": [
+        {
+          "question": "Authorization header thường chứa gì?",
+          "answer": "Với bearer authentication, nó thường có dạng `Authorization: Bearer <token>`; server vẫn phải validate token chứ không chỉ kiểm tra header tồn tại."
+        }
+      ]
+    },
+    {
+      "id": "JUN-HTTP-002",
+      "level": "Junior",
+      "topic": "HTTP/API",
+      "question": "Content-Type và Accept khác nhau thế nào?",
+      "answer": "`Content-Type` mô tả định dạng body đang được gửi, còn `Accept` mô tả định dạng response mà client mong muốn nhận. Trong API JSON phổ biến, Content-Type thường là `application/json` cho request có JSON body.",
+      "keyPoints": [
+        "Content-Type mô tả body hiện tại",
+        "Accept mô tả response mong muốn",
+        "Liên quan content negotiation"
+      ],
+      "followUps": [
+        {
+          "question": "GET request có luôn cần Content-Type không?",
+          "answer": "Không. Nếu request không có body thì thường không cần Content-Type; Accept vẫn có thể dùng để nói định dạng response mong muốn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-HTTP-003",
+      "level": "Junior",
+      "topic": "HTTP/API",
+      "question": "Reverse proxy đứng trước ASP.NET Core thường làm gì?",
+      "answer": "Reverse proxy nhận request từ client rồi chuyển tiếp tới application server. Nó có thể xử lý TLS termination, routing, load balancing, compression hoặc header forwarding trước khi request tới Kestrel.",
+      "keyPoints": [
+        "Đứng trước application server",
+        "TLS/routing/load balancing",
+        "Forward request tới backend"
+      ],
+      "followUps": [
+        {
+          "question": "Ứng dụng cần chú ý gì khi chạy sau reverse proxy?",
+          "answer": "Phải xử lý forwarded headers đúng để biết scheme, host hoặc IP client thật và chỉ tin proxy được cấu hình đáng tin cậy."
+        }
+      ]
+    },
+    {
+      "id": "JUN-HTTP-004",
+      "level": "Junior",
+      "topic": "HTTP/API",
+      "question": "HTTPS khác HTTP ở điểm nào quan trọng nhất?",
+      "answer": "HTTPS là HTTP chạy qua TLS, cung cấp mã hóa đường truyền, integrity và xác thực server bằng certificate. Nó bảo vệ dữ liệu trên network nhưng không thay thế authentication, authorization hoặc validation của ứng dụng.",
+      "keyPoints": [
+        "TLS mã hóa traffic",
+        "Bảo vệ integrity",
+        "Không thay app security"
+      ],
+      "followUps": [
+        {
+          "question": "HTTPS có ngăn SQL injection không?",
+          "answer": "Không. HTTPS chỉ bảo vệ dữ liệu trên đường truyền; SQL injection phải được ngăn bằng parameterization và validation ở application/data layer."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SEC-006",
+      "level": "Junior",
+      "topic": "Security",
+      "question": "SQL injection xảy ra như thế nào?",
+      "answer": "SQL injection xảy ra khi dữ liệu không tin cậy bị ghép vào cấu trúc SQL và làm thay đổi ý nghĩa câu query. Cách phòng chính là parameterized query/ORM đúng cách, không nối chuỗi input người dùng vào SQL.",
+      "keyPoints": [
+        "Input thay đổi SQL structure",
+        "Dùng parameterization",
+        "Không nối chuỗi user input"
+      ],
+      "followUps": [
+        {
+          "question": "Dùng EF Core có tự động hết nguy cơ SQL injection không?",
+          "answer": "Không hoàn toàn. LINQ được parameterize an toàn trong nhiều trường hợp, nhưng raw SQL hoặc dynamic SQL viết sai vẫn có thể tạo lỗ hổng."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SEC-007",
+      "level": "Junior",
+      "topic": "Security",
+      "question": "Principle of least privilege là gì?",
+      "answer": "Mỗi user, service hoặc database account chỉ nên có quyền tối thiểu cần để làm nhiệm vụ. Nếu credential bị lộ hoặc code có bug, phạm vi thiệt hại sẽ nhỏ hơn so với tài khoản có quyền quá rộng.",
+      "keyPoints": [
+        "Chỉ cấp quyền cần thiết",
+        "Giảm blast radius",
+        "Áp dụng cho user/service/DB"
+      ],
+      "followUps": [
+        {
+          "question": "API service có nên dùng database account quyền admin không?",
+          "answer": "Không. Service chỉ nên có các quyền cần cho workload của nó, tránh quyền quản trị schema hoặc database nếu không thật sự cần."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SEC-008",
+      "level": "Junior",
+      "topic": "Security",
+      "question": "Vì sao không nên tự viết thuật toán mã hóa hoặc hash password?",
+      "answer": "Cryptography rất dễ sai ở algorithm, mode, key management hoặc random source. Password nên dùng library/framework chuẩn với thuật toán password hashing được thiết kế và cập nhật bởi chuyên gia thay vì tự phát minh giải pháp riêng.",
+      "keyPoints": [
+        "Crypto tự viết dễ sai",
+        "Dùng library chuẩn",
+        "Password hashing cần algorithm chuyên dụng"
+      ],
+      "followUps": [
+        {
+          "question": "Base64 có phải là encryption không?",
+          "answer": "Không. Base64 chỉ encoding dữ liệu sang dạng text và có thể decode dễ dàng, không cung cấp bí mật."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SEC-009",
+      "level": "Junior",
+      "topic": "Security",
+      "question": "CSP giúp giảm rủi ro XSS như thế nào?",
+      "answer": "Content Security Policy cho browser biết nguồn script, style và resource nào được phép tải hoặc thực thi. CSP là lớp defense-in-depth hữu ích chống một số XSS, nhưng không thay thế việc encode output và tránh DOM injection nguy hiểm.",
+      "keyPoints": [
+        "Giới hạn nguồn resource/script",
+        "Defense-in-depth cho XSS",
+        "Không thay output encoding"
+      ],
+      "followUps": [
+        {
+          "question": "Chỉ bật CSP có đủ để bỏ qua sanitization không?",
+          "answer": "Không. CSP có thể bị cấu hình yếu hoặc có bypass; ứng dụng vẫn cần xử lý dữ liệu không tin cậy đúng cách."
+        }
+      ]
+    },
+    {
+      "id": "MID-REDIS-001",
+      "level": "Middle",
+      "topic": "Redis",
+      "question": "RDB và AOF trong Redis khác nhau thế nào?",
+      "answer": "RDB tạo snapshot theo thời điểm, recovery nhanh và file gọn nhưng có thể mất dữ liệu sau snapshot cuối. AOF ghi lại write operations, thường giảm cửa sổ mất dữ liệu hơn nhưng file và recovery cost có thể lớn hơn. Production có thể kết hợp tùy durability requirement.",
+      "keyPoints": [
+        "RDB = snapshot",
+        "AOF = write log",
+        "Trade-off durability/recovery/size"
+      ],
+      "followUps": [
+        {
+          "question": "Cache thuần có nhất thiết cần persistence không?",
+          "answer": "Không. Nếu dữ liệu tái tạo dễ từ source of truth, có thể chấp nhận mất cache khi restart; persistence chỉ nên bật khi use case cần."
+        }
+      ]
+    },
+    {
+      "id": "MID-REDIS-002",
+      "level": "Middle",
+      "topic": "Redis",
+      "question": "Redis eviction policy ảnh hưởng cache như thế nào?",
+      "answer": "Khi memory đạt giới hạn, eviction policy quyết định key nào bị loại, ví dụ LRU/LFU và phạm vi allkeys hoặc volatile. Policy phải phù hợp loại dữ liệu; cấu hình sai có thể làm key quan trọng bị đẩy ra hoặc Redis trả lỗi write.",
+      "keyPoints": [
+        "Chọn key bị loại khi hết memory",
+        "LRU/LFU phổ biến",
+        "allkeys vs volatile quan trọng"
+      ],
+      "followUps": [
+        {
+          "question": "TTL và eviction có giống nhau không?",
+          "answer": "Không. TTL làm key hết hạn theo thời gian; eviction xảy ra do memory pressure theo policy."
+        }
+      ]
+    },
+    {
+      "id": "MID-REDIS-003",
+      "level": "Middle",
+      "topic": "Redis",
+      "question": "Redis pipeline giúp cải thiện performance thế nào?",
+      "answer": "Pipelining gửi nhiều command mà không chờ round-trip từng command rồi nhận các response sau, giúp giảm network latency overhead. Nó không làm các command trở thành một transaction atomic.",
+      "keyPoints": [
+        "Giảm round-trip",
+        "Batch command over network",
+        "Không atomic mặc định"
+      ],
+      "followUps": [
+        {
+          "question": "Pipeline khác MULTI/EXEC thế nào?",
+          "answer": "Pipeline tối ưu network; MULTI/EXEC nhóm command để thực thi theo transaction semantics của Redis, hai mục tiêu khác nhau."
+        }
+      ]
+    },
+    {
+      "id": "MID-REDIS-004",
+      "level": "Middle",
+      "topic": "Redis",
+      "question": "Redis Pub/Sub có hạn chế gì khi dùng làm message bus?",
+      "answer": "Pub/Sub gửi message tới subscriber đang online nhưng không lưu message để consumer offline đọc lại và không có consumer-group durability như queue/stream. Nó hợp notification transient hơn là workflow cần delivery guarantee.",
+      "keyPoints": [
+        "Message transient",
+        "Subscriber offline bỏ lỡ",
+        "Không có durable consumer queue"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào Redis Streams phù hợp hơn Pub/Sub?",
+          "answer": "Khi cần lưu event, consumer group, pending message và khả năng consumer xử lý lại sau khi reconnect."
+        }
+      ]
+    },
+    {
+      "id": "MID-REDIS-005",
+      "level": "Middle",
+      "topic": "Redis",
+      "question": "Distributed lock với Redis cần cẩn thận điều gì?",
+      "answer": "Lock phải có TTL để tránh deadlock khi owner chết và release chỉ nên xóa lock nếu token ownership còn đúng. Network partition, clock/liveness và critical section dài khiến distributed lock phức tạp hơn lock trong một process.",
+      "keyPoints": [
+        "Lock cần TTL",
+        "Release phải kiểm tra ownership",
+        "Distributed failure phức tạp"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên dùng distributed lock để sửa mọi race condition không?",
+          "answer": "Không. Unique constraint, idempotency hoặc transaction tại source of truth thường đơn giản và đáng tin hơn nếu bài toán cho phép."
+        }
+      ]
+    },
+    {
+      "id": "MID-REDIS-006",
+      "level": "Middle",
+      "topic": "Redis",
+      "question": "Cache invalidation nên xử lý thế nào khi dữ liệu được update?",
+      "answer": "Một strategy phổ biến là update database trước rồi xóa cache để lần đọc sau nạp dữ liệu mới. Cần cân nhắc race giữa read/write, TTL và consistency window; với dữ liệu quan trọng có thể cần version key hoặc event-driven invalidation.",
+      "keyPoints": [
+        "Source of truth trước",
+        "Invalidate cache sau update",
+        "Có race/consistency window"
+      ],
+      "followUps": [
+        {
+          "question": "Update cache trước database có rủi ro gì?",
+          "answer": "Nếu database update thất bại, cache có thể chứa giá trị không tồn tại trong source of truth và làm consistency tệ hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-REDIS-007",
+      "level": "Middle",
+      "topic": "Redis",
+      "question": "Redis Cluster giải quyết bài toán gì ở mức khái niệm?",
+      "answer": "Redis Cluster phân phối key qua nhiều node bằng hash slot để tăng capacity và availability. Client cần hiểu redirect/topology, còn multi-key operation có giới hạn nếu key nằm ở slot khác nhau trừ khi dùng hash tag phù hợp.",
+      "keyPoints": [
+        "Sharding bằng hash slots",
+        "Scale capacity",
+        "Cross-slot operation có hạn chế"
+      ],
+      "followUps": [
+        {
+          "question": "Redis Cluster có tự giải quyết cache stampede không?",
+          "answer": "Không. Cluster giải quyết phân phối dữ liệu/availability; stampede vẫn cần strategy như single-flight, lock hoặc jitter TTL."
+        }
+      ]
+    },
+    {
+      "id": "MID-DEV-001",
+      "level": "Middle",
+      "topic": "DevOps",
+      "question": "Docker layer cache nên được tận dụng thế nào khi build .NET?",
+      "answer": "Nên copy project/package metadata và restore trước, rồi mới copy source và build, để thay đổi source không làm mất cache restore dependency mỗi lần. Thứ tự Dockerfile ảnh hưởng lớn tới build time trong CI.",
+      "keyPoints": [
+        "Layer cache phụ thuộc thứ tự",
+        "Restore trước source copy đầy đủ",
+        "Giảm CI build time"
+      ],
+      "followUps": [
+        {
+          "question": "COPY toàn repository trước dotnet restore có bất lợi gì?",
+          "answer": "Bất kỳ thay đổi source nào cũng có thể invalidate layer trước restore, khiến dependency restore chạy lại không cần thiết."
+        }
+      ]
+    },
+    {
+      "id": "MID-DEV-002",
+      "level": "Middle",
+      "topic": "DevOps",
+      "question": "Readiness, liveness và startup probe khác nhau thế nào trong Kubernetes?",
+      "answer": "Readiness quyết định Pod có nhận traffic không; liveness quyết định container có cần restart vì bị kẹt; startup probe cho ứng dụng khởi động chậm thời gian trước khi liveness/readiness kiểm tra bình thường. Dùng sai có thể tạo restart loop.",
+      "keyPoints": [
+        "Readiness điều khiển traffic",
+        "Liveness phục vụ restart",
+        "Startup cho boot chậm"
+      ],
+      "followUps": [
+        {
+          "question": "Database tạm thời down có nên làm liveness fail không?",
+          "answer": "Thường không, vì dependency lỗi có thể làm tất cả Pod restart vô ích; readiness phù hợp hơn để tạm ngừng nhận traffic."
+        }
+      ]
+    },
+    {
+      "id": "MID-DEV-003",
+      "level": "Middle",
+      "topic": "DevOps",
+      "question": "CPU/memory request và limit trong Kubernetes ảnh hưởng workload thế nào?",
+      "answer": "Request giúp scheduler đặt Pod lên node có capacity phù hợp; limit đặt trần sử dụng. CPU vượt limit có thể bị throttle, còn memory vượt limit có thể dẫn tới OOM kill, nên giá trị phải dựa trên measurement thay vì copy mặc định.",
+      "keyPoints": [
+        "Request dùng cho scheduling",
+        "Limit đặt trần",
+        "Memory limit có thể OOMKill"
+      ],
+      "followUps": [
+        {
+          "question": "Đặt memory limit quá sát working set gây gì?",
+          "answer": "Ứng dụng dễ bị OOM kill khi có spike hoặc GC cần headroom, dẫn tới restart và latency bất ổn."
+        }
+      ]
+    },
+    {
+      "id": "MID-DEV-004",
+      "level": "Middle",
+      "topic": "DevOps",
+      "question": "Rolling deployment cần gì để giảm downtime cho ASP.NET Core?",
+      "answer": "Cần nhiều replica, readiness probe chính xác, graceful shutdown và cấu hình rollout để Pod mới ready trước khi Pod cũ bị loại. App/database change cũng phải backward compatible trong thời gian hai version cùng chạy.",
+      "keyPoints": [
+        "Readiness chính xác",
+        "Graceful shutdown",
+        "Backward-compatible rollout"
+      ],
+      "followUps": [
+        {
+          "question": "Readiness pass quá sớm có vấn đề gì?",
+          "answer": "Traffic có thể vào khi app chưa warm-up hoặc dependency chưa sẵn sàng, gây spike lỗi ngay trong rollout."
+        }
+      ]
+    },
+    {
+      "id": "MID-DEV-005",
+      "level": "Middle",
+      "topic": "DevOps",
+      "question": "Docker tag và image digest khác nhau thế nào?",
+      "answer": "Tag là tên mutable như `1.2` hoặc `latest` có thể trỏ sang image khác theo thời gian; digest là content-addressed identifier của image cụ thể. Production cần strategy để biết chính xác artifact nào được deploy.",
+      "keyPoints": [
+        "Tag có thể mutable",
+        "Digest xác định content cụ thể",
+        "Quan trọng cho reproducibility"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao deploy bằng latest khó rollback?",
+          "answer": "Bạn khó biết chính xác `latest` từng trỏ tới image nào ở thời điểm release, làm audit và rollback kém deterministic."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-016",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "`SELECT ... FOR UPDATE` phù hợp khi nào?",
+      "answer": "Nó khóa các row được chọn cho workflow cần đọc rồi cập nhật dưới transaction để tránh concurrent writer thay đổi cùng dữ liệu. Lock làm giảm concurrency nên chỉ dùng khi optimistic strategy hoặc atomic statement không đủ.",
+      "keyPoints": [
+        "Pessimistic row locking",
+        "Dùng trong transaction",
+        "Có blocking trade-off"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên giữ transaction mở trong lúc chờ user thao tác không?",
+          "answer": "Không. Transaction dài giữ lock lâu, tăng blocking và deadlock; nên thiết kế workflow khác như optimistic concurrency."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-017",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "`EXPLAIN` và `EXPLAIN ANALYZE` khác nhau thế nào?",
+      "answer": "`EXPLAIN` cho plan optimizer dự kiến mà không nhất thiết chạy query; `EXPLAIN ANALYZE` thực thi query và bổ sung runtime statistics như actual rows/time. Với write query cần cực kỳ cẩn thận vì ANALYZE có thể thực sự thay đổi dữ liệu.",
+      "keyPoints": [
+        "EXPLAIN xem estimated plan",
+        "ANALYZE chạy thật",
+        "Actual vs estimated rất hữu ích"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao actual rows lệch estimate lớn đáng chú ý?",
+          "answer": "Optimizer có thể chọn join/index strategy sai vì cardinality estimate không chính xác, thường liên quan statistics hoặc data distribution."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-018",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "MVCC giúp database xử lý concurrency theo ý tưởng nào?",
+      "answer": "MVCC giữ nhiều version logic của row để reader có thể thấy snapshot phù hợp mà không phải block writer trong nhiều trường hợp. Đổi lại database phải quản lý version cũ và cleanup, nên long transaction có thể làm bloat tăng.",
+      "keyPoints": [
+        "Reader thấy snapshot",
+        "Giảm reader-writer blocking",
+        "Version cũ cần cleanup"
+      ],
+      "followUps": [
+        {
+          "question": "MVCC có nghĩa không còn lock không?",
+          "answer": "Không. Write conflict, DDL và nhiều operation khác vẫn dùng lock; MVCC chủ yếu giảm một số read/write blocking."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-019",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Connection pooling quan trọng thế nào với PostgreSQL hoặc SQL Server?",
+      "answer": "Mở connection vật lý mới rất tốn chi phí, nên application thường tái sử dụng connection qua pool. Pool quá nhỏ gây queue chờ, quá lớn có thể làm database quá tải; sizing phải dựa trên workload và capacity DB.",
+      "keyPoints": [
+        "Tái sử dụng connection",
+        "Pool quá nhỏ gây wait",
+        "Pool quá lớn gây DB pressure"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên mở một connection rồi giữ static cho toàn ứng dụng không?",
+          "answer": "Không. Nên mở/đóng logical connection theo scope; pool phía dưới tái sử dụng physical connection an toàn hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-ARCH-006",
+      "level": "Middle",
+      "topic": "Architecture",
+      "question": "Load balancer giải quyết bài toán gì?",
+      "answer": "Load balancer phân phối request qua nhiều instance để tăng capacity và availability. Algorithm có thể round-robin, least-connections hoặc dựa trên health/weight; application nên hạn chế state local nếu muốn scale ngang dễ.",
+      "keyPoints": [
+        "Phân phối traffic",
+        "Tăng availability/capacity",
+        "Stateless app scale dễ hơn"
+      ],
+      "followUps": [
+        {
+          "question": "Sticky session có trade-off gì?",
+          "answer": "Nó đơn giản hóa session local nhưng giảm khả năng phân phối tải và failover; shared session store hoặc stateless auth thường linh hoạt hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-ARCH-007",
+      "level": "Middle",
+      "topic": "Architecture",
+      "question": "CDN giúp web application nhanh hơn thế nào?",
+      "answer": "CDN cache asset hoặc content ở edge gần user, giảm latency và tải origin. Nó đặc biệt hiệu quả với static asset có hash và content cacheable; dữ liệu personalized cần cache key và security policy cẩn thận.",
+      "keyPoints": [
+        "Cache ở edge",
+        "Giảm latency/origin load",
+        "Cần cache policy đúng"
+      ],
+      "followUps": [
+        {
+          "question": "Asset có content hash nên cache thế nào?",
+          "answer": "Có thể dùng TTL rất dài/immutable vì khi nội dung đổi thì filename/hash đổi, tránh phải invalidate cùng URL."
         }
       ]
     }
