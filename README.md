@@ -2,7 +2,7 @@
 
 Kho kiến thức luyện phỏng vấn Full Stack .NET từ **Intern → Junior → Middle → Senior**.
 
-Mục tiêu của repo không phải học thuộc đáp án, mà là luyện cách trả lời đúng trọng tâm, giải thích được trade-off và xử lý câu hỏi follow-up như trong phỏng vấn thật.
+Mục tiêu của repo không phải học thuộc đáp án, mà là luyện cách trả lời đúng trọng tâm, giải thích được trade-off và xử lý các câu hỏi đào sâu như trong phỏng vấn thật.
 
 ## Website
 
@@ -49,7 +49,7 @@ Quy ước deploy:
 - Câu hỏi
 - Câu trả lời mẫu ngắn gọn
 - Key points interviewer mong đợi
-- Follow-up thường gặp
+- Câu hỏi đào sâu + câu trả lời mẫu riêng
 - Level và topic
 
 Cấu trúc dữ liệu này được tái sử dụng cho **website học**, **flashcard** và **mock interview**.
