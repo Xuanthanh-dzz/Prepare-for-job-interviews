@@ -135,3 +135,35 @@ Bạn nên chắc:
 
 !!! warning "Đừng học thuộc câu chữ"
     Một câu trả lời Middle tốt thường bắt đầu từ **context/constraint**, sau đó mới nói solution và trade-off.
+
+
+---
+
+## Scenario drill — đợt luyện mới
+
+Sau khi học lý thuyết, hãy luyện các tình huống sau mà **không mở đáp án ngay**:
+
+### Junior
+
+- API bind đúng nhưng business rule fail: trả status nào?
+- Client hủy request: CancellationToken đi đến EF Core/HttpClient thế nào?
+- EF Core phát hàng chục query trong một loop: nghi vấn gì?
+- JOIN làm số dòng tăng bất thường: kiểm tra gì trước khi dùng DISTINCT?
+- Angular HttpClient lỗi: loading/error state đặt ở đâu?
+- Reactive Form invalid: khi nào nên hiện message?
+- XSS và CSRF khác nhau ra sao?
+
+### Middle
+
+- Endpoint chậm vì hàng trăm query giống nhau: debug từ đâu?
+- POST payment bị retry hai lần: thiết kế idempotency thế nào?
+- Distributed cache stale: invalidation strategy ra sao?
+- Query plan ước lượng sai row: statistics ảnh hưởng thế nào?
+- Angular component bị check quá nhiều: profile và xử lý gì?
+- RxJS stream chết sau một request lỗi: kiểm tra vị trí catchError ở đâu?
+- Form lớn lag khi gõ: validator/valueChanges/updateOn ảnh hưởng thế nào?
+- Outbox worker test bị flaky: làm sao chờ eventual consistency mà không sleep cố định?
+
+!!! tip "Cách trả lời scenario"
+    Dùng cấu trúc: **triệu chứng → giả thuyết → cách đo/xác nhận → cách sửa → trade-off**.  
+    Với Middle, nếu chỉ nhảy thẳng vào solution mà không nói cách xác nhận nguyên nhân thì câu trả lời vẫn chưa mạnh.
