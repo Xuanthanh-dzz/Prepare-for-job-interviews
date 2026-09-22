@@ -6429,17 +6429,17 @@
       "id": "JUN-NET-007",
       "level": "Junior",
       "topic": ".NET",
-      "question": "Assembly trong .NET là gì?",
-      "answer": "Assembly là đơn vị deployment và versioning chứa IL, metadata, manifest và resource liên quan. Một assembly thường được build thành file DLL hoặc EXE và có thể chứa nhiều type thuộc nhiều namespace.",
+      "question": "Assembly manifest và metadata trong .NET dùng để làm gì?",
+      "answer": "Manifest mô tả identity, version và dependency của assembly; metadata mô tả type, member và signature bên trong. Runtime và tooling dùng thông tin này để load assembly, resolve type/dependency và hỗ trợ reflection.",
       "keyPoints": [
-        "Đơn vị deployment/versioning",
-        "Chứa IL + metadata",
-        "Có thể là DLL hoặc EXE"
+        "Manifest chứa assembly identity/version",
+        "Metadata mô tả type/member",
+        "Runtime/tooling dùng để load và inspect"
       ],
       "followUps": [
         {
-          "question": "Namespace có phải là assembly không?",
-          "answer": "Không. Namespace chỉ tổ chức tên type theo logic; một namespace có thể trải trên nhiều assembly và một assembly có thể chứa nhiều namespace."
+          "question": "Reflection dựa vào metadata như thế nào?",
+          "answer": "Reflection đọc metadata runtime để khám phá type, method, property hoặc attribute mà không cần biết toàn bộ chúng ở compile time."
         }
       ]
     },
