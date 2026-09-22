@@ -50,6 +50,12 @@ Nên chắc:
 - hot table/write contention
 - read replica
 - partitioning
+- messaging consumer groups / partitioning / schema evolution
+- saga orchestration vs choreography
+- capacity estimation
+- sharding
+- multi-region active-active
+- end-to-end backpressure
 
 ### Production / Security / Reliability
 
@@ -63,6 +69,12 @@ Nên chắc:
 - progressive deployment
 - rollback với database migration
 - design system governance ở Angular
+- alert design + alert fatigue
+- RED / USE
+- trace sampling
+- error-budget burn rate
+- chaos testing
+- queue backlog và capacity
 
 **Chuẩn Senior:** không trả lời theo “best practice” chung chung. Phải nói được constraint, cách đo, failure mode, trade-off và rollout/rollback.
 
