@@ -18,6 +18,8 @@ Dùng bộ lọc để chọn level và chủ đề. Mỗi câu gồm đáp án 
   <input id="qb-search" type="search" placeholder="Tìm câu hỏi...">
 </div>
 
+<p id="qb-count" class="muted"></p>
+
 <div id="question-bank" class="question-list">
   <p>Đang tải ngân hàng câu hỏi...</p>
 </div>
