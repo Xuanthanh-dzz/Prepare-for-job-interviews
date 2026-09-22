@@ -7,6 +7,9 @@ docs_dir: docs
 theme:
   name: material
   language: vi
+  font:
+    text: Inter
+    code: JetBrains Mono
   features:
     - navigation.instant
     - navigation.tabs

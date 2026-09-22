@@ -4,32 +4,60 @@ Học để **trả lời như một kỹ sư**, không học thuộc một câu
 
 <div class="hero-grid">
   <a class="hero-card" href="tracks/junior-middle/">
-    <strong>Junior & Middle Focus</strong>
+    <div class="hero-card-header">
+      <span class="hero-card-icon">🚀</span>
+      <strong>Junior & Middle Focus</strong>
+    </div>
     <span>Luyện đúng chuẩn tuyển dụng: Junior build feature, Middle trade-off + debugging + performance.</span>
+    <div class="hero-card-footer">Xem trọng tâm level &rarr;</div>
   </a>
   <a class="hero-card" href="roadmap/">
-    <strong>Stack ưu tiên</strong>
-    <span>Backend: C#/.NET/EF/SQL · Frontend: JavaScript/TypeScript/Angular.</span>
+    <div class="hero-card-header">
+      <span class="hero-card-icon">🎯</span>
+      <strong>Stack ưu tiên</strong>
+    </div>
+    <span>Backend: C# / .NET / EF Core / SQL · Frontend: JavaScript / TypeScript / Angular.</span>
+    <div class="hero-card-footer">Khám phá lộ trình &rarr;</div>
   </a>
   <a class="hero-card" href="modules/csharp-dotnet/">
-    <strong>Backend — C# / .NET</strong>
-    <span>C#, runtime, LINQ, async/concurrency, memory/GC và nền tảng .NET.</span>
+    <div class="hero-card-header">
+      <span class="hero-card-icon">⚙️</span>
+      <strong>Backend — C# / .NET</strong>
+    </div>
+    <span>C#, CLR runtime, LINQ, async/concurrency, memory/GC và nền tảng .NET chuyên sâu.</span>
+    <div class="hero-card-footer">Xem module Backend &rarr;</div>
   </a>
   <a class="hero-card" href="modules/frontend-angular/">
-    <strong>Frontend — Angular</strong>
-    <span>JavaScript, TypeScript, HTML/CSS, browser, Angular, RxJS và frontend architecture.</span>
+    <div class="hero-card-header">
+      <span class="hero-card-icon">🌐</span>
+      <strong>Frontend — Angular</strong>
+    </div>
+    <span>JavaScript, TypeScript, Web Platform, Angular, RxJS, Signals và frontend architecture.</span>
+    <div class="hero-card-footer">Xem module Frontend &rarr;</div>
   </a>
   <a class="hero-card" href="question-bank/">
-    <strong>Ngân hàng câu hỏi</strong>
-    <span>Lọc theo level và chủ đề, xem đáp án + key points + câu hỏi đào sâu có đáp án.</span>
+    <div class="hero-card-header">
+      <span class="hero-card-icon">📚</span>
+      <strong>Ngân hàng câu hỏi</strong>
+    </div>
+    <span>184+ câu hỏi chia theo level (Intern &rarr; Senior), có Trả lời mẫu + Key points + Câu hỏi đào sâu.</span>
+    <div class="hero-card-footer">Tra cứu ngân hàng &rarr;</div>
   </a>
   <a class="hero-card" href="flashcards/">
-    <strong>Flashcards</strong>
-    <span>Luyện recall nhanh, đánh dấu câu đã biết và câu cần ôn lại.</span>
+    <div class="hero-card-header">
+      <span class="hero-card-icon">🗂️</span>
+      <strong>Flashcards</strong>
+    </div>
+    <span>Luyện active recall nhanh, theo dõi tiến độ thẻ đã biết và câu cần ôn lại kèm phím tắt tiện lợi.</span>
+    <div class="hero-card-footer">Luyện thẻ flashcards &rarr;</div>
   </a>
   <a class="hero-card" href="mock-interview/">
-    <strong>Mock Interview</strong>
-    <span>Tạo đề theo level + topic, tự chấm và xem tổng kết sau mỗi lượt.</span>
+    <div class="hero-card-header">
+      <span class="hero-card-icon">🎙️</span>
+      <strong>Mock Interview</strong>
+    </div>
+    <span>Mô phỏng buổi phỏng vấn thực tế theo level và chủ đề, tự chấm điểm và nhận phân tích kết quả.</span>
+    <div class="hero-card-footer">Bắt đầu phỏng vấn thử &rarr;</div>
   </a>
 </div>
 
