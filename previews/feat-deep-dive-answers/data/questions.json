@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "questions": [
     {
       "id": "INT-CS-001",
@@ -13,8 +13,14 @@
         "Biết struct là value type, class là reference type"
       ],
       "followUps": [
-        "string là value type hay reference type?",
-        "boxing/unboxing là gì?"
+        {
+          "question": "string là value type hay reference type?",
+          "answer": "string là reference type, nhưng có value-like behavior ở một số chỗ vì nó immutable và overload equality để so nội dung thay vì mặc định so reference."
+        },
+        {
+          "question": "boxing/unboxing là gì?",
+          "answer": "Boxing chuyển value type sang object hoặc interface và thường tạo allocation; unboxing lấy giá trị cụ thể trở lại. Nếu làm nhiều trong hot path có thể gây overhead đáng kể."
+        }
       ]
     },
     {
@@ -29,7 +35,10 @@
         "dynamic kiểm tra ở runtime"
       ],
       "followUps": [
-        "Khi nào nên tránh dynamic?"
+        {
+          "question": "Khi nào nên tránh dynamic?",
+          "answer": "Nên tránh dynamic trong core business logic khi có thể dùng type tĩnh, vì lỗi kiểu chỉ xuất hiện lúc runtime và refactor/tooling kém an toàn hơn. Dynamic phù hợp hơn ở boundary thực sự động như COM hoặc scripting."
+        }
       ]
     },
     {
@@ -44,7 +53,10 @@
         "Biết khi nào dùng StringBuilder"
       ],
       "followUps": [
-        "StringBuilder có luôn nhanh hơn không?"
+        {
+          "question": "StringBuilder có luôn nhanh hơn không?",
+          "answer": "Không. Với vài phép nối chuỗi nhỏ, toán tử + có thể đơn giản và đủ nhanh. StringBuilder đáng giá khi nối nhiều lần, đặc biệt trong loop hoặc khi số đoạn nối lớn."
+        }
       ]
     },
     {
@@ -59,7 +71,10 @@
         "Biết inheritance không phải lúc nào cũng tốt"
       ],
       "followUps": [
-        "Cho ví dụ polymorphism trong C#?"
+        {
+          "question": "Cho ví dụ polymorphism trong C#?",
+          "answer": "Ví dụ `IShape` có method `Area()`, còn `Circle` và `Rectangle` implement khác nhau. Code gọi `shape.Area()` qua interface nhưng behavior phụ thuộc object thực tế."
+        }
       ]
     },
     {
@@ -74,8 +89,14 @@
         "Nhắc được idempotency"
       ],
       "followUps": [
-        "GET có nên thay đổi dữ liệu không?",
-        "POST có idempotent không?"
+        {
+          "question": "GET có nên thay đổi dữ liệu không?",
+          "answer": "Không nên. GET được kỳ vọng là safe và chỉ đọc; nếu GET thay đổi state thì cache, crawler hoặc retry tự động có thể gây side effect ngoài ý muốn."
+        },
+        {
+          "question": "POST có idempotent không?",
+          "answer": "POST không mặc định idempotent. Gọi lại cùng request có thể tạo thêm resource; nếu cần retry an toàn thường phải thiết kế thêm idempotency key."
+        }
       ]
     },
     {
@@ -90,7 +111,10 @@
         "Không trả 200 cho mọi trường hợp"
       ],
       "followUps": [
-        "Validation error nên trả gì?"
+        {
+          "question": "Validation error nên trả gì?",
+          "answer": "Thông thường trả 400 Bad Request; với API hiện đại có thể dùng Problem Details để mô tả lỗi field rõ ràng. Một số hệ thống dùng 422 cho lỗi semantic nhưng cần thống nhất contract."
+        }
       ]
     },
     {
@@ -105,7 +129,10 @@
         "Hiểu referential integrity"
       ],
       "followUps": [
-        "Unique key khác primary key thế nào?"
+        {
+          "question": "Unique key khác primary key thế nào?",
+          "answer": "Primary key là định danh chính của row và mỗi bảng chỉ có một primary key logical. Unique constraint/key cũng đảm bảo uniqueness nhưng một bảng có thể có nhiều unique key và chúng thường dùng cho alternate key."
+        }
       ]
     },
     {
@@ -120,7 +147,10 @@
         "Hiểu NULL khi không match"
       ],
       "followUps": [
-        "Khi nào LEFT JOIN có thể cho kết quả giống INNER JOIN?"
+        {
+          "question": "Khi nào LEFT JOIN có thể cho kết quả giống INNER JOIN?",
+          "answer": "Khi mọi row bên trái đều có row khớp bên phải, hoặc khi điều kiện ở WHERE vô tình loại các row có giá trị NULL phía phải. Trường hợp sau thường biến LEFT JOIN thành behavior gần giống INNER JOIN."
+        }
       ]
     },
     {
@@ -135,7 +165,10 @@
         "Tăng testability"
       ],
       "followUps": [
-        "Constructor injection có lợi gì?"
+        {
+          "question": "Constructor injection có lợi gì?",
+          "answer": "Nó làm dependency của class rõ ngay từ constructor, giúp object được tạo ở trạng thái hợp lệ và dễ mock khi unit test. Nó cũng hạn chế hidden dependency như service locator."
+        }
       ]
     },
     {
@@ -150,7 +183,10 @@
         "PR = quy trình review/merge trên nền tảng"
       ],
       "followUps": [
-        "merge conflict là gì?"
+        {
+          "question": "merge conflict là gì?",
+          "answer": "Merge conflict xảy ra khi Git không thể tự quyết định cách kết hợp hai thay đổi, thường vì cùng sửa một vùng code. Developer phải chọn hoặc hòa trộn nội dung rồi commit kết quả resolve."
+        }
       ]
     },
     {
@@ -165,7 +201,10 @@
         "Biết captive dependency"
       ],
       "followUps": [
-        "Vì sao DbContext không nên là Singleton?"
+        {
+          "question": "Vì sao DbContext không nên là Singleton?",
+          "answer": "DbContext không được thiết kế để dùng đồng thời giữa nhiều request và nó giữ change-tracking state. Singleton sẽ làm state sống quá lâu, tăng memory usage và dễ gây race condition."
+        }
       ]
     },
     {
@@ -180,7 +219,10 @@
         "Order matters"
       ],
       "followUps": [
-        "Exception middleware nên đặt ở đâu?"
+        {
+          "question": "Exception middleware nên đặt ở đâu?",
+          "answer": "Thường đặt gần đầu pipeline để có thể bắt exception từ các middleware và endpoint phía sau. Nó vẫn phải đứng sau những thành phần cần thiết nếu ứng dụng yêu cầu context đặc biệt để format lỗi."
+        }
       ]
     },
     {
@@ -195,7 +237,10 @@
         "Tránh materialize quá sớm"
       ],
       "followUps": [
-        "Khi nào query thực sự chạy?"
+        {
+          "question": "Khi nào query thực sự chạy?",
+          "answer": "Với IQueryable, query thường chỉ chạy khi được materialize hoặc enumerate, ví dụ `ToListAsync`, `FirstAsync` hoặc `await foreach`. Trước đó bạn chủ yếu đang xây expression tree."
+        }
       ]
     },
     {
@@ -210,7 +255,10 @@
         "Không phù hợp nếu cần update tracked entity"
       ],
       "followUps": [
-        "AsNoTrackingWithIdentityResolution khác gì?"
+        {
+          "question": "AsNoTrackingWithIdentityResolution khác gì?",
+          "answer": "Nó không track entity để update nhưng vẫn đảm bảo các row cùng key trong cùng kết quả dùng chung một object instance. Điều này tốn thêm chi phí hơn AsNoTracking thuần nhưng hữu ích khi graph có entity lặp."
+        }
       ]
     },
     {
@@ -225,7 +273,10 @@
         "Biết projection/Include/batching"
       ],
       "followUps": [
-        "Include có thể gây vấn đề gì?"
+        {
+          "question": "Include có thể gây vấn đề gì?",
+          "answer": "Include quá nhiều navigation có thể tạo join lớn, duplicate row hoặc cartesian explosion và kéo thừa dữ liệu. Projection thường tốt hơn nếu API chỉ cần một shape nhỏ."
+        }
       ]
     },
     {
@@ -240,7 +291,10 @@
         "Phân biệt I/O-bound và CPU-bound"
       ],
       "followUps": [
-        "Vì sao không nên dùng .Result trong request async?"
+        {
+          "question": "Vì sao không nên dùng .Result trong request async?",
+          "answer": "`.Result` và `.Wait()` block thread thay vì await. Trong server điều này làm giảm throughput và có thể góp phần gây ThreadPool starvation; ở một số môi trường còn có nguy cơ deadlock."
+        }
       ]
     },
     {
@@ -255,7 +309,10 @@
         "Payload không phải encrypted"
       ],
       "followUps": [
-        "Refresh token dùng để làm gì?"
+        {
+          "question": "Refresh token dùng để làm gì?",
+          "answer": "Refresh token dùng để xin access token mới mà không yêu cầu user đăng nhập lại. Nó thường sống lâu hơn access token nên phải được lưu và revoke an toàn hơn."
+        }
       ]
     },
     {
@@ -270,7 +327,10 @@
         "Không thay thế auth"
       ],
       "followUps": [
-        "Preflight request là gì?"
+        {
+          "question": "Preflight request là gì?",
+          "answer": "Đó là request OPTIONS mà browser gửi trước một số cross-origin request để hỏi server có cho phép method/header/origin đó hay không. Nếu policy không cho phép, browser không gửi request chính."
+        }
       ]
     },
     {
@@ -285,7 +345,10 @@
         "Thiết kế theo query pattern"
       ],
       "followUps": [
-        "Composite index phụ thuộc thứ tự cột thế nào?"
+        {
+          "question": "Composite index phụ thuộc thứ tự cột thế nào?",
+          "answer": "Thứ tự cột ảnh hưởng query nào tận dụng được index, đặc biệt theo nguyên tắc left-most prefix. Nên đặt thứ tự dựa trên filter, join, sort và selectivity thực tế chứ không theo cảm tính."
+        }
       ]
     },
     {
@@ -300,7 +363,10 @@
         "Biết trade-off tốc độ/độ tin cậy"
       ],
       "followUps": [
-        "Bạn sẽ test controller hay service như thế nào?"
+        {
+          "question": "Bạn sẽ test controller hay service như thế nào?",
+          "answer": "Business logic nên được unit test ở service/domain; controller thường test mỏng cho routing, validation và mapping. Integration test nên bao phủ pipeline thật, auth, serialization và database ở các luồng quan trọng."
+        }
       ]
     },
     {
@@ -315,7 +381,10 @@
         "Phân biệt cancellation với failure"
       ],
       "followUps": [
-        "Khi nào không nên hủy giữa chừng?"
+        {
+          "question": "Khi nào không nên hủy giữa chừng?",
+          "answer": "Không nên hủy tại điểm sẽ để lại state nửa chừng hoặc vi phạm invariant nếu operation không có transaction/compensation. Sau khi đã commit một side effect quan trọng, có thể cần hoàn tất các bước bắt buộc thay vì dừng ngay."
+        }
       ]
     },
     {
@@ -330,7 +399,10 @@
         "Centralized configuration"
       ],
       "followUps": [
-        "DNS change liên quan HttpClient lifetime thế nào?"
+        {
+          "question": "DNS change liên quan HttpClient lifetime thế nào?",
+          "answer": "Nếu handler/connection sống quá lâu, client có thể giữ endpoint cũ dù DNS đã thay đổi. IHttpClientFactory quản lý handler lifetime để connection được refresh theo chu kỳ hợp lý."
+        }
       ]
     },
     {
@@ -345,7 +417,10 @@
         "Có chiến lược xử lý conflict"
       ],
       "followUps": [
-        "Pessimistic locking phù hợp khi nào?"
+        {
+          "question": "Pessimistic locking phù hợp khi nào?",
+          "answer": "Nó phù hợp khi xung đột xảy ra thường xuyên và chi phí conflict/retry cao hơn chi phí giữ lock. Đổi lại nó làm giảm concurrency và tăng nguy cơ blocking/deadlock."
+        }
       ]
     },
     {
@@ -360,7 +435,10 @@
         "Không chọn mức cao nhất máy móc"
       ],
       "followUps": [
-        "Snapshot isolation hoạt động theo ý tưởng nào?"
+        {
+          "question": "Snapshot isolation hoạt động theo ý tưởng nào?",
+          "answer": "Database cho transaction đọc một snapshot nhất quán của dữ liệu bằng row versioning thay vì block writer/reader theo cách truyền thống. Nó giảm blocking nhưng cần tài nguyên để giữ version và vẫn phải xử lý write conflict."
+        }
       ]
     },
     {
@@ -375,8 +453,14 @@
         "Idempotency key cho command nhạy cảm"
       ],
       "followUps": [
-        "PUT có idempotent không?",
-        "Idempotency key lưu bao lâu?"
+        {
+          "question": "PUT có idempotent không?",
+          "answer": "Theo HTTP semantics, PUT được thiết kế là idempotent: gửi cùng representation nhiều lần đến cùng URI nên dẫn đến cùng trạng thái cuối. Response từng lần có thể khác nhưng state cuối không tiếp tục thay đổi."
+        },
+        {
+          "question": "Idempotency key lưu bao lâu?",
+          "answer": "Tùy business window và khả năng client retry. Thường lưu đủ lâu để bao phủ retry hợp lý của operation, kèm request fingerprint và kết quả; hết TTL thì key có thể được tái sử dụng theo contract."
+        }
       ]
     },
     {
@@ -391,7 +475,10 @@
         "Cache stampede/failure"
       ],
       "followUps": [
-        "Cache-aside hoạt động thế nào?"
+        {
+          "question": "Cache-aside hoạt động thế nào?",
+          "answer": "Ứng dụng đọc cache trước; miss thì đọc database, ghi kết quả vào cache rồi trả về. Khi dữ liệu thay đổi, ứng dụng cập nhật source of truth và invalidate hoặc refresh cache."
+        }
       ]
     },
     {
@@ -406,7 +493,10 @@
         "Biết biện pháp phòng chống khác nhau"
       ],
       "followUps": [
-        "JWT trong Authorization header có bị CSRF giống cookie không?"
+        {
+          "question": "JWT trong Authorization header có bị CSRF giống cookie không?",
+          "answer": "Thường không theo cùng cơ chế, vì browser không tự gắn Authorization header cho cross-site request như cookie. Tuy nhiên XSS vẫn có thể đánh cắp token nếu bạn lưu nó ở nơi script truy cập được."
+        }
       ]
     },
     {
@@ -421,7 +511,10 @@
         "Ít E2E nhưng có giá trị"
       ],
       "followUps": [
-        "Mock quá nhiều gây vấn đề gì?"
+        {
+          "question": "Mock quá nhiều gây vấn đề gì?",
+          "answer": "Mock quá sâu làm test bám chặt implementation thay vì behavior, khiến refactor nhỏ cũng làm test vỡ. Nó còn có thể che lỗi integration vì mock không phản ánh behavior thật của dependency."
+        }
       ]
     },
     {
@@ -436,7 +529,10 @@
         "Không dùng vì trend"
       ],
       "followUps": [
-        "CQRS có bắt buộc Event Sourcing không?"
+        {
+          "question": "CQRS có bắt buộc Event Sourcing không?",
+          "answer": "Không. CQRS chỉ yêu cầu tách trách nhiệm command và query ở mức phù hợp; Event Sourcing là một cách lưu state bằng event nhưng hoàn toàn có thể dùng CQRS với database thông thường."
+        }
       ]
     },
     {
@@ -451,7 +547,10 @@
         "Consumer idempotent"
       ],
       "followUps": [
-        "Làm sao tránh publish trùng?"
+        {
+          "question": "Làm sao tránh publish trùng?",
+          "answer": "Khó đảm bảo tuyệt đối exactly-once end-to-end, nên thường thiết kế at-least-once với message ID và consumer idempotent. Outbox có thể đánh dấu trạng thái publish, nhưng retry vẫn phải chịu được duplicate."
+        }
       ]
     },
     {
@@ -466,7 +565,10 @@
         "Không mặc định microservices tốt hơn"
       ],
       "followUps": [
-        "Dấu hiệu nào cho thấy nên tách một module thành service?"
+        {
+          "question": "Dấu hiệu nào cho thấy nên tách một module thành service?",
+          "answer": "Khi module có boundary nghiệp vụ rõ, cần deploy/scale độc lập, team ownership riêng hoặc failure isolation có giá trị. Nếu chỉ tách vì codebase lớn mà chưa có các nhu cầu này thì modular monolith thường đơn giản hơn."
+        }
       ]
     },
     {
@@ -481,7 +583,10 @@
         "Idempotency + recovery"
       ],
       "followUps": [
-        "Saga orchestration và choreography khác nhau thế nào?"
+        {
+          "question": "Saga orchestration và choreography khác nhau thế nào?",
+          "answer": "Orchestration có một coordinator điều khiển các bước và compensation; choreography để service phản ứng với event của nhau. Orchestration dễ nhìn flow hơn, còn choreography giảm central coordinator nhưng dễ tạo coupling ngầm qua event."
+        }
       ]
     },
     {
@@ -496,7 +601,10 @@
         "Failure mode/backpressure"
       ],
       "followUps": [
-        "Bạn bảo vệ database khi traffic tăng 10 lần thế nào?"
+        {
+          "question": "Bạn bảo vệ database khi traffic tăng 10 lần thế nào?",
+          "answer": "Ưu tiên rate limiting, cache, queue/backpressure, connection-pool control và tối ưu query/index trước. Nếu workload phù hợp có thể thêm read replica hoặc partitioning, nhưng phải dựa trên bottleneck đo được."
+        }
       ]
     },
     {
@@ -511,7 +619,10 @@
         "Alert theo SLO, không chỉ hạ tầng"
       ],
       "followUps": [
-        "Bạn debug request chậm xuyên 5 service thế nào?"
+        {
+          "question": "Bạn debug request chậm xuyên 5 service thế nào?",
+          "answer": "Dùng distributed tracing với correlation ID để xem span nào chiếm latency, sau đó đối chiếu metrics và logs của dependency đó. Tôi kiểm tra network, queue, DB query, retries và saturation thay vì đọc log từng service rời rạc."
+        }
       ]
     },
     {
@@ -526,7 +637,10 @@
         "Retry storm/cascade failure"
       ],
       "followUps": [
-        "Operation không idempotent retry thế nào?"
+        {
+          "question": "Operation không idempotent retry thế nào?",
+          "answer": "Không retry mù. Cần idempotency key, deduplication hoặc cơ chế business transaction để phân biệt request mới với request lặp; nếu không bảo đảm được thì fail rõ ràng thay vì có nguy cơ tạo side effect trùng."
+        }
       ]
     },
     {
@@ -541,7 +655,10 @@
         "Hiểu replication lag/sharding cost"
       ],
       "followUps": [
-        "Sharding key tốt có đặc điểm gì?"
+        {
+          "question": "Sharding key tốt có đặc điểm gì?",
+          "answer": "Nó phân phối tải tương đối đều, ổn định theo thời gian và phù hợp với access pattern để giảm cross-shard query. Cần tránh hot key và cân nhắc khả năng rebalancing."
+        }
       ]
     },
     {
@@ -556,7 +673,10 @@
         "Service identity + key rotation"
       ],
       "followUps": [
-        "Authorization theo resource nên đặt ở đâu?"
+        {
+          "question": "Authorization theo resource nên đặt ở đâu?",
+          "answer": "Nên enforce gần resource/business operation nơi có đủ context về ownership và policy, thường trong application/domain boundary hoặc policy handler của service sở hữu dữ liệu. Không nên chỉ dựa vào UI."
+        }
       ]
     },
     {
@@ -571,7 +691,10 @@
         "Tránh long lock + có recovery plan"
       ],
       "followUps": [
-        "Rename một cột production an toàn thế nào?"
+        {
+          "question": "Rename một cột production an toàn thế nào?",
+          "answer": "Dùng expand-and-contract: thêm cột mới, deploy code đọc/ghi tương thích cả hai, backfill dữ liệu, chuyển hoàn toàn sang cột mới rồi mới xóa cột cũ ở release sau."
+        }
       ]
     },
     {
@@ -586,7 +709,10 @@
         "Contract testing"
       ],
       "followUps": [
-        "Version trong URL hay header?"
+        {
+          "question": "Version trong URL hay header?",
+          "answer": "Cả hai đều hợp lệ nếu dùng nhất quán. URL dễ quan sát và cache/debug hơn; header/media type giữ URL sạch hơn nhưng tooling/client phức tạp hơn. Quan trọng hơn là strategy deprecation và backward compatibility."
+        }
       ]
     },
     {
@@ -601,7 +727,10 @@
         "ADR + reversible decisions"
       ],
       "followUps": [
-        "Khi nào bạn chấp nhận technical debt?"
+        {
+          "question": "Khi nào bạn chấp nhận technical debt?",
+          "answer": "Khi trade-off mang lại giá trị rõ như time-to-market và có rủi ro được hiểu, giới hạn phạm vi, owner và kế hoạch trả nợ. Không nên gọi code cẩu thả không có kế hoạch là technical debt có chủ đích."
+        }
       ]
     },
     {
@@ -616,7 +745,10 @@
         "Chọn theo semantics, không chỉ performance"
       ],
       "followUps": [
-        "record struct khác struct thường thế nào?"
+        {
+          "question": "record struct khác struct thường thế nào?",
+          "answer": "record struct vẫn là value type nhưng compiler sinh thêm value-based equality, deconstruction và hỗ trợ `with`. Struct thường thì bạn phải tự định nghĩa các behavior này nếu cần."
+        }
       ]
     },
     {
@@ -631,7 +763,10 @@
         "Multiple interfaces, single class inheritance"
       ],
       "followUps": [
-        "Khi nào bạn ưu tiên interface?"
+        {
+          "question": "Khi nào bạn ưu tiên interface?",
+          "answer": "Khi cần mô tả contract cho nhiều implementation không nhất thiết cùng hierarchy, muốn giảm coupling hoặc dễ test. Nếu cần state/implementation dùng chung có lifecycle rõ thì abstract class có thể phù hợp hơn."
+        }
       ]
     },
     {
@@ -646,7 +781,10 @@
         "Ưu tiên mức truy cập hẹp"
       ],
       "followUps": [
-        "protected internal nghĩa là gì?"
+        {
+          "question": "protected internal nghĩa là gì?",
+          "answer": "Member truy cập được từ code trong cùng assembly hoặc từ derived type ở assembly khác. Đây là phép OR giữa protected và internal."
+        }
       ]
     },
     {
@@ -661,7 +799,10 @@
         "const ngầm static"
       ],
       "followUps": [
-        "static readonly dùng khi nào?"
+        {
+          "question": "static readonly dùng khi nào?",
+          "answer": "Dùng khi cần một giá trị dùng chung cho toàn type nhưng chỉ được gán lúc khai báo hoặc static constructor, ví dụ object cấu hình cố định không thể là compile-time const."
+        }
       ]
     },
     {
@@ -676,7 +817,10 @@
         "Public API ưu tiên property"
       ],
       "followUps": [
-        "Auto-property có backing field không?"
+        {
+          "question": "Auto-property có backing field không?",
+          "answer": "Có, compiler tạo một backing field ẩn cho auto-property. Nếu bạn tự viết getter/setter với storage riêng thì đó không còn là auto-property thuần."
+        }
       ]
     },
     {
@@ -691,7 +835,10 @@
         "Override dispatch theo runtime type"
       ],
       "followUps": [
-        "new keyword khi che member khác override thế nào?"
+        {
+          "question": "new keyword khi che member khác override thế nào?",
+          "answer": "`new` chỉ che member của base theo static type; override tham gia runtime polymorphism và thay implementation virtual. Gọi qua reference kiểu base có thể cho kết quả khác giữa hai cơ chế."
+        }
       ]
     },
     {
@@ -706,7 +853,10 @@
         "in là readonly reference"
       ],
       "followUps": [
-        "Có nên lạm dụng ref để tối ưu không?"
+        {
+          "question": "Có nên lạm dụng ref để tối ưu không?",
+          "answer": "Không. `ref` làm API khó hiểu và dễ tạo aliasing bug; chỉ dùng khi semantics cần hoặc profiling cho thấy copy value type lớn thực sự là bottleneck."
+        }
       ]
     },
     {
@@ -721,7 +871,10 @@
         "Boxing có allocation"
       ],
       "followUps": [
-        "Generic collection giúp tránh boxing thế nào?"
+        {
+          "question": "Generic collection giúp tránh boxing thế nào?",
+          "answer": "Ví dụ `List<int>` lưu int theo kiểu generic thay vì ép từng phần tử thành object, nên không cần boxing/unboxing cho mỗi giá trị như collection dựa trên object."
+        }
       ]
     },
     {
@@ -736,7 +889,10 @@
         "Cần xử lý null rõ ràng"
       ],
       "followUps": [
-        "Nullable reference types có giống int? không?"
+        {
+          "question": "Nullable reference types có giống int? không?",
+          "answer": "Không. `int?` là `Nullable<int>` có runtime representation riêng; còn `string?` chủ yếu là annotation để compiler phân tích nullability, runtime vẫn là reference type như cũ."
+        }
       ]
     },
     {
@@ -751,7 +907,10 @@
         "List dùng backing array"
       ],
       "followUps": [
-        "Count và Capacity của List khác nhau thế nào?"
+        {
+          "question": "Count và Capacity của List khác nhau thế nào?",
+          "answer": "Count là số phần tử đang có; Capacity là kích thước backing array hiện có trước khi cần resize. Capacity thường lớn hơn hoặc bằng Count."
+        }
       ]
     },
     {
@@ -766,7 +925,10 @@
         "Key equality/hash phải ổn định"
       ],
       "followUps": [
-        "Nếu hai key có cùng hash code thì sao?"
+        {
+          "question": "Nếu hai key có cùng hash code thì sao?",
+          "answer": "Đó là hash collision. Dictionary dùng equality comparer để phân biệt các key trong cùng bucket; correctness vẫn giữ nhưng quá nhiều collision có thể làm performance giảm."
+        }
       ]
     },
     {
@@ -781,7 +943,10 @@
         "finally dùng cleanup"
       ],
       "followUps": [
-        "Vì sao catch Exception rồi bỏ qua là nguy hiểm?"
+        {
+          "question": "Vì sao catch Exception rồi bỏ qua là nguy hiểm?",
+          "answer": "Bạn che mất lỗi thật, làm state có thể sai mà hệ thống vẫn tiếp tục như không có chuyện gì. Nếu catch thì nên xử lý, log đúng context, convert exception hoặc rethrow phù hợp."
+        }
       ]
     },
     {
@@ -796,7 +961,10 @@
         "Dispose khác GC"
       ],
       "followUps": [
-        "using declaration khác using block thế nào?"
+        {
+          "question": "using declaration khác using block thế nào?",
+          "answer": "Cả hai đều đảm bảo Dispose. Using declaration giữ resource đến cuối scope hiện tại; using block giới hạn lifetime rõ bằng cặp ngoặc ngay quanh vùng cần dùng."
+        }
       ]
     },
     {
@@ -811,7 +979,10 @@
         "Equality contract cần nhất quán"
       ],
       "followUps": [
-        "ReferenceEquals dùng để làm gì?"
+        {
+          "question": "ReferenceEquals dùng để làm gì?",
+          "answer": "Nó kiểm tra hai reference có trỏ đúng cùng một object hay không và bỏ qua overload equality. Với value type, boxing có thể làm kết quả không như kỳ vọng."
+        }
       ]
     },
     {
@@ -826,7 +997,10 @@
         "C# không đồng nghĩa .NET"
       ],
       "followUps": [
-        "IL là gì?"
+        {
+          "question": "IL là gì?",
+          "answer": "IL là Intermediate Language mà compiler .NET tạo ra trước khi runtime JIT/AOT chuyển thành machine code. Nó giúp nhiều ngôn ngữ .NET cùng chạy trên CLR."
+        }
       ]
     },
     {
@@ -841,7 +1015,10 @@
         "Namespace khác assembly"
       ],
       "followUps": [
-        "Một assembly có thể chứa nhiều namespace không?"
+        {
+          "question": "Một assembly có thể chứa nhiều namespace không?",
+          "answer": "Có. Namespace chỉ là cách tổ chức tên logic; một assembly có thể chứa type của nhiều namespace và một namespace cũng có thể trải trên nhiều assembly."
+        }
       ]
     },
     {
@@ -856,7 +1033,10 @@
         "Có startup/performance trade-off"
       ],
       "followUps": [
-        "AOT khác JIT ở điểm nào?"
+        {
+          "question": "AOT khác JIT ở điểm nào?",
+          "answer": "AOT compile trước khi chạy, thường giảm startup cost nhưng ít linh hoạt runtime hơn; JIT compile khi chạy và có thể tối ưu dựa trên môi trường thực tế."
+        }
       ]
     },
     {
@@ -871,7 +1051,10 @@
         "Dispose vẫn cần cho unmanaged resource"
       ],
       "followUps": [
-        "GC có xử lý database connection thay Dispose không?"
+        {
+          "question": "GC có xử lý database connection thay Dispose không?",
+          "answer": "Không nên dựa vào GC. Connection giữ resource ngoài managed heap; Dispose/using trả connection về pool kịp thời, còn finalization nếu có là chậm và không deterministic."
+        }
       ]
     },
     {
@@ -886,7 +1069,10 @@
         "Action không return"
       ],
       "followUps": [
-        "Multicast delegate là gì?"
+        {
+          "question": "Multicast delegate là gì?",
+          "answer": "Là delegate có invocation list chứa nhiều method. Khi invoke, các method được gọi theo thứ tự đăng ký; return value nếu có thường chỉ giữ giá trị của handler cuối."
+        }
       ]
     },
     {
@@ -901,7 +1087,10 @@
         "Chỉ publisher raise event"
       ],
       "followUps": [
-        "Event có thể gây memory leak thế nào?"
+        {
+          "question": "Event có thể gây memory leak thế nào?",
+          "answer": "Publisher giữ reference đến subscriber qua delegate. Nếu publisher sống lâu hơn subscriber và subscriber không unsubscribe, subscriber vẫn reachable nên không được GC."
+        }
       ]
     },
     {
@@ -916,7 +1105,10 @@
         "Không truy cập private member"
       ],
       "followUps": [
-        "Nếu instance method và extension method cùng tên thì method nào được chọn?"
+        {
+          "question": "Nếu instance method và extension method cùng tên thì method nào được chọn?",
+          "answer": "Instance method có ưu tiên hơn extension method nếu overload phù hợp. Extension method chỉ được xét khi compiler không tìm được instance member phù hợp."
+        }
       ]
     },
     {
@@ -931,7 +1123,10 @@
         "Record không tự động bất biến hoàn toàn"
       ],
       "followUps": [
-        "record class và record struct khác nhau thế nào?"
+        {
+          "question": "record class và record struct khác nhau thế nào?",
+          "answer": "record class là reference type; record struct là value type. Cả hai có value-based equality mặc định nhưng khác copy semantics, nullability và inheritance."
+        }
       ]
     },
     {
@@ -946,7 +1141,10 @@
         "Không thay validation business"
       ],
       "followUps": [
-        "Constructor có còn cần khi dùng required không?"
+        {
+          "question": "Constructor có còn cần khi dùng required không?",
+          "answer": "Có thể vẫn cần nếu phải enforce invariant, validate hoặc tạo dependency. `required` chỉ ép caller khởi tạo member ở compile time chứ không thay toàn bộ vai trò của constructor."
+        }
       ]
     },
     {
@@ -961,7 +1159,10 @@
         "Có generic constraints"
       ],
       "followUps": [
-        "where T : class và where T : struct khác nhau thế nào?"
+        {
+          "question": "where T : class và where T : struct khác nhau thế nào?",
+          "answer": "`class` giới hạn T là reference type; `struct` giới hạn T là non-nullable value type. Constraint này giúp compiler cho phép những operation khác nhau trên T."
+        }
       ]
     },
     {
@@ -976,7 +1177,10 @@
         "foreach dùng protocol này"
       ],
       "followUps": [
-        "Một IEnumerable có thể được enumerate nhiều lần không?"
+        {
+          "question": "Một IEnumerable có thể được enumerate nhiều lần không?",
+          "answer": "Tùy implementation. Collection in-memory thường được; iterator có side effect, stream hoặc query remote có thể chạy lại mỗi lần và cho kết quả/chi phí khác."
+        }
       ]
     },
     {
@@ -991,7 +1195,10 @@
         "Không materialize toàn bộ ngay"
       ],
       "followUps": [
-        "Exception trong iterator xuất hiện lúc gọi method hay lúc enumerate?"
+        {
+          "question": "Exception trong iterator xuất hiện lúc gọi method hay lúc enumerate?",
+          "answer": "Với phần code nằm trong iterator dùng yield, exception thường xuất hiện khi MoveNext/enumeration chạy tới dòng đó, không phải ngay lúc tạo IEnumerable."
+        }
       ]
     },
     {
@@ -1006,7 +1213,10 @@
         "Chuẩn hóa thời điểm ở boundary"
       ],
       "followUps": [
-        "UTC offset có phải timezone đầy đủ không?"
+        {
+          "question": "UTC offset có phải timezone đầy đủ không?",
+          "answer": "Không. Offset chỉ là độ lệch UTC tại một thời điểm; timezone còn có rules như daylight saving và thay đổi lịch sử/tương lai."
+        }
       ]
     },
     {
@@ -1021,7 +1231,10 @@
         "Có thể execute nhiều lần"
       ],
       "followUps": [
-        "Operator nào materialize ngay?"
+        {
+          "question": "Operator nào materialize ngay?",
+          "answer": "Các operator terminal như ToList, ToArray, Count, First, Single, Max... buộc query được thực thi theo semantics tương ứng. Where/Select thường deferred."
+        }
       ]
     },
     {
@@ -1036,7 +1249,10 @@
         "OrDefault xử lý trường hợp rỗng"
       ],
       "followUps": [
-        "Khi query database, Single có thể tốn gì hơn First?"
+        {
+          "question": "Khi query database, Single có thể tốn gì hơn First?",
+          "answer": "Single phải xác nhận không có phần tử thứ hai, nên provider thường cần lấy tối đa hai row hoặc kiểm tra thêm. First chỉ cần phần tử đầu tiên."
+        }
       ]
     },
     {
@@ -1051,7 +1267,10 @@
         "Chọn theo intent"
       ],
       "followUps": [
-        "List<T>.Count có enumerate không?"
+        {
+          "question": "List<T>.Count có enumerate không?",
+          "answer": "Không. List<T> lưu Count nội bộ nên đọc là O(1), khác với LINQ `Count()` trên một IEnumerable không biết kích thước."
+        }
       ]
     },
     {
@@ -1066,7 +1285,10 @@
         "Hữu ích với collection lồng nhau"
       ],
       "followUps": [
-        "Cho ví dụ Order có nhiều OrderItems?"
+        {
+          "question": "Cho ví dụ Order có nhiều OrderItems?",
+          "answer": "`orders.SelectMany(o => o.Items)` sẽ biến danh sách order, mỗi order có nhiều item, thành một sequence phẳng chứa toàn bộ OrderItems."
+        }
       ]
     },
     {
@@ -1081,7 +1303,10 @@
         "I/O async không cần giữ thread"
       ],
       "followUps": [
-        "Task.Run phù hợp cho loại công việc nào?"
+        {
+          "question": "Task.Run phù hợp cho loại công việc nào?",
+          "answer": "Chủ yếu cho CPU-bound work cần đẩy sang ThreadPool, đặc biệt ở UI app để không block UI thread. Không nên dùng chỉ để bọc I/O API vốn có async thật."
+        }
       ]
     },
     {
@@ -1096,7 +1321,10 @@
         "Chỉ hợp chủ yếu cho event handler"
       ],
       "followUps": [
-        "Exception từ async void đi đâu?"
+        {
+          "question": "Exception từ async void đi đâu?",
+          "answer": "Nó không được giữ trong Task cho caller await; thường được đưa tới SynchronizationContext hiện tại hoặc process-level handler, nên khó kiểm soát và test hơn."
+        }
       ]
     },
     {
@@ -1111,7 +1339,10 @@
         "Cần bounded concurrency khi số lượng lớn"
       ],
       "followUps": [
-        "Nếu một task lỗi thì WhenAll xử lý thế nào?"
+        {
+          "question": "Nếu một task lỗi thì WhenAll xử lý thế nào?",
+          "answer": "Task trả về từ WhenAll sẽ fault nếu có task con fault. Khi await, một exception được ném ra nhưng Task tổng vẫn chứa thông tin về tất cả lỗi; các task khác không tự bị hủy."
+        }
       ]
     },
     {
@@ -1126,7 +1357,10 @@
         "await using cho IAsyncDisposable"
       ],
       "followUps": [
-        "Một type có thể implement cả hai không?"
+        {
+          "question": "Một type có thể implement cả hai không?",
+          "answer": "Có, một type có thể implement cả IDisposable và IAsyncDisposable để caller chọn cleanup sync hoặc async phù hợp. Cần tránh double-dispose resource sai cách."
+        }
       ]
     },
     {
@@ -1141,7 +1375,10 @@
         "Không thay runtime representation"
       ],
       "followUps": [
-        "Dấu ! null-forgiving operator làm gì?"
+        {
+          "question": "Dấu ! null-forgiving operator làm gì?",
+          "answer": "Nó chỉ nói với compiler rằng bạn chấp nhận giá trị đó là non-null tại điểm sử dụng và tắt warning. Nó không thêm runtime check và không biến null thành non-null."
+        }
       ]
     },
     {
@@ -1156,7 +1393,10 @@
         "out/in trên interface hoặc delegate"
       ],
       "followUps": [
-        "Vì sao List<T> không covariance?"
+        {
+          "question": "Vì sao List<T> không covariance?",
+          "answer": "Vì List<T> vừa đọc vừa ghi T. Nếu List<string> được coi là List<object>, caller có thể Add một int/object khác vào và phá type safety."
+        }
       ]
     },
     {
@@ -1171,7 +1411,10 @@
         "Lifetime của captured state kéo dài"
       ],
       "followUps": [
-        "Capture biến vòng lặp hiện nay hoạt động thế nào?"
+        {
+          "question": "Capture biến vòng lặp hiện nay hoạt động thế nào?",
+          "answer": "Trong foreach hiện đại, biến iteration được xem như biến riêng cho mỗi vòng nên lambda capture đúng giá trị từng vòng. Với một số pattern dùng biến ngoài loop vẫn có thể capture cùng một biến mutable."
+        }
       ]
     },
     {
@@ -1186,7 +1429,10 @@
         "ref struct với lifetime hạn chế"
       ],
       "followUps": [
-        "Memory<T> khác Span<T> thế nào?"
+        {
+          "question": "Memory<T> khác Span<T> thế nào?",
+          "answer": "Memory<T> có thể sống trên heap và đi qua async boundary; Span<T> là ref struct, tối ưu cho stack-bound synchronous access. Bạn có thể lấy Span từ Memory khi cần xử lý trực tiếp."
+        }
       ]
     },
     {
@@ -1201,7 +1447,10 @@
         "EF Core dùng expression tree"
       ],
       "followUps": [
-        "Compile expression tree thành delegate có được không?"
+        {
+          "question": "Compile expression tree thành delegate có được không?",
+          "answer": "Có, `Expression<TDelegate>.Compile()` tạo delegate thực thi được. Tuy nhiên compile có cost và có thể không phù hợp trong AOT/trimming scenario."
+        }
       ]
     },
     {
@@ -1216,7 +1465,10 @@
         "Chọn boundary rõ ràng"
       ],
       "followUps": [
-        "Trong EF Core, projection trước ToList có lợi gì?"
+        {
+          "question": "Trong EF Core, projection trước ToList có lợi gì?",
+          "answer": "Select trước ToList giúp database chỉ trả các cột cần thiết và tránh materialize entity/relationship không dùng. Điều này giảm network, memory và tracking cost."
+        }
       ]
     },
     {
@@ -1231,7 +1483,10 @@
         "Ưu tiên aggregation gần data source"
       ],
       "followUps": [
-        "GroupBy trong SQL khác LINQ-to-Objects thế nào?"
+        {
+          "question": "GroupBy trong SQL khác LINQ-to-Objects thế nào?",
+          "answer": "SQL GROUP BY thường aggregate trên server và không trả object group đầy đủ như LINQ-to-Objects. Provider chỉ translate được một số shape GroupBy nhất định."
+        }
       ]
     },
     {
@@ -1246,7 +1501,10 @@
         "Có thể truyền comparer"
       ],
       "followUps": [
-        "DistinctBy hữu ích khi nào?"
+        {
+          "question": "DistinctBy hữu ích khi nào?",
+          "answer": "Khi muốn loại phần tử trùng dựa trên một key cụ thể mà không phải tự viết comparer, ví dụ lấy user duy nhất theo Email."
+        }
       ]
     },
     {
@@ -1261,7 +1519,10 @@
         "Có thể giới hạn N concurrent operations"
       ],
       "followUps": [
-        "SemaphoreSlim có phải distributed lock không?"
+        {
+          "question": "SemaphoreSlim có phải distributed lock không?",
+          "answer": "Không. SemaphoreSlim chỉ đồng bộ trong cùng process. Distributed lock cần cơ chế chia sẻ giữa process/node như database, Redis hoặc coordinator phù hợp."
+        }
       ]
     },
     {
@@ -1276,7 +1537,10 @@
         "Sync-over-async là nguyên nhân phổ biến"
       ],
       "followUps": [
-        "Bạn đo ThreadPool starvation bằng gì?"
+        {
+          "question": "Bạn đo ThreadPool starvation bằng gì?",
+          "answer": "Có thể dùng dotnet-counters, dotnet-trace, OpenTelemetry/runtime metrics hoặc profiler để xem thread count, queue length, CPU và blocking stack."
+        }
       ]
     },
     {
@@ -1291,7 +1555,10 @@
         "Library cần cân nhắc context"
       ],
       "followUps": [
-        "Vì sao UI app lại quan tâm SynchronizationContext?"
+        {
+          "question": "Vì sao UI app lại quan tâm SynchronizationContext?",
+          "answer": "Vì UI control thường chỉ được cập nhật từ UI thread. SynchronizationContext giúp continuation sau await quay lại thread/context đó khi cần."
+        }
       ]
     },
     {
@@ -1306,7 +1573,10 @@
         "Profile trước khi dùng"
       ],
       "followUps": [
-        "Có được await một ValueTask nhiều lần không?"
+        {
+          "question": "Có được await một ValueTask nhiều lần không?",
+          "answer": "Không nên giả định là được. Một số ValueTask bọc Task thì có thể, nhưng nguồn dựa trên IValueTaskSource có thể chỉ hỗ trợ consume một lần; mặc định hãy await một lần hoặc chuyển sang Task nếu cần reuse."
+        }
       ]
     },
     {
@@ -1321,7 +1591,10 @@
         "Tune theo capacity downstream"
       ],
       "followUps": [
-        "Parallel.ForEachAsync khác Task.WhenAll toàn bộ danh sách thế nào?"
+        {
+          "question": "Parallel.ForEachAsync khác Task.WhenAll toàn bộ danh sách thế nào?",
+          "answer": "Parallel.ForEachAsync có giới hạn concurrency tương đối tự nhiên qua MaxDegreeOfParallelism; Task.WhenAll trên toàn bộ danh sách có thể tạo tất cả operation ngay và gây fan-out quá lớn."
+        }
       ]
     },
     {
@@ -1336,7 +1609,10 @@
         "Gen 2 thường đắt hơn"
       ],
       "followUps": [
-        "Large Object Heap liên quan generation nào?"
+        {
+          "question": "Large Object Heap liên quan generation nào?",
+          "answer": "LOH được thu gom cùng Gen 2 về mặt collection cycle, dù là vùng heap riêng cho object lớn. Vì vậy allocation LOH thường tác động đến các GC đắt hơn."
+        }
       ]
     },
     {
@@ -1351,7 +1627,10 @@
         "Pooling có thể giảm churn"
       ],
       "followUps": [
-        "LOH có compact ở mọi GC không?"
+        {
+          "question": "LOH có compact ở mọi GC không?",
+          "answer": "Không. LOH historically không compact thường xuyên như small object heap; runtime có cơ chế compaction có điều kiện hoặc theo cấu hình, nhưng không nên dựa vào compaction để chữa allocation churn."
+        }
       ]
     },
     {
@@ -1366,7 +1645,10 @@
         "Static/event/cache là nguồn phổ biến"
       ],
       "followUps": [
-        "Bạn điều tra managed memory leak bằng cách nào?"
+        {
+          "question": "Bạn điều tra managed memory leak bằng cách nào?",
+          "answer": "Theo dõi heap tăng theo thời gian rồi chụp dump/snapshot, xem type giữ nhiều memory, dominator và reference path. Tool có thể là dotnet-dump, Visual Studio Profiler, PerfView hoặc commercial profiler."
+        }
       ]
     },
     {
@@ -1381,7 +1663,10 @@
         "Phải Return đúng lifecycle"
       ],
       "followUps": [
-        "Array nhận từ pool có đúng size yêu cầu không?"
+        {
+          "question": "Array nhận từ pool có đúng size yêu cầu không?",
+          "answer": "Pool đảm bảo array có độ dài ít nhất bằng size yêu cầu, không nhất thiết đúng chính xác. Caller phải dùng phần length cần thiết và không giả định content được zero."
+        }
       ]
     },
     {
@@ -1396,7 +1681,10 @@
         "Có cost và ảnh hưởng trimming/AOT"
       ],
       "followUps": [
-        "Có thể cache reflection metadata không?"
+        {
+          "question": "Có thể cache reflection metadata không?",
+          "answer": "Có. Cache Type/PropertyInfo/delegate đã resolve giúp tránh lặp lookup reflection. Tuy nhiên cần cân nhắc lifetime, memory và AssemblyLoadContext nếu hệ thống hỗ trợ unload plugin."
+        }
       ]
     },
     {
@@ -1411,7 +1699,10 @@
         "Tăng complexity tooling/build"
       ],
       "followUps": [
-        "Incremental generator có lợi gì?"
+        {
+          "question": "Incremental generator có lợi gì?",
+          "answer": "Nó tái sử dụng kết quả trung gian và chỉ tính lại phần bị ảnh hưởng khi source thay đổi, giúp build IDE nhanh và ổn định hơn so với generator quét toàn compilation mỗi lần."
+        }
       ]
     },
     {
@@ -1426,7 +1717,10 @@
         "Equals/GetHashCode nhất quán"
       ],
       "followUps": [
-        "Khi nào readonly struct hợp hơn record class?"
+        {
+          "question": "Khi nào readonly struct hợp hơn record class?",
+          "answer": "Khi value nhỏ, immutable, copy semantics tự nhiên và bạn muốn tránh allocation heap trong hot path. Nếu object lớn, cần identity hoặc inheritance thì reference type thường phù hợp hơn."
+        }
       ]
     },
     {
@@ -1441,7 +1735,10 @@
         "Public API cần compatibility"
       ],
       "followUps": [
-        "Mutable struct gây vấn đề gì?"
+        {
+          "question": "Mutable struct gây vấn đề gì?",
+          "answer": "Vì struct được copy theo value, sửa một bản copy có thể không ảnh hưởng bản gốc và gây bug khó thấy, đặc biệt khi nằm trong property/collection. Immutable struct an toàn hơn."
+        }
       ]
     },
     {
@@ -1456,7 +1753,10 @@
         "Cô lập ở boundary"
       ],
       "followUps": [
-        "ExpandoObject phù hợp trong trường hợp nào?"
+        {
+          "question": "ExpandoObject phù hợp trong trường hợp nào?",
+          "answer": "Phù hợp khi cần object shape động ở boundary như scripting, prototype hoặc dữ liệu ad-hoc. Không nên dùng làm core domain model vì mất compile-time contract."
+        }
       ]
     },
     {
@@ -1471,7 +1771,10 @@
         "Không bọc I/O sync bằng Task.Run để giả async"
       ],
       "followUps": [
-        "Có nên cung cấp cả sync và async API không?"
+        {
+          "question": "Có nên cung cấp cả sync và async API không?",
+          "answer": "Chỉ khi cả hai có implementation tự nhiên và use case thật. Không nên tạo async giả bằng Task.Run hoặc sync giả bằng `.GetAwaiter().GetResult()` vì dễ block/deadlock."
+        }
       ]
     },
     {
@@ -1486,7 +1789,10 @@
         "Bảo vệ downstream"
       ],
       "followUps": [
-        "Bounded Channel FullMode khác nhau ra sao?"
+        {
+          "question": "Bounded Channel FullMode khác nhau ra sao?",
+          "answer": "Khi channel đầy, policy có thể chờ producer, drop item mới, drop item cũ nhất hoặc drop item đang chờ tùy FullMode. Chọn policy phải theo yêu cầu mất dữ liệu và backpressure của nghiệp vụ."
+        }
       ]
     },
     {
@@ -1501,7 +1807,10 @@
         "Không chữa mặc định bằng tăng MinThreads"
       ],
       "followUps": [
-        "Tăng ThreadPool.SetMinThreads có khi nào hợp lý?"
+        {
+          "question": "Tăng ThreadPool.SetMinThreads có khi nào hợp lý?",
+          "answer": "Có thể hữu ích khi workload burst ngắn và runtime tăng thread quá chậm, sau khi đã đo rõ. Nhưng nó không sửa nguyên nhân blocking và đặt quá cao có thể tăng context switching/resource usage."
+        }
       ]
     },
     {
@@ -1516,7 +1825,10 @@
         "Factory có thể chạy nhiều lần"
       ],
       "followUps": [
-        "GetOrAdd có đảm bảo factory chỉ chạy một lần không?"
+        {
+          "question": "GetOrAdd có đảm bảo factory chỉ chạy một lần không?",
+          "answer": "Không. Trong race, valueFactory có thể được gọi nhiều lần dù chỉ một value thắng và được lưu. Factory không nên có side effect không idempotent."
+        }
       ]
     },
     {
@@ -1531,7 +1843,10 @@
         "Tối ưu có đo lường"
       ],
       "followUps": [
-        "Tool nào bạn dùng để xem allocation?"
+        {
+          "question": "Tool nào bạn dùng để xem allocation?",
+          "answer": "Có thể dùng dotnet-counters để xem allocation rate, dotnet-trace/PerfView, Visual Studio Profiler hoặc dotMemory để xem type và call stack tạo allocation."
+        }
       ]
     },
     {
@@ -1546,7 +1861,10 @@
         "Đo theo workload"
       ],
       "followUps": [
-        "Container memory limit ảnh hưởng GC thế nào?"
+        {
+          "question": "Container memory limit ảnh hưởng GC thế nào?",
+          "answer": "GC nhận biết giới hạn memory của container và điều chỉnh heap budget/collection behavior theo tài nguyên khả dụng. Cấu hình limit quá sát có thể làm GC chạy nhiều và tăng latency."
+        }
       ]
     },
     {
@@ -1561,7 +1879,10 @@
         "Giữ pin ngắn và có chủ đích"
       ],
       "followUps": [
-        "Pinned Object Heap giải quyết phần nào vấn đề?"
+        {
+          "question": "Pinned Object Heap giải quyết phần nào vấn đề?",
+          "answer": "POH tách các object được pin lâu khỏi vùng heap thường, giúp giảm fragmentation do GC phải né object pinned khi compact. Nó không loại bỏ mọi cost của pinning."
+        }
       ]
     },
     {
@@ -1576,7 +1897,10 @@
         "Chỉ dùng khi workload justify"
       ],
       "followUps": [
-        "ObjectPool và ArrayPool khác nhau ở mục tiêu nào?"
+        {
+          "question": "ObjectPool và ArrayPool khác nhau ở mục tiêu nào?",
+          "answer": "ArrayPool chuyên tái sử dụng array/buffer; ObjectPool tái sử dụng object bất kỳ có chi phí tạo/reset đáng kể. Cả hai cần lifecycle rõ để tránh state bẩn hoặc giữ memory quá lâu."
+        }
       ]
     },
     {
@@ -1591,7 +1915,10 @@
         "Phân tích object graph"
       ],
       "followUps": [
-        "Cache lớn nhưng có eviction có được xem là leak không?"
+        {
+          "question": "Cache lớn nhưng có eviction có được xem là leak không?",
+          "answer": "Không nhất thiết. Nếu cache có giới hạn/eviction và memory ổn định theo policy thì đó có thể là working set hợp lệ; leak là retention ngoài ý muốn tăng không kiểm soát."
+        }
       ]
     },
     {
@@ -1606,7 +1933,10 @@
         "Reflection/dynamic code constraints"
       ],
       "followUps": [
-        "Ứng dụng ASP.NET Core nào hưởng lợi rõ từ NativeAOT?"
+        {
+          "question": "Ứng dụng ASP.NET Core nào hưởng lợi rõ từ NativeAOT?",
+          "answer": "Các API nhỏ, serverless/container cần cold-start nhanh, footprint thấp và ít dùng reflection/dynamic feature thường hưởng lợi rõ hơn. App phụ thuộc nhiều thư viện không AOT-friendly có thể không phù hợp."
+        }
       ]
     },
     {
@@ -1621,7 +1951,10 @@
         "Ưu tiên trim-friendly design"
       ],
       "followUps": [
-        "DynamicallyAccessedMembers dùng để làm gì?"
+        {
+          "question": "DynamicallyAccessedMembers dùng để làm gì?",
+          "answer": "Attribute này báo cho trimmer rằng một số member của type phải được giữ lại vì sẽ được truy cập động, giúp static analysis hiểu reflection dependency tốt hơn."
+        }
       ]
     },
     {
@@ -1636,7 +1969,10 @@
         "Không phải security sandbox"
       ],
       "followUps": [
-        "Vì sao AssemblyLoadContext có thể không unload được?"
+        {
+          "question": "Vì sao AssemblyLoadContext có thể không unload được?",
+          "answer": "Nếu còn reference mạnh tới type/object/assembly trong context, hoặc event/static cache giữ chúng, context vẫn reachable nên GC không thể unload. Unload là cooperative theo reachability."
+        }
       ]
     },
     {
@@ -1651,7 +1987,10 @@
         "Major upgrade có staged rollout"
       ],
       "followUps": [
-        "Framework-dependent và self-contained deployment khác nhau thế nào?"
+        {
+          "question": "Framework-dependent và self-contained deployment khác nhau thế nào?",
+          "answer": "Framework-dependent cần runtime .NET phù hợp đã có trên máy và package nhỏ hơn. Self-contained đóng gói runtime cùng app, dễ kiểm soát version hơn nhưng artifact lớn và bạn tự chịu trách nhiệm cập nhật runtime patch qua redeploy."
+        }
       ]
     },
     {
@@ -1666,7 +2005,10 @@
         "Dùng tooling + versioning"
       ],
       "followUps": [
-        "Đổi return type có thể binary breaking không?"
+        {
+          "question": "Đổi return type có thể binary breaking không?",
+          "answer": "Có. Caller đã compile có thể tham chiếu metadata signature cũ; đổi return type có thể làm assembly không bind được dù source nhìn tương thích. Public library nên kiểm tra binary compatibility bằng tooling."
+        }
       ]
     },
     {
@@ -1681,7 +2023,10 @@
         "AOT/trimming compatibility"
       ],
       "followUps": [
-        "Polymorphic serialization có rủi ro gì?"
+        {
+          "question": "Polymorphic serialization có rủi ro gì?",
+          "answer": "Nếu cho phép type discriminator quá rộng hoặc deserialize type tùy ý, có thể tạo security risk và contract khó kiểm soát. Nên whitelist subtype, version discriminator rõ và tránh deserialize arbitrary runtime type."
+        }
       ]
     }
   ]
