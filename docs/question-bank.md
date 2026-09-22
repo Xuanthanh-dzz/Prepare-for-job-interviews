@@ -1,6 +1,6 @@
 # Ngân hàng câu hỏi
 
-Dùng bộ lọc để chọn level và chủ đề. Mỗi câu gồm đáp án mẫu vừa đủ để luyện phỏng vấn, key points mà interviewer mong đợi và câu follow-up thường gặp.
+Dùng bộ lọc để chọn level và chủ đề. Mỗi câu gồm đáp án mẫu vừa đủ để luyện phỏng vấn, key points mà interviewer mong đợi và các **câu hỏi đào sâu có đáp án riêng**.
 
 <div class="interview-toolbar">
   <label>Level
