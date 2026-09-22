@@ -15,6 +15,13 @@ Ví dụ branch `feat/interview-prep-platform` có preview tại:
 
 Quy ước deploy:
 
+- `main` là **nguồn UI duy nhất** cho toàn bộ website.
+- Theme, `mkdocs.yml`, CSS, JavaScript và các trang shell (home/question bank/flashcard/mock interview) luôn lấy từ `main`.
+- Branch chỉ overlay data và nội dung riêng của branch lên UI từ `main`.
+- Mỗi lần `main` thay UI, workflow tự rebuild lại toàn bộ branch previews bằng UI mới.
+- Branch cũ có schema câu hỏi thấp hơn `main` sẽ tự dùng data mới của `main` để tránh preview bị vỡ.
+- `main` luôn là bản production dành cho người dùng cuối.
+
 - `main` luôn là bản production dành cho người dùng cuối.
 - Mọi branch khác được deploy vào thư mục `previews/` và không được ghi đè production.
 - Pull request phải build MkDocs thành công trước khi merge.

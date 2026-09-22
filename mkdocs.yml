@@ -7,6 +7,9 @@ docs_dir: docs
 theme:
   name: material
   language: vi
+  font:
+    text: Inter
+    code: JetBrains Mono
   features:
     - navigation.instant
     - navigation.tabs
@@ -34,6 +37,9 @@ theme:
 nav:
   - Trang chủ: index.md
   - Stack ưu tiên: roadmap.md
+  - Trọng tâm level:
+      - Intern & Senior — 60/40: tracks/intern-senior.md
+      - Junior & Middle: tracks/junior-middle.md
   - Modules:
       - Backend — C# / .NET: modules/csharp-dotnet.md
       - Frontend — JS / TS / Angular: modules/frontend-angular.md

@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 8,
   "questions": [
     {
       "id": "INT-CS-001",
@@ -3323,6 +3323,3069 @@
         {
           "question": "Khi nào nên dùng shared service thay vì Input/Output?",
           "answer": "Khi các component không có quan hệ parent-child thuận tiện hoặc cùng cần một state/service theo feature. Tuy nhiên không nên dùng shared service để né thiết kế component tree một cách tùy tiện."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-001",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Controller-based API và Minimal API khác nhau thế nào?",
+      "answer": "Controller phù hợp khi API lớn cần convention, filter, model binding và tổ chức theo class rõ ràng. Minimal API giảm ceremony và hợp endpoint nhỏ hoặc service gọn; không có lựa chọn nào luôn tốt hơn, nên chọn theo độ phức tạp và convention của team.",
+      "keyPoints": [
+        "Controller có structure/convention rõ",
+        "Minimal API ít ceremony",
+        "Chọn theo complexity/team convention"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào bạn ưu tiên Controller hơn Minimal API?",
+          "answer": "Khi có nhiều endpoint liên quan, cần filter/attribute convention, versioning hoặc team đã chuẩn hóa theo controller để maintain dễ hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-002",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Model binding trong ASP.NET Core là gì?",
+      "answer": "Model binding lấy dữ liệu từ route, query string, header, form hoặc request body rồi gán vào parameter/model của endpoint. Validation có thể chạy sau binding để kiểm tra dữ liệu đầu vào trước khi vào business logic.",
+      "keyPoints": [
+        "Bind request data vào parameter/model",
+        "Nguồn có thể là route/query/body",
+        "Validation là bước riêng"
+      ],
+      "followUps": [
+        {
+          "question": "`[FromRoute]`, `[FromQuery]` và `[FromBody]` dùng khi nào?",
+          "answer": "Dùng khi muốn chỉ rõ nguồn binding hoặc tránh ambiguity; nhiều trường hợp framework có convention mặc định nhưng explicit attribute giúp contract rõ hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-003",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "ActionResult<T> có lợi gì trong Web API?",
+      "answer": "`ActionResult<T>` cho phép endpoint trả cả dữ liệu kiểu T khi thành công và các HTTP result khác như NotFound hoặc BadRequest. Nó giúp signature mô tả response chính mà vẫn linh hoạt xử lý nhiều status code.",
+      "keyPoints": [
+        "Typed success response",
+        "Vẫn trả được HTTP result khác",
+        "Contract rõ hơn"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào nên trả 204 thay vì 200?",
+          "answer": "Khi operation thành công nhưng không cần response body, ví dụ update/delete không cần trả resource sau xử lý."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-004",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Configuration trong ASP.NET Core thường lấy từ đâu?",
+      "answer": "Configuration có thể đến từ appsettings.json, environment-specific file, environment variables, command line hoặc provider khác. Provider nạp sau có thể override giá trị trước, nên production thường dùng environment/secret provider thay vì hard-code.",
+      "keyPoints": [
+        "Nhiều configuration providers",
+        "Có thứ tự override",
+        "Không hard-code secret"
+      ],
+      "followUps": [
+        {
+          "question": "appsettings.Development.json có nên chứa secret thật không?",
+          "answer": "Không nên commit secret thật vào source control; dùng user secrets cho local hoặc secret manager/vault phù hợp ở môi trường deploy."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-005",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Options pattern dùng để làm gì?",
+      "answer": "Options pattern map một section configuration vào class strongly typed và inject qua `IOptions<T>` hoặc biến thể khác. Nó giúp giảm việc đọc configuration bằng string key rải rác và dễ validate cấu hình hơn.",
+      "keyPoints": [
+        "Strongly typed configuration",
+        "Giảm magic string",
+        "Hỗ trợ validation"
+      ],
+      "followUps": [
+        {
+          "question": "`IOptionsSnapshot` khác `IOptions` ở điểm nào?",
+          "answer": "`IOptions` thường giữ một value ổn định, còn `IOptionsSnapshot` tạo snapshot theo scope và hữu ích khi cần reload config trong request-based app."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-006",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Logging tốt trong ASP.NET Core nên log gì?",
+      "answer": "Log nên chứa event có ý nghĩa, context như request/correlation ID và dữ liệu cần để chẩn đoán lỗi. Tránh log secret, token hoặc PII không cần thiết; dùng structured logging thay vì nối chuỗi tự do khi có thể.",
+      "keyPoints": [
+        "Log event + context",
+        "Structured logging",
+        "Không log secret/PII tùy tiện"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao structured logging tốt hơn string message thuần?",
+          "answer": "Vì field có cấu trúc có thể query, filter và aggregate theo thuộc tính như userId, orderId hoặc status thay vì parse text."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-007",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Middleware order quan trọng thế nào?",
+      "answer": "Request đi qua middleware theo thứ tự đăng ký và response đi ngược lại. Nếu đặt sai thứ tự, authentication/authorization, exception handling, routing hoặc CORS có thể không hoạt động như mong đợi.",
+      "keyPoints": [
+        "Request theo thứ tự đăng ký",
+        "Response đi ngược lại",
+        "Order ảnh hưởng behavior"
+      ],
+      "followUps": [
+        {
+          "question": "Authentication và Authorization nên theo thứ tự nào?",
+          "answer": "Thông thường authentication phải chạy trước authorization để hệ thống biết identity rồi mới kiểm tra quyền."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-008",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Problem Details dùng để làm gì?",
+      "answer": "Problem Details là format chuẩn để trả lỗi HTTP có cấu trúc với các field như type, title, status và detail. Nó giúp client xử lý lỗi nhất quán thay vì mỗi endpoint trả một shape khác nhau.",
+      "keyPoints": [
+        "Standard error shape",
+        "Client xử lý nhất quán",
+        "Không trả stack trace nhạy cảm"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên trả exception message thẳng cho client không?",
+          "answer": "Không mặc định; message có thể lộ implementation hoặc dữ liệu nhạy cảm. Client nên nhận lỗi đã chuẩn hóa, còn chi tiết kỹ thuật ở log server."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-004",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "DbContext nên có lifetime thế nào trong Web API?",
+      "answer": "DbContext thường được đăng ký Scoped để mỗi HTTP request có một context riêng. Nó không thread-safe và không nên giữ sống lâu vì change tracker sẽ tích lũy state và dễ gây lỗi concurrency.",
+      "keyPoints": [
+        "Thường Scoped",
+        "Không thread-safe",
+        "Không giữ lâu"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên dùng một DbContext cho nhiều request không?",
+          "answer": "Không. Mỗi request nên có scope riêng; chia sẻ context giữa request có thể gây race condition và state lẫn nhau."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-005",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Migration trong EF Core dùng để làm gì?",
+      "answer": "Migration lưu lịch sử thay đổi schema từ model của ứng dụng và có thể sinh SQL để cập nhật database. Migration cần được review như code vì thay đổi schema production có thể lock bảng hoặc mất dữ liệu nếu làm sai.",
+      "keyPoints": [
+        "Version schema change",
+        "Sinh SQL cập nhật DB",
+        "Phải review trước production"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên chạy migration tự động khi app startup ở production không?",
+          "answer": "Không phải lúc nào cũng nên; với hệ thống lớn thường deploy migration có kiểm soát để tránh nhiều instance cùng chạy hoặc migration dài làm startup thất bại."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-006",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Include và ThenInclude dùng khi nào?",
+      "answer": "`Include` tải navigation liên quan cùng query flow, còn `ThenInclude` đi sâu thêm vào navigation lồng nhau. Chỉ include dữ liệu thật sự cần vì graph lớn có thể làm query nặng.",
+      "keyPoints": [
+        "Eager load navigation",
+        "ThenInclude cho nested navigation",
+        "Tránh over-fetch"
+      ],
+      "followUps": [
+        {
+          "question": "Khi API chỉ cần vài field thì Include hay Select tốt hơn?",
+          "answer": "Thường `Select` projection tốt hơn vì chỉ lấy đúng cột/shape cần thiết và tránh materialize entity graph thừa."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-007",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "SaveChanges làm gì?",
+      "answer": "`SaveChanges` phát hiện thay đổi trên tracked entities rồi gửi INSERT/UPDATE/DELETE cần thiết tới database trong transaction phù hợp. Nó trả số entry bị ảnh hưởng, không phải số row luôn tương đương trong mọi provider.",
+      "keyPoints": [
+        "Detect tracked changes",
+        "Phát SQL write",
+        "Có transaction behavior"
+      ],
+      "followUps": [
+        {
+          "question": "SaveChangesAsync có luôn tốt hơn SaveChanges không?",
+          "answer": "Trong Web API, async thường phù hợp vì I/O database không block thread; nhưng async không làm query tự nhanh hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-008",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Tracking query và no-tracking query khác nhau thế nào?",
+      "answer": "Tracking query đưa entity vào change tracker để có thể update sau đó; no-tracking bỏ phần này và phù hợp read-only query. Tracking có thêm memory/CPU cost nhưng cần thiết khi workflow sửa entity rồi SaveChanges.",
+      "keyPoints": [
+        "Tracking phục vụ update",
+        "No-tracking cho read-only",
+        "Có cost memory/CPU"
+      ],
+      "followUps": [
+        {
+          "question": "Nếu query no-tracking rồi muốn update thì làm sao?",
+          "answer": "Có thể attach entity hoặc load entity tracked trước khi update; cần cẩn thận tránh overwrite field không được phép sửa."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-009",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Projection bằng Select có lợi gì?",
+      "answer": "Projection cho database chỉ trả các field cần và map thẳng sang DTO hoặc anonymous shape. Nó giảm network, memory, tracking và nguy cơ serialize navigation ngoài ý muốn.",
+      "keyPoints": [
+        "Chỉ lấy field cần",
+        "Map trực tiếp DTO",
+        "Giảm over-fetch"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên trả EF entity trực tiếp từ API không?",
+          "answer": "Thường không nên vì coupling API với persistence model, dễ lộ field/navigation và khó version contract."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-010",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Eager, explicit và lazy loading khác nhau thế nào?",
+      "answer": "Eager loading lấy relation chủ động bằng Include; explicit loading gọi load khi cần; lazy loading tự tải khi navigation được truy cập. Lazy loading tiện nhưng dễ tạo N+1 và query khó đoán nên cần dùng thận trọng.",
+      "keyPoints": [
+        "Eager = Include",
+        "Explicit = chủ động load sau",
+        "Lazy = tự load khi access"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao lazy loading dễ gây N+1?",
+          "answer": "Khi loop qua nhiều entity và mỗi lần truy cập navigation lại phát sinh query riêng, số round-trip tăng theo số phần tử."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-011",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "FirstOrDefault và SingleOrDefault nên chọn theo gì?",
+      "answer": "`FirstOrDefault` chỉ yêu cầu zero hoặc nhiều và lấy phần tử đầu; `SingleOrDefault` biểu đạt invariant zero hoặc đúng một và lỗi nếu nhiều hơn một. Chọn theo rule dữ liệu, không chọn chỉ để tránh exception.",
+      "keyPoints": [
+        "First lấy phần tử đầu",
+        "Single enforce uniqueness",
+        "Chọn theo invariant"
+      ],
+      "followUps": [
+        {
+          "question": "Nếu query theo primary key nên dùng gì?",
+          "answer": "`Find/FindAsync` có thể phù hợp vì tận dụng change tracker trước khi query DB; LINQ First/Single phù hợp khi cần filter/projection khác."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-002",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "GROUP BY và HAVING khác WHERE thế nào?",
+      "answer": "`WHERE` lọc row trước khi group; `GROUP BY` gom row; `HAVING` lọc kết quả sau grouping/aggregation. Dùng HAVING cho điều kiện dựa trên aggregate như COUNT hoặc SUM.",
+      "keyPoints": [
+        "WHERE trước group",
+        "HAVING sau group",
+        "Aggregate condition dùng HAVING"
+      ],
+      "followUps": [
+        {
+          "question": "Có thể dùng WHERE với SUM không?",
+          "answer": "Không trực tiếp cho aggregate của group; cần GROUP BY rồi HAVING hoặc subquery tùy bài toán."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-003",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "ACID trong transaction là gì?",
+      "answer": "ACID gồm Atomicity, Consistency, Isolation và Durability. Nó mô tả các thuộc tính giúp transaction giữ dữ liệu đúng khi có nhiều thao tác, concurrent access hoặc failure.",
+      "keyPoints": [
+        "Atomicity",
+        "Consistency",
+        "Isolation",
+        "Durability"
+      ],
+      "followUps": [
+        {
+          "question": "Atomicity khác Durability thế nào?",
+          "answer": "Atomicity đảm bảo transaction all-or-nothing; Durability đảm bảo dữ liệu đã commit vẫn tồn tại sau crash theo guarantee của DB."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-004",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "Normalization giải quyết vấn đề gì?",
+      "answer": "Normalization tách dữ liệu để giảm duplication và update anomaly, thường qua các normal form. Với OLTP, normalized schema giúp consistency tốt hơn; đôi khi đọc nhiều có thể denormalize có chủ đích.",
+      "keyPoints": [
+        "Giảm duplication",
+        "Tránh update anomaly",
+        "Có trade-off với read complexity"
+      ],
+      "followUps": [
+        {
+          "question": "Denormalization có phải thiết kế xấu không?",
+          "answer": "Không nếu có lý do đo được như read performance/reporting và có chiến lược giữ dữ liệu đồng bộ."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-005",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "Clustered và nonclustered index khác nhau ở mức khái niệm?",
+      "answer": "Clustered index quyết định cách dữ liệu row được tổ chức theo key ở leaf level của index; một bảng chỉ có một cấu trúc clustered chính. Nonclustered index là cấu trúc riêng chứa key và locator tới row.",
+      "keyPoints": [
+        "Clustered gắn với row storage",
+        "Chỉ một clustered structure",
+        "Có nhiều nonclustered index"
+      ],
+      "followUps": [
+        {
+          "question": "Có phải primary key luôn là clustered index không?",
+          "answer": "Không bắt buộc; nhiều DB/tool chọn mặc định như vậy nhưng primary key và clustering là hai quyết định khác nhau."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-006",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "NULL trong SQL cần chú ý gì?",
+      "answer": "NULL biểu diễn unknown/missing và không so sánh bằng `= NULL`; phải dùng `IS NULL` hoặc `IS NOT NULL`. Logic với NULL dùng three-valued logic nên biểu thức có thể thành UNKNOWN.",
+      "keyPoints": [
+        "NULL không bằng giá trị thường",
+        "Dùng IS NULL",
+        "Three-valued logic"
+      ],
+      "followUps": [
+        {
+          "question": "`COUNT(column)` có đếm NULL không?",
+          "answer": "Không; `COUNT(column)` bỏ NULL, còn `COUNT(*)` đếm row."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-007",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "CTE dùng để làm gì?",
+      "answer": "CTE đặt tên tạm cho một query trong statement hiện tại, giúp chia query phức tạp thành phần dễ đọc hơn và hỗ trợ recursive query. CTE không mặc định là cache hay temp table.",
+      "keyPoints": [
+        "Named query expression",
+        "Tăng readability",
+        "Có recursive CTE"
+      ],
+      "followUps": [
+        {
+          "question": "CTE có luôn nhanh hơn subquery không?",
+          "answer": "Không. Optimizer thường có thể tạo plan tương tự; chọn vì clarity trước rồi đo execution plan nếu performance quan trọng."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-008",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "Transaction nên ngắn hay dài?",
+      "answer": "Nên giữ transaction ngắn nhất có thể mà vẫn bảo toàn business invariant. Transaction dài giữ lock/resource lâu hơn, tăng blocking và nguy cơ deadlock.",
+      "keyPoints": [
+        "Giữ transaction ngắn",
+        "Giảm lock time",
+        "Vẫn bảo toàn invariant"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên gọi external API bên trong DB transaction không?",
+          "answer": "Thường tránh vì network call có latency/failure không kiểm soát, làm transaction giữ lock lâu; dùng outbox/saga nếu cần phối hợp hệ thống."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-009",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "OFFSET pagination hoạt động thế nào và có hạn chế gì?",
+      "answer": "`OFFSET ... FETCH/LIMIT` bỏ qua N row rồi lấy page tiếp theo, dễ implement cho UI page number. Khi offset lớn, DB vẫn có thể phải xử lý nhiều row trước đó nên performance giảm.",
+      "keyPoints": [
+        "Dễ làm page-number pagination",
+        "Offset lớn có cost",
+        "Cần ORDER BY ổn định"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao pagination phải có ORDER BY ổn định?",
+          "answer": "Nếu sort không deterministic, row có thể nhảy giữa page khi dữ liệu thay đổi hoặc khi nhiều row cùng giá trị sort."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SEC-001",
+      "level": "Junior",
+      "topic": "Security",
+      "question": "Authentication và Authorization khác nhau thế nào?",
+      "answer": "Authentication xác định bạn là ai; Authorization quyết định bạn được phép làm gì. Hệ thống thường authenticate trước rồi áp policy/role/resource rule để authorize operation.",
+      "keyPoints": [
+        "AuthN = identity",
+        "AuthZ = permission",
+        "Authorize sau authenticate"
+      ],
+      "followUps": [
+        {
+          "question": "Frontend ẩn button có được xem là authorization không?",
+          "answer": "Không. Đó chỉ là UX; backend vẫn phải enforce quyền vì client có thể gọi API trực tiếp."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SEC-002",
+      "level": "Junior",
+      "topic": "Security",
+      "question": "Password nên lưu như thế nào?",
+      "answer": "Không lưu plaintext hoặc mã hóa reversible. Password nên được hash bằng password hashing algorithm có salt và work factor phù hợp như Argon2, bcrypt hoặc PBKDF2 theo stack/library chuẩn.",
+      "keyPoints": [
+        "Không plaintext",
+        "Hash chậm chuyên dụng",
+        "Salt + work factor"
+      ],
+      "followUps": [
+        {
+          "question": "SHA-256 có phù hợp để hash password trực tiếp không?",
+          "answer": "Không lý tưởng vì quá nhanh, giúp brute-force dễ hơn; password hashing algorithm được thiết kế để tốn chi phí tính toán/memory."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SEC-003",
+      "level": "Junior",
+      "topic": "Security",
+      "question": "Role và policy authorization khác nhau thế nào?",
+      "answer": "Role kiểm tra user thuộc nhóm quyền nào, còn policy có thể kết hợp nhiều requirement như claim, role, tenant hoặc custom rule. Policy linh hoạt hơn cho rule business phức tạp.",
+      "keyPoints": [
+        "Role đơn giản theo nhóm",
+        "Policy kết hợp requirement",
+        "Policy hợp rule phức tạp"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào role-based auth bắt đầu khó maintain?",
+          "answer": "Khi quyền phụ thuộc resource, tenant, trạng thái hoặc nhiều điều kiện kết hợp chứ không chỉ chức danh."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SEC-004",
+      "level": "Junior",
+      "topic": "Security",
+      "question": "Secret trong ứng dụng nên quản lý thế nào?",
+      "answer": "Secret không nên commit vào repository hoặc hard-code trong source. Local có thể dùng user secrets; production dùng environment secret, cloud secret manager hoặc vault với access control và rotation.",
+      "keyPoints": [
+        "Không commit secret",
+        "Dùng secret manager",
+        "Có access control/rotation"
+      ],
+      "followUps": [
+        {
+          "question": "Base64 có phải mã hóa secret không?",
+          "answer": "Không. Base64 chỉ là encoding và có thể decode dễ dàng, không cung cấp confidentiality."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TEST-002",
+      "level": "Junior",
+      "topic": "Testing",
+      "question": "Mock và fake khác nhau thế nào?",
+      "answer": "Mock thường dùng để verify interaction/call kỳ vọng; fake là implementation đơn giản nhưng hoạt động thật ở mức nào đó, ví dụ in-memory repository. Không nên mock mọi dependency nếu fake/integration test cho tín hiệu đáng tin hơn.",
+      "keyPoints": [
+        "Mock tập trung interaction",
+        "Fake là implementation nhẹ",
+        "Không over-mock"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào mock database repository hợp lý?",
+          "answer": "Khi unit test business logic không quan tâm query/database behavior; còn query EF/SQL nên có integration test với provider thật phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TEST-003",
+      "level": "Junior",
+      "topic": "Testing",
+      "question": "Arrange-Act-Assert là gì?",
+      "answer": "Đó là cấu trúc test gồm chuẩn bị input/dependency, thực hiện hành vi cần test và kiểm tra kết quả. Nó giúp test dễ đọc và giữ mỗi test tập trung vào một behavior chính.",
+      "keyPoints": [
+        "Arrange",
+        "Act",
+        "Assert"
+      ],
+      "followUps": [
+        {
+          "question": "Một test nên có bao nhiêu assert?",
+          "answer": "Không có con số tuyệt đối; nhiều assert vẫn ổn nếu cùng kiểm tra một behavior/outcome, tránh gom nhiều scenario không liên quan vào một test."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TEST-004",
+      "level": "Junior",
+      "topic": "Testing",
+      "question": "WebApplicationFactory dùng để làm gì?",
+      "answer": "Nó hỗ trợ boot ASP.NET Core app trong test host để integration test HTTP pipeline gần thực tế. Bạn có thể override service/config và gọi endpoint bằng HttpClient mà không cần deploy app thật.",
+      "keyPoints": [
+        "Integration test app host",
+        "Test pipeline thật",
+        "Override dependency/config được"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao integration test API có giá trị hơn chỉ unit test controller?",
+          "answer": "Nó bắt được lỗi routing, middleware, serialization, DI, auth và model binding mà unit test controller thường bỏ qua."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TEST-005",
+      "level": "Junior",
+      "topic": "Testing",
+      "question": "Một unit test tốt nên có đặc điểm gì?",
+      "answer": "Nó chạy nhanh, deterministic, độc lập và kiểm tra behavior có ý nghĩa. Test không nên phụ thuộc thời gian thật, network hoặc thứ tự chạy nếu không kiểm soát.",
+      "keyPoints": [
+        "Nhanh",
+        "Deterministic",
+        "Independent",
+        "Behavior-focused"
+      ],
+      "followUps": [
+        {
+          "question": "Flaky test nguy hiểm thế nào?",
+          "answer": "Team mất niềm tin vào CI, bắt đầu rerun hoặc bỏ qua failure thật; cần tìm nguyên nhân timing/shared state/random dependency."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ARCH-001",
+      "level": "Junior",
+      "topic": "Architecture",
+      "question": "DTO và Entity khác nhau thế nào?",
+      "answer": "Entity là model persistence/domain có identity và behavior; DTO là shape dùng để truyền dữ liệu qua boundary như API. Tách DTO giúp tránh expose persistence detail và cho API evolve độc lập hơn.",
+      "keyPoints": [
+        "Entity phục vụ domain/persistence",
+        "DTO phục vụ transport",
+        "Giảm coupling API-DB"
+      ],
+      "followUps": [
+        {
+          "question": "Có cần AutoMapper cho mọi DTO không?",
+          "answer": "Không. Mapping nhỏ có thể viết explicit rõ hơn; tool hữu ích khi mapping lặp lại nhiều nhưng không nên che logic business."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ARCH-002",
+      "level": "Junior",
+      "topic": "Architecture",
+      "question": "Repository pattern dùng để làm gì?",
+      "answer": "Repository tạo abstraction cho truy cập aggregate/data source và giúp business code không phụ thuộc trực tiếp chi tiết lưu trữ. Với EF Core, DbContext đã có nhiều behavior kiểu repository/unit-of-work nên thêm layer cần có lý do.",
+      "keyPoints": [
+        "Abstraction data access",
+        "Giảm coupling persistence",
+        "Không bọc EF máy móc"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào generic repository trở thành bất lợi?",
+          "answer": "Khi nó chỉ mirror CRUD của DbSet và làm query đặc thù khó tối ưu/projection, tạo abstraction không thêm giá trị."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ARCH-003",
+      "level": "Junior",
+      "topic": "Architecture",
+      "question": "Service layer nên chứa gì?",
+      "answer": "Service/application layer điều phối use case, authorization/business rule phù hợp và transaction boundary, không nên chỉ pass-through controller sang repository. Controller giữ HTTP concern, service giữ application behavior.",
+      "keyPoints": [
+        "Điều phối use case",
+        "Controller không chứa business logic",
+        "Tránh pass-through service vô nghĩa"
+      ],
+      "followUps": [
+        {
+          "question": "Validation đặt ở controller hay service?",
+          "answer": "Input format/basic validation có thể ở boundary; business invariant cần nằm ở layer có thể bảo vệ rule dù caller không phải HTTP."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ARCH-004",
+      "level": "Junior",
+      "topic": "Architecture",
+      "question": "Separation of concerns giúp gì?",
+      "answer": "Nó tách trách nhiệm như HTTP, business logic, persistence và infrastructure để thay đổi một concern ít ảnh hưởng concern khác. Mục tiêu là giảm coupling chứ không phải tạo thật nhiều layer.",
+      "keyPoints": [
+        "Tách trách nhiệm",
+        "Giảm coupling",
+        "Không đồng nghĩa nhiều layer"
+      ],
+      "followUps": [
+        {
+          "question": "Dấu hiệu over-engineering là gì?",
+          "answer": "Nhiều abstraction/layer nhưng mỗi lớp chỉ chuyển tiếp dữ liệu, khó trace flow và không giải quyết variability hoặc complexity thật."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-002",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Custom middleware và action filter nên chọn thế nào?",
+      "answer": "Middleware chạy ở pipeline rộng và phù hợp cross-cutting concern không phụ thuộc MVC như correlation, exception hoặc request logging. Action filter nằm trong MVC/action pipeline và phù hợp logic cần action context/model state.",
+      "keyPoints": [
+        "Middleware ở HTTP pipeline rộng",
+        "Filter ở MVC/action context",
+        "Chọn theo scope concern"
+      ],
+      "followUps": [
+        {
+          "question": "Validation nên làm bằng middleware không?",
+          "answer": "Thường không nếu cần model/action metadata; endpoint filter, action filter hoặc validation layer phù hợp hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-003",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "BackgroundService cần chú ý gì khi dùng Scoped dependency?",
+      "answer": "Hosted service thường là Singleton, nên không inject DbContext scoped trực tiếp để dùng mãi. Mỗi iteration/job nên tạo scope bằng `IServiceScopeFactory`, resolve dependency scoped rồi dispose scope.",
+      "keyPoints": [
+        "Hosted service thường singleton",
+        "Tạo scope cho scoped dependency",
+        "Dispose scope đúng lifecycle"
+      ],
+      "followUps": [
+        {
+          "question": "CancellationToken trong BackgroundService dùng thế nào?",
+          "answer": "Propagate stoppingToken xuống I/O và loop để service dừng graceful khi host shutdown."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-004",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Health check nên phân biệt readiness và liveness thế nào?",
+      "answer": "Liveness trả lời process còn sống hay không; readiness trả lời instance đã sẵn sàng nhận traffic chưa, có thể phụ thuộc critical dependency. Tách hai loại tránh restart app chỉ vì dependency tạm thời lỗi.",
+      "keyPoints": [
+        "Liveness = process alive",
+        "Readiness = ready for traffic",
+        "Không restart vô ích"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên gọi mọi external service trong liveness check không?",
+          "answer": "Không. Điều đó có thể tạo cascading restart khi dependency lỗi; dependency thường phù hợp readiness hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-005",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Rate limiting bảo vệ API như thế nào?",
+      "answer": "Rate limiting giới hạn request theo key/caller/window để bảo vệ capacity và fairness. Policy có thể fixed/sliding/token bucket/concurrency và cần trả status/retry information phù hợp.",
+      "keyPoints": [
+        "Bảo vệ capacity",
+        "Có nhiều algorithm",
+        "Key/policy theo use case"
+      ],
+      "followUps": [
+        {
+          "question": "Rate limit có thay thế authorization không?",
+          "answer": "Không. Nó kiểm soát tốc độ, không xác định caller có quyền thực hiện operation hay không."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-006",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Output caching khác response caching thế nào?",
+      "answer": "Response caching chủ yếu tuân HTTP cache semantics/header và phụ thuộc client/proxy behavior; output caching là server-side policy chủ động cache response của endpoint. Cần thiết kế vary key/invalidation để tránh trả nhầm dữ liệu giữa user.",
+      "keyPoints": [
+        "Response cache theo HTTP semantics",
+        "Output cache do server policy",
+        "Vary key rất quan trọng"
+      ],
+      "followUps": [
+        {
+          "question": "Endpoint có auth user-specific có nên cache chung không?",
+          "answer": "Không nếu response phụ thuộc user; phải vary theo identity/tenant hoặc không cache để tránh data leak."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-007",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Graceful shutdown quan trọng thế nào?",
+      "answer": "Khi nhận shutdown, app nên ngừng nhận work mới, cho request/job đang chạy hoàn tất trong timeout và propagate cancellation. Điều này giảm partial processing khi deploy hoặc scale-in.",
+      "keyPoints": [
+        "Ngừng nhận work mới",
+        "Cho in-flight work hoàn tất",
+        "Có timeout/cancellation"
+      ],
+      "followUps": [
+        {
+          "question": "Background worker cần làm gì khi shutdown?",
+          "answer": "Nghe cancellation token, dừng lấy job mới và hoàn tất/rollback job hiện tại theo semantics an toàn."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-008",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Endpoint filter phù hợp với trường hợp nào?",
+      "answer": "Endpoint filter phù hợp Minimal API khi cần logic trước/sau handler như validation, logging hoặc policy cục bộ. Nó có context gần endpoint hơn middleware nhưng scope hẹp hơn.",
+      "keyPoints": [
+        "Gần endpoint",
+        "Cross-cutting cục bộ",
+        "Hợp Minimal API"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào middleware vẫn tốt hơn endpoint filter?",
+          "answer": "Khi concern áp dụng cho toàn pipeline, kể cả static/routing layer hoặc không cần endpoint-specific metadata."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-009",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Bạn chuẩn hóa exception handling cho API như thế nào?",
+      "answer": "Dùng một global exception handler/middleware để map exception đã biết sang Problem Details/status phù hợp, log unexpected exception và không leak stack trace. Business error có thể dùng result/typed exception có chủ đích.",
+      "keyPoints": [
+        "Centralized handling",
+        "Map error -> HTTP contract",
+        "Không leak internals"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên dùng exception cho mọi validation failure không?",
+          "answer": "Không nhất thiết. Expected validation/business result thường rõ hơn nếu trả result có cấu trúc thay vì dùng exception làm control flow."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-002",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "AsSplitQuery giải quyết vấn đề gì?",
+      "answer": "Query nhiều collection Include có thể tạo cartesian explosion trong một SQL lớn. Split query tách thành nhiều SQL để giảm duplicate row nhưng đổi lại tăng round-trip và cần cân nhắc consistency giữa các query.",
+      "keyPoints": [
+        "Giảm cartesian explosion",
+        "Tăng round-trip",
+        "Có consistency trade-off"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào single query vẫn tốt hơn?",
+          "answer": "Khi graph nhỏ, ít collection và một round-trip hiệu quả hơn chi phí duplicate data."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-003",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "Keyset pagination tốt hơn OFFSET khi nào?",
+      "answer": "Keyset dùng giá trị sort cuối của page trước để lấy page tiếp theo, nên không phải skip lượng row lớn và ổn định hơn khi data thay đổi. Đổi lại khó nhảy trực tiếp tới page số bất kỳ.",
+      "keyPoints": [
+        "Không skip offset lớn",
+        "Ổn định hơn khi insert/delete",
+        "Khó random page jump"
+      ],
+      "followUps": [
+        {
+          "question": "Keyset cần index thế nào?",
+          "answer": "Index nên match thứ tự sort/filter và keyset condition, thường gồm sort column cùng unique tie-breaker."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-004",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "ExecuteUpdate/ExecuteDelete có lợi gì?",
+      "answer": "Chúng cho phép update/delete trực tiếp trên database mà không materialize từng entity vào change tracker. Điều này hiệu quả cho bulk operation, nhưng tracked entity hiện có có thể trở nên stale.",
+      "keyPoints": [
+        "Server-side bulk update/delete",
+        "Không materialize entity",
+        "Tracked state có thể stale"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào không nên dùng ExecuteUpdate?",
+          "answer": "Khi cần domain behavior/per-entity validation hoặc logic phụ thuộc change tracker/event của từng entity."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-005",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "Global query filter dùng cho gì?",
+      "answer": "Nó tự thêm predicate vào query của entity, thường dùng soft delete hoặc tenant filter. Cần hiểu cách disable/filter composition để tránh query admin hoặc cross-tenant sai.",
+      "keyPoints": [
+        "Soft delete",
+        "Multi-tenancy filter",
+        "Có thể bypass có chủ đích"
+      ],
+      "followUps": [
+        {
+          "question": "Global filter có thay thế database security không?",
+          "answer": "Không. Nó là application-level safeguard; tenant/security quan trọng vẫn nên có defense-in-depth và test chặt."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-006",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "Database transaction và execution strategy retry có thể xung đột thế nào?",
+      "answer": "Nếu provider có retry strategy, transaction tự quản lý cần được thực thi thông qua execution strategy để toàn transaction có thể retry đúng cách. Nếu không, transient failure giữa transaction có thể để retry semantics không an toàn.",
+      "keyPoints": [
+        "Retry phải bao transaction phù hợp",
+        "Transient failure",
+        "Không retry partial transaction mù"
+      ],
+      "followUps": [
+        {
+          "question": "Operation không idempotent trong transaction retry cần chú ý gì?",
+          "answer": "Phải đảm bảo side effect ngoài DB không bị lặp; tốt nhất không gọi external system trực tiếp trong transaction retry."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-007",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "Compiled query có đáng dùng không?",
+      "answer": "Compiled query giảm overhead compile expression cho query được gọi rất thường xuyên với shape ổn định. EF đã cache nhiều thứ nên chỉ nên dùng khi profiling cho thấy query compilation là bottleneck đáng kể.",
+      "keyPoints": [
+        "Giảm query compilation overhead",
+        "Chỉ cho hot query",
+        "Profile trước"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên compiled query mọi repository method không?",
+          "answer": "Không. Complexity tăng mà lợi ích thường nhỏ nếu query không đủ nóng."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-008",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "Interceptor trong EF Core dùng khi nào?",
+      "answer": "Interceptor cho phép quan sát/thay đổi behavior ở boundary như command, connection hoặc SaveChanges, phù hợp logging, auditing hoặc policy hạ tầng. Không nên giấu business logic cốt lõi trong interceptor.",
+      "keyPoints": [
+        "Cross-cutting DB concern",
+        "Có command/SaveChanges interceptors",
+        "Tránh business logic ẩn"
+      ],
+      "followUps": [
+        {
+          "question": "Auditing nên đặt interceptor hay application layer?",
+          "answer": "Metadata kỹ thuật chung có thể ở interceptor; business audit có semantics domain nên ở layer hiểu use case."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-009",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "Migration zero-downtime cần nguyên tắc gì?",
+      "answer": "Dùng backward-compatible expand-and-contract: thêm schema mới trước, deploy code hỗ trợ cả cũ/mới, backfill rồi mới drop phần cũ. Tránh rename/drop trực tiếp khi nhiều app version có thể cùng chạy.",
+      "keyPoints": [
+        "Expand-and-contract",
+        "Backward compatibility",
+        "Backfill trước cleanup"
+      ],
+      "followUps": [
+        {
+          "question": "Thêm NOT NULL column vào bảng lớn có rủi ro gì?",
+          "answer": "Có thể lock/rewrite hoặc fail vì row cũ thiếu value; thường thêm nullable/default/backfill theo bước rồi mới enforce constraint."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-010",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "Optimistic concurrency với rowversion hoạt động thế nào?",
+      "answer": "EF đưa concurrency token cũ vào WHERE khi UPDATE/DELETE. Nếu không còn row khớp, SaveChanges báo concurrency conflict và app phải quyết định reload, merge, retry hoặc trả conflict cho user.",
+      "keyPoints": [
+        "Token nằm trong WHERE",
+        "Zero affected row => conflict",
+        "Cần strategy resolve"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên tự động retry mọi concurrency conflict không?",
+          "answer": "Không. Nếu hai user sửa cùng business field, retry mù có thể ghi đè dữ liệu; cần policy theo domain."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-002",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Sargable query là gì?",
+      "answer": "Query sargable cho optimizer dùng index seek hiệu quả, thường tránh bọc indexed column trong function hoặc implicit conversion ở predicate. Ví dụ range theo date tốt hơn `YEAR(dateColumn)=...` trong nhiều trường hợp.",
+      "keyPoints": [
+        "Cho phép index seek tốt hơn",
+        "Tránh function trên indexed column",
+        "Tránh implicit conversion"
+      ],
+      "followUps": [
+        {
+          "question": "LIKE '%text' có dễ dùng index seek không?",
+          "answer": "Thường khó vì wildcard đầu chuỗi làm mất prefix để seek; full-text search hoặc strategy khác có thể phù hợp hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-003",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Execution plan giúp bạn debug query chậm thế nào?",
+      "answer": "Execution plan cho biết optimizer chọn scan/seek, join algorithm, sort, estimate row và cost. So sánh estimated với actual row giúp phát hiện statistics/cardinality vấn đề.",
+      "keyPoints": [
+        "Xem scan/seek/join",
+        "Actual vs estimated rows",
+        "Tìm expensive operator"
+      ],
+      "followUps": [
+        {
+          "question": "Index scan có luôn xấu không?",
+          "answer": "Không. Nếu cần đọc phần lớn bảng, scan có thể rẻ hơn nhiều random seek; phải nhìn workload và row count."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-004",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Covering index là gì?",
+      "answer": "Index covering chứa đủ column để query trả kết quả mà không cần lookup về base table/clustered index. Có thể thêm included column để cover query nhưng index rộng làm write/storage đắt hơn.",
+      "keyPoints": [
+        "Tránh key lookup",
+        "Có include columns",
+        "Trade-off write/storage"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên include mọi cột SELECT vào index không?",
+          "answer": "Không. Index quá rộng tăng storage, cache pressure và write cost; chỉ cover query quan trọng dựa trên đo lường."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-005",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Deadlock xảy ra thế nào và xử lý ra sao?",
+      "answer": "Deadlock xảy ra khi transaction giữ resource và chờ resource của nhau tạo cycle. Database thường chọn một victim để rollback; app nên retry transaction phù hợp và giảm deadlock bằng lock order nhất quán, transaction ngắn, index tốt.",
+      "keyPoints": [
+        "Cycle wait",
+        "DB chọn victim",
+        "Retry + giảm lock contention"
+      ],
+      "followUps": [
+        {
+          "question": "Deadlock khác blocking thế nào?",
+          "answer": "Blocking có thể tự hết khi holder release lock; deadlock là cycle không tự giải nên DB phải phá một transaction."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-006",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Window function dùng khi nào?",
+      "answer": "Window function tính giá trị trên tập row liên quan mà không collapse row như GROUP BY, ví dụ ROW_NUMBER, running SUM hoặc LAG. Nó rất hữu ích cho ranking, analytics và pagination.",
+      "keyPoints": [
+        "Không collapse row",
+        "Ranking/aggregate theo window",
+        "ROW_NUMBER/LAG/SUM OVER"
+      ],
+      "followUps": [
+        {
+          "question": "ROW_NUMBER khác RANK thế nào?",
+          "answer": "ROW_NUMBER luôn tăng duy nhất từng row; RANK cho cùng rank khi tie và tạo gap cho rank tiếp theo."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-007",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Parameter sniffing là gì ở mức khái niệm?",
+      "answer": "Database có thể compile plan dựa trên parameter value ban đầu rồi reuse plan cho value phân bố rất khác, dẫn đến plan không tối ưu. Cách xử lý phụ thuộc DB và workload, không nên luôn ép recompile.",
+      "keyPoints": [
+        "Plan phụ thuộc parameter đầu",
+        "Data skew gây plan xấu",
+        "Cần đo trước khi fix"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao cùng query lúc nhanh lúc chậm?",
+          "answer": "Có thể do parameter skew, cache/IO, blocking hoặc plan thay đổi; cần xem actual plan và runtime metrics thay vì đoán."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-008",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Isolation level ảnh hưởng performance thế nào?",
+      "answer": "Isolation cao hơn có thể giảm anomaly nhưng tăng lock/blocking hoặc versioning cost. Chọn mức dựa trên consistency invariant và concurrency workload, không mặc định dùng mức mạnh nhất.",
+      "keyPoints": [
+        "Consistency vs concurrency",
+        "Lock/versioning cost",
+        "Chọn theo invariant"
+      ],
+      "followUps": [
+        {
+          "question": "Read Committed có tránh mọi race condition không?",
+          "answer": "Không. Nó ngăn dirty read nhưng vẫn có thể gặp non-repeatable read hoặc race giữa read-then-write tùy workflow."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-009",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Normalization và denormalization nên cân bằng thế nào?",
+      "answer": "OLTP thường ưu tiên normalized source of truth để update nhất quán; read-heavy/reporting có thể denormalize hoặc materialize view/cache. Denormalization phải có owner và sync strategy rõ.",
+      "keyPoints": [
+        "Normalized cho consistency",
+        "Denormalized cho read path",
+        "Cần sync strategy"
+      ],
+      "followUps": [
+        {
+          "question": "Denormalize bằng duplicate column có rủi ro gì?",
+          "answer": "Dữ liệu có thể lệch khi update một nơi mà quên nơi khác; cần transaction/event/rebuild strategy."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-010",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Bạn thiết kế composite index dựa trên query pattern thế nào?",
+      "answer": "Xem equality predicate, range predicate, join và order by; cột đầu index phải phù hợp cách query filter/sort thực tế. Selectivity hữu ích nhưng không phải rule duy nhất, cần đọc execution plan.",
+      "keyPoints": [
+        "Dựa query pattern",
+        "Equality/range/order",
+        "Không chọn chỉ theo selectivity"
+      ],
+      "followUps": [
+        {
+          "question": "Index `(A,B)` có dùng tốt cho query chỉ filter B không?",
+          "answer": "Thường không hiệu quả bằng index bắt đầu từ B vì B không phải left-most key, dù optimizer có thể chọn scan hoặc strategy khác."
+        }
+      ]
+    },
+    {
+      "id": "MID-SEC-002",
+      "level": "Middle",
+      "topic": "Security",
+      "question": "JWT access token và cookie session trade-off thế nào?",
+      "answer": "Bearer token tiện cho API/mobile/service nhưng token bị lộ có thể dùng từ nơi khác tới khi hết hạn; HttpOnly cookie giảm JS access nhưng cần xử lý CSRF/SameSite. Chọn theo client architecture và threat model.",
+      "keyPoints": [
+        "Bearer token phù hợp API",
+        "Cookie giảm JS token exposure",
+        "CSRF vs XSS trade-off"
+      ],
+      "followUps": [
+        {
+          "question": "JWT có tự động an toàn hơn session cookie không?",
+          "answer": "Không. Cả hai có attack surface khác nhau; security phụ thuộc storage, transport, lifetime, validation và revocation design."
+        }
+      ]
+    },
+    {
+      "id": "MID-SEC-003",
+      "level": "Middle",
+      "topic": "Security",
+      "question": "Refresh token rotation giải quyết gì?",
+      "answer": "Mỗi lần refresh, server cấp refresh token mới và làm token cũ hết hiệu lực. Nếu token cũ bị reuse, hệ thống có thể phát hiện khả năng token theft và revoke session/token family.",
+      "keyPoints": [
+        "Rotate mỗi refresh",
+        "Detect reuse",
+        "Có revoke strategy"
+      ],
+      "followUps": [
+        {
+          "question": "Access token nên sống ngắn hay dài?",
+          "answer": "Thường ngắn để giảm blast radius khi lộ; refresh token chịu trách nhiệm duy trì session dài hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-SEC-004",
+      "level": "Middle",
+      "topic": "Security",
+      "question": "Resource-based authorization dùng khi nào?",
+      "answer": "Khi quyền phụ thuộc resource cụ thể như owner, tenant hoặc trạng thái, role đơn thuần không đủ. Authorization handler/policy nhận cả user và resource để quyết định.",
+      "keyPoints": [
+        "Quyền phụ thuộc resource",
+        "Role không đủ",
+        "Check ownership/tenant/state"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên query database trong authorization handler không?",
+          "answer": "Có thể nhưng cần tránh N+1/hidden heavy I/O; nhiều trường hợp load resource trước rồi authorize trên dữ liệu đã có sẽ rõ hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-SEC-005",
+      "level": "Middle",
+      "topic": "Security",
+      "question": "Bạn chống mass assignment/over-posting trong API thế nào?",
+      "answer": "Không bind trực tiếp request vào entity có field nhạy cảm. Dùng request DTO chỉ chứa field được phép sửa, rồi map có chủ đích sang domain/entity và enforce authorization theo field/resource.",
+      "keyPoints": [
+        "Request DTO allowlist",
+        "Không bind entity trực tiếp",
+        "Authorize field/resource"
+      ],
+      "followUps": [
+        {
+          "question": "Patch endpoint có tăng rủi ro over-posting không?",
+          "answer": "Có nếu path/property được cho phép quá rộng; cần whitelist operation/field và validate sau patch."
+        }
+      ]
+    },
+    {
+      "id": "MID-TEST-002",
+      "level": "Middle",
+      "topic": "Testing",
+      "question": "Testcontainers có lợi gì cho integration test .NET?",
+      "answer": "Nó chạy dependency thật như SQL Server/Postgres/Redis trong container cô lập, giúp test gần production hơn in-memory fake. Cost là startup chậm hơn nên cần quản lifecycle hợp lý.",
+      "keyPoints": [
+        "Real dependency",
+        "Isolation",
+        "Trade-off startup time"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao EF InMemory provider không thay database integration test?",
+          "answer": "Nó không có đầy đủ SQL translation, constraint, transaction và provider behavior nên có thể cho test pass dù production fail."
+        }
+      ]
+    },
+    {
+      "id": "MID-TEST-003",
+      "level": "Middle",
+      "topic": "Testing",
+      "question": "Contract test giữa frontend và backend giải quyết gì?",
+      "answer": "Nó xác nhận producer/consumer cùng hiểu request-response contract mà không cần chạy full E2E. Điều này bắt breaking change sớm và giảm phụ thuộc môi trường lớn.",
+      "keyPoints": [
+        "Verify API contract",
+        "Bắt breaking change sớm",
+        "Nhẹ hơn full E2E"
+      ],
+      "followUps": [
+        {
+          "question": "OpenAPI schema có đủ thay contract test không?",
+          "answer": "Không hoàn toàn; schema mô tả shape nhưng contract test còn kiểm tra behavior/example/compatibility mà consumer thực sự dựa vào."
+        }
+      ]
+    },
+    {
+      "id": "MID-TEST-004",
+      "level": "Middle",
+      "topic": "Testing",
+      "question": "Bạn giảm flaky integration test thế nào?",
+      "answer": "Cô lập state mỗi test, kiểm soát clock/randomness, chờ event theo condition thay vì sleep cố định và tránh phụ thuộc thứ tự chạy. External dependency cần deterministic test double hoặc container quản lý được.",
+      "keyPoints": [
+        "Isolate state",
+        "Control time/randomness",
+        "Không sleep mù"
+      ],
+      "followUps": [
+        {
+          "question": "Retry flaky test trong CI có phải giải pháp tốt không?",
+          "answer": "Chỉ nên là biện pháp tạm; retry che nguyên nhân và làm team mất niềm tin, cần root-cause."
+        }
+      ]
+    },
+    {
+      "id": "MID-TEST-005",
+      "level": "Middle",
+      "topic": "Testing",
+      "question": "Testing pyramid có cần áp dụng cứng nhắc không?",
+      "answer": "Không. Mục tiêu là feedback nhanh với đủ confidence: nhiều test rẻ ở logic cốt lõi, integration test cho boundary và ít E2E cho critical flow. Tỷ lệ thay đổi theo architecture và risk.",
+      "keyPoints": [
+        "Feedback speed",
+        "Boundary confidence",
+        "Risk-based mix"
+      ],
+      "followUps": [
+        {
+          "question": "Service nhiều integration logic nhưng ít domain logic thì test mix ra sao?",
+          "answer": "Có thể cần nhiều integration/contract test hơn unit test; không nên ép số lượng chỉ để đúng hình kim tự tháp."
+        }
+      ]
+    },
+    {
+      "id": "MID-ARCH-004",
+      "level": "Middle",
+      "topic": "Architecture",
+      "question": "Unit of Work pattern có cần thêm khi dùng EF Core không?",
+      "answer": "DbContext đã theo dõi thay đổi và SaveChanges commit như một unit of work ở nhiều use case. Thêm abstraction riêng chỉ đáng khi cần coordinate nhiều store hoặc tạo boundary thật sự, không chỉ wrap DbContext.",
+      "keyPoints": [
+        "DbContext đã có UoW behavior",
+        "Không wrap máy móc",
+        "Thêm khi có abstraction value"
+      ],
+      "followUps": [
+        {
+          "question": "Repository + UnitOfWork có thể làm EF Core kém linh hoạt thế nào?",
+          "answer": "Generic API có thể che IQueryable/projection/transaction feature và buộc query phức tạp đi vòng qua abstraction nghèo."
+        }
+      ]
+    },
+    {
+      "id": "MID-ARCH-005",
+      "level": "Middle",
+      "topic": "Architecture",
+      "question": "Cache-aside cần xử lý cache stampede thế nào?",
+      "answer": "Khi nhiều request cùng miss một hot key, tất cả có thể cùng đánh DB. Có thể dùng per-key lock/single-flight, jitter TTL, stale-while-revalidate hoặc distributed coordination tùy scale.",
+      "keyPoints": [
+        "Miss đồng thời gây DB spike",
+        "Single-flight/per-key lock",
+        "TTL jitter/stale strategy"
+      ],
+      "followUps": [
+        {
+          "question": "Distributed lock có phải lựa chọn đầu tiên không?",
+          "answer": "Không. Nó thêm complexity/failure mode; single-node lock hoặc stale strategy có thể đủ tùy topology."
+        }
+      ]
+    },
+    {
+      "id": "JUN-CS-011",
+      "level": "Junior",
+      "topic": "C#",
+      "question": "Pattern matching trong C# giúp gì khi xử lý nhiều loại hoặc trạng thái dữ liệu?",
+      "answer": "Pattern matching cho phép kiểm tra type, giá trị và điều kiện ngay trong biểu thức `is` hoặc `switch`, giúp giảm chuỗi `if`/cast thủ công. Nó đặc biệt hữu ích khi xử lý discriminated-like state, nullable value hoặc nhiều subtype nhưng vẫn muốn code rõ ràng.",
+      "keyPoints": [
+        "Giảm cast thủ công",
+        "Dùng tốt với is/switch",
+        "Làm rõ nhiều nhánh trạng thái"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào switch expression phù hợp hơn switch statement?",
+          "answer": "Khi mỗi nhánh chủ yếu biến input thành một giá trị kết quả và không cần nhiều side effect, switch expression thường ngắn và dễ đọc hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-CS-012",
+      "level": "Junior",
+      "topic": "C#",
+      "question": "Record và class nên chọn thế nào cho DTO hoặc value-like model?",
+      "answer": "Record phù hợp khi object mang ý nghĩa theo giá trị, thường immutable và cần equality theo dữ liệu. Class phù hợp hơn khi object có identity riêng, lifecycle dài hoặc mutable behavior. DTO có thể dùng record, nhưng không phải DTO nào cũng bắt buộc là record.",
+      "keyPoints": [
+        "Record có value-based equality",
+        "Class hợp identity/lifecycle",
+        "Chọn theo semantics"
+      ],
+      "followUps": [
+        {
+          "question": "Record có immutable tuyệt đối không?",
+          "answer": "Không. Record chỉ cung cấp value-like behavior và cú pháp thuận tiện; property vẫn có thể mutable nếu bạn khai báo setter thông thường."
+        }
+      ]
+    },
+    {
+      "id": "JUN-CS-013",
+      "level": "Junior",
+      "topic": "C#",
+      "question": "`using` với `IAsyncDisposable` khác gì `IDisposable`?",
+      "answer": "`IDisposable` giải phóng resource đồng bộ bằng `Dispose`, còn `IAsyncDisposable` dùng `DisposeAsync` khi cleanup cần I/O bất đồng bộ. Với resource hỗ trợ async cleanup, `await using` giúp không block thread trong lúc giải phóng.",
+      "keyPoints": [
+        "Dispose sync",
+        "DisposeAsync cho async cleanup",
+        "Dùng await using khi phù hợp"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên implement cả IDisposable và IAsyncDisposable không?",
+          "answer": "Có thể nếu type hỗ trợ cả hai cách cleanup cho caller khác nhau, nhưng implementation phải tránh giải phóng cùng resource sai hoặc hai lần."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-009",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Request đã bind hợp lệ nhưng vi phạm business rule thì nên trả lỗi thế nào?",
+      "answer": "Validation format như thiếu field hoặc sai kiểu thường là 400. Business conflict như email đã tồn tại hoặc trạng thái không cho phép thao tác có thể trả 409 hoặc mã phù hợp contract. Quan trọng là phân biệt lỗi input với lỗi nghiệp vụ và trả Problem Details nhất quán.",
+      "keyPoints": [
+        "Phân biệt input và business error",
+        "Dùng status code đúng semantics",
+        "Chuẩn hóa error contract"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên trả 500 cho business rule failure không?",
+          "answer": "Không. 500 dành cho lỗi server ngoài dự kiến; business rule failure là expected outcome và nên map sang response có chủ đích."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-010",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "Vì sao nên dùng IHttpClientFactory khi service gọi API bên ngoài?",
+      "answer": "`IHttpClientFactory` giúp cấu hình client tập trung, quản lý lifetime của handler và tránh nhiều vấn đề khi tự tạo HttpClient liên tục. Nó cũng hỗ trợ named/typed client, logging và pipeline handler cho cross-cutting concern của outbound HTTP.",
+      "keyPoints": [
+        "Quản lý handler lifetime",
+        "Named/typed client",
+        "Cấu hình outbound HTTP tập trung"
+      ],
+      "followUps": [
+        {
+          "question": "Có cần tạo HttpClient mới bằng `new` cho mỗi request không?",
+          "answer": "Không nên. Tạo handler/client tùy tiện có thể gây socket/resource issue; factory hoặc SocketsHttpHandler được quản lý đúng lifetime sẽ an toàn hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-011",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "CancellationToken từ HTTP request nên được dùng thế nào?",
+      "answer": "CancellationToken của request nên được truyền xuống các operation I/O như EF Core, HttpClient hoặc service async để dừng công việc khi client hủy kết nối. Không phải mọi đoạn code đều cần kiểm tra token liên tục, nhưng các operation dài nên propagate token.",
+      "keyPoints": [
+        "Propagate xuống I/O",
+        "Dừng work khi request bị hủy",
+        "Không nuốt cancellation"
+      ],
+      "followUps": [
+        {
+          "question": "Nếu bắt OperationCanceledException thì có nên log error không?",
+          "answer": "Không phải lúc nào cũng là lỗi; nếu cancellation do request bị hủy hợp lệ thì thường chỉ cần log mức thấp hoặc bỏ qua theo policy."
+        }
+      ]
+    },
+    {
+      "id": "JUN-API-012",
+      "level": "Junior",
+      "topic": "ASP.NET Core",
+      "question": "API pagination nên thiết kế response gồm những gì?",
+      "answer": "Ngoài danh sách item, response thường cần metadata như page/pageSize, total count nếu thật sự cần, hoặc cursor/hasNext cho keyset pagination. Contract nên ổn định và tránh bắt database tính COUNT(*) đắt nếu UI không cần tổng số chính xác.",
+      "keyPoints": [
+        "Items + pagination metadata",
+        "Không tính total nếu không cần",
+        "Contract rõ cho client"
+      ],
+      "followUps": [
+        {
+          "question": "PageSize có nên để client truyền tùy ý không?",
+          "answer": "Không. Nên có default và giới hạn tối đa để tránh request kéo quá nhiều dữ liệu hoặc làm quá tải database."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-012",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Bạn phát hiện N+1 query trong EF Core như thế nào?",
+      "answer": "Dấu hiệu phổ biến là một query lấy danh sách rồi mỗi item lại phát thêm query relation. Có thể phát hiện bằng SQL logging, profiler hoặc telemetry. Cách sửa thường là projection, Include phù hợp hoặc thay đổi shape query thay vì truy cập navigation trong loop.",
+      "keyPoints": [
+        "Nhìn số query tăng theo item",
+        "Dùng logging/profiler",
+        "Projection thường là cách sửa tốt"
+      ],
+      "followUps": [
+        {
+          "question": "Lazy loading có làm N+1 dễ xảy ra hơn không?",
+          "answer": "Có. Navigation tự load khi truy cập rất tiện nhưng dễ che việc mỗi vòng lặp đang phát một query riêng."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-013",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "Khi nào cần transaction explicit thay vì chỉ gọi SaveChanges?",
+      "answer": "Một lần `SaveChanges` thường đã có transaction cho các lệnh cần thiết. Transaction explicit cần khi nhiều bước database phải commit cùng nhau qua nhiều lần SaveChanges hoặc cần transaction boundary lớn hơn mặc định. Không nên giữ transaction mở lâu hơn cần thiết.",
+      "keyPoints": [
+        "SaveChanges đã có transaction phù hợp",
+        "Explicit cho nhiều bước atomic",
+        "Giữ transaction ngắn"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên gọi external API bên trong transaction database không?",
+          "answer": "Thường không nên vì network chậm hoặc fail sẽ giữ transaction và lock lâu; các pattern như outbox phù hợp hơn cho cross-system consistency."
+        }
+      ]
+    },
+    {
+      "id": "JUN-EF-014",
+      "level": "Junior",
+      "topic": "EF Core",
+      "question": "`AnyAsync` và `CountAsync > 0` nên dùng cái nào khi chỉ cần kiểm tra tồn tại?",
+      "answer": "`AnyAsync` thể hiện đúng ý định và provider có thể dừng khi tìm thấy row phù hợp. `CountAsync` cần tính số lượng, thường làm nhiều việc hơn nếu bạn chỉ cần biết có tồn tại hay không.",
+      "keyPoints": [
+        "Any biểu đạt existence",
+        "Có thể dừng sớm",
+        "Không đếm khi không cần"
+      ],
+      "followUps": [
+        {
+          "question": "`FirstOrDefaultAsync` có thay AnyAsync được không?",
+          "answer": "Có thể nhưng nó tải shape của row đầu tiên; nếu chỉ cần boolean thì AnyAsync rõ intent và thường nhẹ hơn."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-010",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "Vì sao JOIN có thể làm số dòng tăng nhiều hơn mong đợi?",
+      "answer": "Nếu quan hệ thực tế là one-to-many hoặc điều kiện join không unique, một row bên trái có thể khớp nhiều row bên phải và bị nhân bản. Cần hiểu cardinality, key và điều kiện join trước khi dùng DISTINCT để che vấn đề.",
+      "keyPoints": [
+        "Hiểu cardinality",
+        "Join không unique gây duplicate",
+        "Không lạm dụng DISTINCT"
+      ],
+      "followUps": [
+        {
+          "question": "DISTINCT có phải cách sửa đúng mọi duplicate do JOIN không?",
+          "answer": "Không. DISTINCT có thể che join sai và thêm chi phí; trước tiên phải xác định duplicate là đúng theo quan hệ hay do điều kiện join thiếu."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-011",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "EXISTS dùng khi nào thay cho việc đếm số dòng?",
+      "answer": "Khi chỉ cần biết subquery có ít nhất một row khớp, EXISTS biểu đạt đúng ý định và database có thể dừng sớm sau khi tìm thấy. Đếm toàn bộ row rồi so > 0 thường không cần thiết.",
+      "keyPoints": [
+        "Existence check",
+        "Có thể short-circuit",
+        "Không đếm khi chỉ cần boolean"
+      ],
+      "followUps": [
+        {
+          "question": "NOT EXISTS thường dùng cho bài toán gì?",
+          "answer": "Dùng để tìm row không có quan hệ khớp, ví dụ khách hàng chưa có đơn hàng hoặc record chưa được xử lý."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-012",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "Foreign key giúp gì ngoài việc JOIN hai bảng?",
+      "answer": "Foreign key enforce referential integrity, ngăn tạo reference tới row không tồn tại và kiểm soát behavior khi parent bị update/delete. Nó không tự tạo mọi index cần thiết cho workload, nên vẫn phải thiết kế index riêng.",
+      "keyPoints": [
+        "Bảo vệ referential integrity",
+        "Quy định delete/update behavior",
+        "Không thay thế index design"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên bỏ foreign key để insert nhanh hơn không?",
+          "answer": "Chỉ trong trường hợp đặc biệt có kiểm soát; bỏ constraint làm mất lớp bảo vệ dữ liệu và chuyển gánh nặng consistency sang application."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SQL-013",
+      "level": "Junior",
+      "topic": "SQL",
+      "question": "Vì sao câu query có `ORDER BY` nhưng không có index phù hợp có thể chậm?",
+      "answer": "Database có thể phải đọc nhiều row rồi thực hiện sort, tốn CPU và memory, thậm chí spill ra disk nếu dữ liệu lớn. Index phù hợp với filter và order có thể giảm chi phí, nhưng không nên thêm index chỉ vì một query nhỏ.",
+      "keyPoints": [
+        "Sort có CPU/memory cost",
+        "Index có thể hỗ trợ order",
+        "Cần nhìn workload"
+      ],
+      "followUps": [
+        {
+          "question": "ORDER BY có cần unique tie-breaker khi phân trang không?",
+          "answer": "Có. Nếu nhiều row cùng sort value, thêm key unique giúp thứ tự deterministic và tránh row nhảy giữa page."
+        }
+      ]
+    },
+    {
+      "id": "JUN-JS-002",
+      "level": "Junior",
+      "topic": "JavaScript",
+      "question": "Event bubbling và capturing khác nhau thế nào?",
+      "answer": "Event đi qua capture phase từ ngoài vào target rồi bubble ngược lên ancestors theo mặc định của nhiều event. Hiểu hai phase giúp dùng event delegation và kiểm soát handler đúng chỗ thay vì gắn listener cho từng element.",
+      "keyPoints": [
+        "Capture: ngoài vào",
+        "Bubble: target ra ngoài",
+        "Event delegation dùng bubbling"
+      ],
+      "followUps": [
+        {
+          "question": "`stopPropagation()` có nên dùng thường xuyên không?",
+          "answer": "Không nên lạm dụng vì nó có thể phá event flow của component khác; chỉ dùng khi thực sự cần chặn propagation theo contract UI."
+        }
+      ]
+    },
+    {
+      "id": "JUN-JS-003",
+      "level": "Junior",
+      "topic": "JavaScript",
+      "question": "Spread operator có tạo deep copy object không?",
+      "answer": "Không. `{...obj}` hoặc `[...arr]` chỉ tạo shallow copy ở level ngoài; nested object vẫn dùng chung reference. Nếu cần deep clone phải chọn strategy phù hợp như `structuredClone` hoặc mapping có chủ đích.",
+      "keyPoints": [
+        "Spread là shallow copy",
+        "Nested reference vẫn dùng chung",
+        "Deep clone cần strategy riêng"
+      ],
+      "followUps": [
+        {
+          "question": "JSON.parse(JSON.stringify(obj)) có phải deep clone an toàn không?",
+          "answer": "Không cho mọi dữ liệu; Date, Map, Set, undefined, circular reference và nhiều type khác có thể bị mất hoặc lỗi."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TS-003",
+      "level": "Junior",
+      "topic": "TypeScript",
+      "question": "`keyof` và `typeof` thường phối hợp thế nào?",
+      "answer": "`typeof` lấy type từ một value đã khai báo; `keyof` lấy union các key của một object type. Kết hợp hai cái giúp tạo API generic hoặc constant map type-safe mà không lặp lại string key bằng tay.",
+      "keyPoints": [
+        "typeof lấy type từ value",
+        "keyof lấy union key",
+        "Hữu ích cho generic utility"
+      ],
+      "followUps": [
+        {
+          "question": "`keyof typeof SomeObject` tạo ra gì?",
+          "answer": "Nó tạo union của các property key có trên object đó, rất hữu ích khi muốn giới hạn input vào đúng các key hợp lệ."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TS-004",
+      "level": "Junior",
+      "topic": "TypeScript",
+      "question": "Union literal như `'draft' | 'published'` khác enum thế nào?",
+      "answer": "Union literal nhẹ, không tạo object runtime và tích hợp tốt với narrowing. Enum tạo ra abstraction riêng ở runtime tùy loại enum và có thể phù hợp khi cần API/library convention. Với state đơn giản, union literal thường đủ rõ.",
+      "keyPoints": [
+        "Union literal không cần runtime object",
+        "Narrowing tốt",
+        "Enum có semantics riêng"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào union literal dễ maintain hơn enum?",
+          "answer": "Khi tập giá trị nhỏ, chỉ phục vụ type checking và bạn không cần iterate hoặc expose object enum ở runtime."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-014",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Khi HttpClient trả lỗi, component nên xử lý thế nào?",
+      "answer": "Không nên chỉ `subscribe` rồi bỏ qua error. Service có thể normalize lỗi kỹ thuật, còn component quyết định UX như hiển thị message, retry hoặc giữ dữ liệu cũ. Loading state phải được reset cả khi success lẫn error.",
+      "keyPoints": [
+        "Phân tách technical error và UX",
+        "Có loading/error state",
+        "Không nuốt lỗi"
+      ],
+      "followUps": [
+        {
+          "question": "`finalize` trong RxJS hữu ích khi nào?",
+          "answer": "Nó chạy khi observable complete, error hoặc bị unsubscribe, nên hữu ích để reset loading state mà không lặp code ở nhiều nhánh."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-015",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "`@for (...; track item.id)` quan trọng vì sao?",
+      "answer": "`track` cho Angular biết identity ổn định của từng item để tái sử dụng đúng DOM khi list thêm, xóa hoặc reorder. Nếu key không ổn định, Angular có thể tạo lại DOM nhiều hơn cần thiết và làm mất state UI cục bộ.",
+      "keyPoints": [
+        "Track identity ổn định",
+        "Giảm DOM recreate",
+        "Dùng key unique như id"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào dùng `$index` để track là hợp lý?",
+          "answer": "Chủ yếu với list tĩnh không reorder/insert; với dữ liệu động nên dùng key ổn định từ item."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-016",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Reactive Form nên hiển thị validation error khi nào?",
+      "answer": "Thường chỉ hiển thị khi control invalid và user đã touched/dirty hoặc sau submit, tránh báo lỗi ngay khi form vừa mở. Error message nên map theo validator và đủ rõ để user biết cách sửa.",
+      "keyPoints": [
+        "Invalid + interaction state",
+        "Không báo lỗi quá sớm",
+        "Message theo validator"
+      ],
+      "followUps": [
+        {
+          "question": "Server-side validation error nên đưa vào form thế nào?",
+          "answer": "Có thể map lỗi field vào control hoặc form-level error, đồng thời giữ lỗi business/global riêng nếu không gắn với một field cụ thể."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-017",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Vì sao không nên gọi method tính toán nặng trực tiếp trong template?",
+      "answer": "Method trong template có thể được gọi nhiều lần trong quá trình render/change detection. Nếu tính toán nặng hoặc tạo object mới liên tục, UI dễ chậm. Nên dùng computed/signal, pipe pure hoặc precomputed state phù hợp.",
+      "keyPoints": [
+        "Template method có thể chạy nhiều lần",
+        "Tránh tạo work/object nặng",
+        "Dùng derived state/pure pipe"
+      ],
+      "followUps": [
+        {
+          "question": "Getter đơn giản trong template có luôn là vấn đề không?",
+          "answer": "Không. Getter rất nhẹ có thể chấp nhận; cần tối ưu dựa trên cost thực tế chứ không cấm máy móc."
+        }
+      ]
+    },
+    {
+      "id": "JUN-TEST-006",
+      "level": "Junior",
+      "topic": "Testing",
+      "question": "Bạn sẽ test một endpoint tạo Order ở mức nào?",
+      "answer": "Unit test business rule ở service/domain, còn integration test endpoint để kiểm tra routing, validation, auth, serialization và persistence flow. Không cần mock toàn bộ controller nếu mục tiêu là tin API thực sự hoạt động.",
+      "keyPoints": [
+        "Unit test rule",
+        "Integration test HTTP pipeline",
+        "Không over-mock controller"
+      ],
+      "followUps": [
+        {
+          "question": "Test tạo Order có nên dùng database thật không?",
+          "answer": "Integration test nên dùng database/provider gần production để bắt constraint và transaction behavior; unit test business rule không cần database."
+        }
+      ]
+    },
+    {
+      "id": "JUN-SEC-005",
+      "level": "Junior",
+      "topic": "Security",
+      "question": "Một SPA bị XSS và một API dùng cookie bị CSRF: hai kiểu tấn công này khác nhau ở đâu?",
+      "answer": "XSS xảy ra khi attacker chạy script trong context của ứng dụng; CSRF lợi dụng browser tự gửi credential để thực hiện request ngoài ý muốn. Defense khác nhau: XSS tập trung escaping/CSP, CSRF tập trung SameSite/anti-forgery và request design.",
+      "keyPoints": [
+        "XSS = chạy script độc hại",
+        "CSRF = lợi dụng credential tự gửi",
+        "Defense khác nhau"
+      ],
+      "followUps": [
+        {
+          "question": "HttpOnly cookie chống được XSS hoàn toàn không?",
+          "answer": "Không. Nó ngăn script đọc cookie trực tiếp nhưng XSS vẫn có thể thao tác UI hoặc gửi request dưới session của user."
+        }
+      ]
+    },
+    {
+      "id": "MID-CS-006",
+      "level": "Middle",
+      "topic": "C#",
+      "question": "`IAsyncEnumerable<T>` phù hợp với bài toán nào?",
+      "answer": "Nó phù hợp khi muốn stream nhiều item bất đồng bộ thay vì đợi tạo xong toàn bộ collection, ví dụ đọc dữ liệu lớn hoặc streaming API. Caller dùng `await foreach`; cần propagate cancellation và chú ý resource lifetime trong quá trình enumerate.",
+      "keyPoints": [
+        "Async streaming",
+        "Không cần materialize toàn bộ",
+        "Propagate cancellation"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào `Task<List<T>>` vẫn tốt hơn?",
+          "answer": "Khi tập dữ liệu nhỏ, cần toàn bộ kết quả trước khi xử lý hoặc consumer cần random access/list semantics ngay từ đầu."
+        }
+      ]
+    },
+    {
+      "id": "MID-CS-007",
+      "level": "Middle",
+      "topic": "C#",
+      "question": "CancellationToken nên được thiết kế xuyên nhiều layer như thế nào?",
+      "answer": "Token nên đi từ boundary xuống các operation có thể cancel, không tự tạo token mới rồi làm mất signal của caller. Với operation có timeout riêng có thể link token, nhưng cần phân biệt timeout, shutdown và user cancellation khi log/handle.",
+      "keyPoints": [
+        "Propagate token",
+        "Có thể linked token",
+        "Phân biệt nguồn cancellation"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên check `ThrowIfCancellationRequested()` trong mọi vòng lặp không?",
+          "answer": "Không cần nếu vòng lặp rất ngắn; với CPU loop dài nên check định kỳ đủ thường để phản hồi cancellation mà không tạo overhead vô ích."
+        }
+      ]
+    },
+    {
+      "id": "MID-CS-008",
+      "level": "Middle",
+      "topic": "C#",
+      "question": "Custom equality có thể gây bug gì với Dictionary hoặc HashSet?",
+      "answer": "Nếu `Equals` và `GetHashCode` không nhất quán, collection hash-based có thể không tìm thấy key hoặc chứa duplicate logic. Field dùng cho hash/equality cũng không nên thay đổi sau khi object đã làm key vì bucket location không tự cập nhật.",
+      "keyPoints": [
+        "Equals/GetHashCode phải nhất quán",
+        "Key mutable gây lỗi lookup",
+        "Hash-based collection phụ thuộc equality"
+      ],
+      "followUps": [
+        {
+          "question": "Record có giải quyết hết vấn đề equality không?",
+          "answer": "Không. Record cung cấp value equality mặc định, nhưng bạn vẫn phải chọn đúng field/value semantics và tránh mutable key khi dùng trong hash collection."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-010",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Typed HttpClient nên chứa responsibility gì?",
+      "answer": "Typed client nên đóng gói contract và cấu hình giao tiếp với một external service, gồm base address, serialization và request method rõ ràng. Retry/logging có thể đi qua handler/pipeline; business orchestration nên ở service cao hơn.",
+      "keyPoints": [
+        "Encapsulate external API contract",
+        "Cấu hình tập trung",
+        "Không nhét business orchestration"
+      ],
+      "followUps": [
+        {
+          "question": "Khi external API trả 429 nên xử lý ở đâu?",
+          "answer": "Resilience policy có thể retry theo Retry-After/backoff nếu operation an toàn; business layer vẫn cần quyết định khi nào fail và báo caller."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-011",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Bạn thiết kế POST idempotent cho operation tạo payment thế nào?",
+      "answer": "Client gửi idempotency key; server lưu key cùng fingerprint/request result trong một khoảng thời gian. Request lặp cùng key và payload trả lại kết quả cũ, còn key trùng nhưng payload khác phải bị từ chối để tránh side effect kép.",
+      "keyPoints": [
+        "Idempotency key",
+        "Lưu request/result",
+        "Reject key reuse khác payload"
+      ],
+      "followUps": [
+        {
+          "question": "Chỉ dùng unique constraint trên payment table có đủ không?",
+          "answer": "Có thể chặn duplicate business key nhưng chưa chắc trả lại đúng response cũ hoặc xử lý race/retry toàn flow; idempotency store thường rõ semantics hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-012",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Distributed cache invalidation nên thiết kế thế nào?",
+      "answer": "Cache cần key strategy, TTL và rule invalidate theo nguồn dữ liệu. Khi update source of truth, có thể xóa key hoặc version key; cần chấp nhận eventual consistency ở mức nào và tránh cache nhiều layer mà không biết owner.",
+      "keyPoints": [
+        "TTL + invalidation rule",
+        "Source of truth rõ",
+        "Chấp nhận consistency window"
+      ],
+      "followUps": [
+        {
+          "question": "TTL ngắn có giải quyết hết stale cache không?",
+          "answer": "Không. Nó chỉ giới hạn thời gian stale; dữ liệu nhạy consistency vẫn cần invalidation hoặc bypass cache phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "MID-API-013",
+      "level": "Middle",
+      "topic": "ASP.NET Core",
+      "question": "Streaming response có lợi và rủi ro gì?",
+      "answer": "Streaming giảm memory và time-to-first-byte khi trả nhiều dữ liệu vì không cần buffer toàn bộ. Đổi lại error sau khi response đã bắt đầu khó đổi status code, cancellation/resource lifetime và backpressure cần xử lý cẩn thận.",
+      "keyPoints": [
+        "Giảm buffering",
+        "TTFB tốt hơn",
+        "Error/resource handling khó hơn"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào không nên streaming?",
+          "answer": "Khi payload nhỏ, client cần toàn bộ response trước khi dùng hoặc infrastructure/proxy không hỗ trợ streaming behavior như mong muốn."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-011",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "Một endpoint chậm và log cho thấy hàng trăm query giống nhau, bạn xử lý thế nào?",
+      "answer": "Tôi xác nhận có N+1 bằng log/trace, tìm chỗ navigation hoặc query nằm trong loop, rồi đổi sang projection, Include hợp lý hoặc query theo batch. Sau đó đo lại số round-trip và latency thay vì chỉ nhìn SQL đẹp hơn.",
+      "keyPoints": [
+        "Xác nhận bằng telemetry",
+        "Tìm query trong loop/navigation",
+        "Đo lại sau khi sửa"
+      ],
+      "followUps": [
+        {
+          "question": "Include tất cả navigation có phải cách sửa N+1 tốt không?",
+          "answer": "Không. Nó có thể tạo query rất lớn hoặc cartesian explosion; projection theo đúng response shape thường an toàn hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-012",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "Vì sao projection DTO thường tốt hơn materialize entity rồi map?",
+      "answer": "Projection cho provider dịch trực tiếp sang SQL chỉ lấy cột cần, giảm network, allocation và tracking. Materialize entity trước rồi map làm database trả dư dữ liệu và có thể kéo thêm navigation ngoài ý muốn.",
+      "keyPoints": [
+        "SQL chỉ lấy field cần",
+        "Giảm allocation/tracking",
+        "Giảm over-fetch"
+      ],
+      "followUps": [
+        {
+          "question": "Khi projection có method custom không translate được thì sao?",
+          "answer": "Provider có thể báo không translate; nên tách phần có thể chạy trên server và chỉ chuyển sang client-side sau khi dữ liệu đã được giới hạn hợp lý."
+        }
+      ]
+    },
+    {
+      "id": "MID-EF-013",
+      "level": "Middle",
+      "topic": "EF Core",
+      "question": "Nhiều `SaveChanges` trong một use case có vấn đề gì?",
+      "answer": "Mỗi SaveChanges có thể tạo transaction riêng nếu không có transaction bao ngoài, khiến state giữa các bước có thể commit một phần khi bước sau fail. Nếu business yêu cầu atomicity, nên xác định transaction boundary rõ thay vì gọi SaveChanges tùy tiện.",
+      "keyPoints": [
+        "Có thể commit từng phần",
+        "Cần transaction boundary",
+        "Không SaveChanges rải rác"
+      ],
+      "followUps": [
+        {
+          "question": "Đặt SaveChanges trong repository method có bất lợi gì?",
+          "answer": "Nó làm application layer khó gom nhiều thay đổi thành một transaction/use case và che transaction boundary."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-011",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Lock escalation là gì và vì sao cần quan tâm?",
+      "answer": "Ở một số database như SQL Server, nhiều lock nhỏ có thể được nâng thành lock mức rộng hơn để giảm overhead quản lý lock. Điều này có thể làm blocking tăng mạnh, nên cần transaction ngắn, index tốt và batch operation hợp lý.",
+      "keyPoints": [
+        "Nhiều lock nhỏ có thể thành lock lớn",
+        "Có thể tăng blocking",
+        "Tối ưu transaction/index/batch"
+      ],
+      "followUps": [
+        {
+          "question": "Chia update lớn thành batch nhỏ có thể giúp gì?",
+          "answer": "Nó giảm số row/lock giữ trong một transaction và giảm log/lock pressure, nhưng cần đảm bảo semantics nếu operation phải atomic."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-012",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Statistics ảnh hưởng query plan thế nào?",
+      "answer": "Optimizer dùng statistics để ước lượng số row và chọn join/index strategy. Statistics cũ hoặc data skew có thể làm estimate sai, dẫn tới plan tệ dù index tồn tại. Khi debug cần so estimated với actual rows.",
+      "keyPoints": [
+        "Optimizer dựa vào statistics",
+        "Estimate sai gây plan xấu",
+        "So actual vs estimated rows"
+      ],
+      "followUps": [
+        {
+          "question": "Update statistics có phải lúc nào cũng sửa query chậm không?",
+          "answer": "Không. Query shape, parameter skew, index design hoặc blocking vẫn có thể là nguyên nhân; phải nhìn plan và workload cụ thể."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-013",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Index fragmentation có phải nguyên nhân đầu tiên của mọi query chậm không?",
+      "answer": "Không. Fragmentation chỉ là một yếu tố và thường bị lạm dụng như câu trả lời mặc định. Query plan, missing/unused index, statistics, blocking, I/O và cardinality thường cần được kiểm tra trước khi rebuild index máy móc.",
+      "keyPoints": [
+        "Không mặc định đổ lỗi fragmentation",
+        "Xem plan và workload trước",
+        "Maintenance phải dựa dữ liệu"
+      ],
+      "followUps": [
+        {
+          "question": "Rebuild index có cost gì?",
+          "answer": "Tốn CPU, I/O, log và có thể lock hoặc dùng nhiều temp space tùy DB/options, nên cần maintenance window và ngưỡng hợp lý."
+        }
+      ]
+    },
+    {
+      "id": "MID-SQL-014",
+      "level": "Middle",
+      "topic": "SQL",
+      "question": "Filtered index phù hợp với trường hợp nào?",
+      "answer": "Nó index chỉ một subset row thỏa predicate, ví dụ chỉ record Active, nên index nhỏ và selective hơn nếu query thường lọc đúng điều kiện đó. Đổi lại query phải match predicate đủ tốt để optimizer tận dụng.",
+      "keyPoints": [
+        "Index subset dữ liệu",
+        "Nhỏ và selective hơn",
+        "Query phải match predicate"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên tạo filtered index cho mọi status value không?",
+          "answer": "Không. Mỗi index tăng write/storage cost; chỉ tạo cho access pattern quan trọng và có selectivity đủ giá trị."
+        }
+      ]
+    },
+    {
+      "id": "MID-JS-002",
+      "level": "Middle",
+      "topic": "JavaScript",
+      "question": "Microtask queue có thể làm UI bị lag như thế nào?",
+      "answer": "Nếu code liên tục tạo Promise/microtask mới mà không nhường event loop, browser có thể phải xử lý chuỗi microtask dài trước khi render hoặc xử lý task khác. Điều này tạo starvation dù mỗi callback riêng lẻ rất nhỏ.",
+      "keyPoints": [
+        "Microtask chạy trước task tiếp theo",
+        "Chuỗi dài có thể starve UI",
+        "Cần yield/chia work"
+      ],
+      "followUps": [
+        {
+          "question": "`setTimeout(..., 0)` có thể giúp yield không?",
+          "answer": "Có thể đưa phần work sang task sau để browser có cơ hội xử lý render/event, nhưng cần dùng có chủ đích và cân nhắc scheduler phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "MID-JS-003",
+      "level": "Middle",
+      "topic": "JavaScript",
+      "question": "Immutability giúp gì cho frontend state management?",
+      "answer": "State immutable làm thay đổi reference rõ ràng, giúp change detection, memoization và debugging dễ dự đoán hơn. Không có nghĩa phải deep clone mọi object; nên cập nhật đúng phần thay đổi và tránh mutation ngoài ý muốn.",
+      "keyPoints": [
+        "Reference change rõ",
+        "Hỗ trợ memoization/change detection",
+        "Không deep clone mù"
+      ],
+      "followUps": [
+        {
+          "question": "Deep clone toàn state mỗi lần update có tốt không?",
+          "answer": "Không. Nó tốn CPU/memory và phá reference sharing; chỉ copy path thay đổi hoặc dùng abstraction phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "MID-TS-002",
+      "level": "Middle",
+      "topic": "TypeScript",
+      "question": "User-defined type guard giúp gì?",
+      "answer": "Type guard như `value is User` vừa thực hiện runtime check vừa báo cho TypeScript cách narrow type trong nhánh đúng. Nó hữu ích khi parse unknown data, union phức tạp hoặc boundary không tin cậy.",
+      "keyPoints": [
+        "Runtime check + compile-time narrowing",
+        "Dùng với unknown/union",
+        "Giảm cast không an toàn"
+      ],
+      "followUps": [
+        {
+          "question": "Type guard có thay runtime schema validation library không?",
+          "answer": "Không nhất thiết; type guard thủ công phù hợp check nhỏ, còn payload lớn/phức tạp thường cần schema validator có error report tốt hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-TS-003",
+      "level": "Middle",
+      "topic": "TypeScript",
+      "question": "Conditional type hữu ích khi nào?",
+      "answer": "Conditional type cho phép type đầu ra phụ thuộc type đầu vào, hữu ích khi xây utility/library generic. Trong application code, lạm dụng conditional type nhiều tầng có thể làm API khó đọc và error message khó hiểu.",
+      "keyPoints": [
+        "Type-level branching",
+        "Hợp utility/library",
+        "Không lạm dụng complexity"
+      ],
+      "followUps": [
+        {
+          "question": "`infer` dùng để làm gì trong conditional type?",
+          "answer": "Nó trích xuất một phần type bên trong pattern, ví dụ lấy return type hoặc element type của một generic structure."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-017",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Đặt `catchError` bên trong hay bên ngoài `switchMap` khác nhau thế nào?",
+      "answer": "`catchError` bên trong inner observable cho phép outer stream tiếp tục nhận input mới sau một request lỗi. Đặt bên ngoài có thể kết thúc cả chain nếu error không được thay thế đúng cách. Vị trí operator quyết định lifecycle của stream.",
+      "keyPoints": [
+        "Operator placement thay đổi lifecycle",
+        "Catch trong inner giữ outer stream",
+        "Hiểu stream termination"
+      ],
+      "followUps": [
+        {
+          "question": "Search box nên xử lý lỗi request thế nào để lần gõ sau vẫn chạy?",
+          "answer": "Thường catch lỗi bên trong `switchMap`, trả fallback như empty result hoặc error state để outer input stream tiếp tục sống."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-018",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Component bị render hoặc gọi method quá nhiều, bạn debug change detection thế nào?",
+      "answer": "Tôi dùng Angular DevTools/browser profiler để xem component nào check nhiều, rồi tìm template method nặng, object/array mới tạo liên tục, input reference thay đổi hoặc subscription cập nhật quá thường xuyên. Sau đó mới cân nhắc OnPush/signals/memoization.",
+      "keyPoints": [
+        "Profile trước",
+        "Tìm allocation/reference churn",
+        "Tối ưu đúng trigger"
+      ],
+      "followUps": [
+        {
+          "question": "OnPush có tự động sửa mọi render thừa không?",
+          "answer": "Không. Nếu state flow vẫn tạo reference mới vô ích hoặc event phát quá nhiều, OnPush không loại bỏ gốc vấn đề."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-019",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Route-level provider có lợi gì?",
+      "answer": "Provider ở route/feature scope giúp service sống theo subtree route thay vì toàn app, hữu ích cho feature state hoặc dependency chỉ dùng trong khu vực đó. Nó giảm global singleton không cần thiết và làm ownership rõ hơn.",
+      "keyPoints": [
+        "Scope theo feature route",
+        "Giảm global singleton",
+        "State ownership rõ"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào root provider vẫn tốt hơn?",
+          "answer": "Với service thật sự dùng toàn app như auth/session client hoặc infrastructure stateless dùng chung, root scope thường đơn giản và phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "MID-ANG-020",
+      "level": "Middle",
+      "topic": "Angular",
+      "question": "Reactive Form lớn bị chậm khi gõ, bạn kiểm tra gì?",
+      "answer": "Tôi xem synchronous validator nặng, subscription `valueChanges` chạy quá nhiều, async validator gọi API mỗi keystroke và template render list lớn. Có thể dùng `updateOn`, debounce, tách sub-form hoặc giảm derived work sau khi đo.",
+      "keyPoints": [
+        "Validator/subscription cost",
+        "Async validation frequency",
+        "Tách form/debounce khi cần"
+      ],
+      "followUps": [
+        {
+          "question": "`updateOn: 'blur'` có trade-off gì?",
+          "answer": "Giảm số lần validation khi gõ nhưng feedback đến chậm hơn; phù hợp field đắt hoặc async, không phải mọi input."
+        }
+      ]
+    },
+    {
+      "id": "MID-TEST-006",
+      "level": "Middle",
+      "topic": "Testing",
+      "question": "Bạn test flow eventual consistency như outbox/worker thế nào mà không flaky?",
+      "answer": "Không dùng sleep cố định. Test nên chờ condition với timeout hợp lý, cô lập message/state và assert outcome cuối. Với worker thật có thể dùng Testcontainers và polling helper deterministic; unit test riêng policy retry/handler.",
+      "keyPoints": [
+        "Không sleep cố định",
+        "Wait until condition + timeout",
+        "Cô lập state/message"
+      ],
+      "followUps": [
+        {
+          "question": "Timeout test quá dài có tốt hơn để tránh flaky không?",
+          "answer": "Không. Nó chỉ che vấn đề và làm CI chậm; cần chờ đúng condition và giữ môi trường deterministic."
+        }
+      ]
+    },
+    {
+      "id": "MID-SEC-006",
+      "level": "Middle",
+      "topic": "Security",
+      "question": "Angular sanitization bảo vệ XSS ở mức nào?",
+      "answer": "Angular escape/sanitize nhiều binding theo context và cảnh báo với giá trị nguy hiểm, nhưng không thể bảo vệ khi developer bypass security trust tùy tiện hoặc đưa HTML/script ngoài kiểm soát. CSP và server-side output/input policy vẫn quan trọng.",
+      "keyPoints": [
+        "Angular có contextual sanitization",
+        "Bypass trust rất nguy hiểm",
+        "CSP là defense-in-depth"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào `bypassSecurityTrustHtml` nên được dùng?",
+          "answer": "Chỉ khi nguồn nội dung thực sự được kiểm soát/đã sanitize theo policy rõ và có review security; không dùng chỉ để bỏ warning cho nhanh."
+        }
+      ]
+    },
+    {
+      "id": "INT-CS-019",
+      "level": "Intern",
+      "topic": "C#",
+      "question": "Biến local và field khác nhau thế nào trong C#?",
+      "answer": "Biến local tồn tại trong scope của method hoặc block, còn field thuộc về object hoặc type. Local phải được gán trước khi dùng, còn field nhận giá trị mặc định nếu chưa gán rõ ràng.",
+      "keyPoints": [
+        "Local có scope trong method/block",
+        "Field thuộc object hoặc type",
+        "Field có default value"
+      ],
+      "followUps": [
+        {
+          "question": "Field static khác field instance thế nào?",
+          "answer": "Field static thuộc về type và được dùng chung giữa các instance; field instance thuộc riêng từng object."
+        }
+      ]
+    },
+    {
+      "id": "INT-CS-020",
+      "level": "Intern",
+      "topic": "C#",
+      "question": "`var` trong C# có phải dynamic type không?",
+      "answer": "Không. `var` vẫn được compiler suy luận thành một type tĩnh tại compile time. Sau khi suy luận, biến không thể đổi sang type khác như `dynamic` có thể làm ở runtime.",
+      "keyPoints": [
+        "var là compile-time inference",
+        "Vẫn type-safe",
+        "Khác dynamic"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào nên dùng var?",
+          "answer": "Khi type đã rõ từ vế phải hoặc type quá dài, nhưng không nên dùng nếu làm code khó hiểu hơn."
+        }
+      ]
+    },
+    {
+      "id": "INT-CS-021",
+      "level": "Intern",
+      "topic": "C#",
+      "question": "Method static khác instance method thế nào?",
+      "answer": "Static method thuộc về type và không cần object để gọi; instance method cần một instance và có thể truy cập state của object đó. Static phù hợp helper không phụ thuộc state instance.",
+      "keyPoints": [
+        "Static thuộc type",
+        "Instance cần object",
+        "Instance truy cập state object"
+      ],
+      "followUps": [
+        {
+          "question": "Static method có truy cập field instance trực tiếp được không?",
+          "answer": "Không, vì nó không có `this`; muốn truy cập state instance phải nhận object cụ thể làm tham số."
+        }
+      ]
+    },
+    {
+      "id": "INT-CS-022",
+      "level": "Intern",
+      "topic": "C#",
+      "question": "Exception và return code khác nhau thế nào?",
+      "answer": "Exception phù hợp cho tình huống lỗi bất thường làm flow hiện tại không thể tiếp tục bình thường; return/result phù hợp cho outcome dự kiến như validation fail. Không nên dùng exception cho mọi nhánh nghiệp vụ.",
+      "keyPoints": [
+        "Exception cho failure bất thường",
+        "Result cho outcome dự kiến",
+        "Không dùng exception làm control flow thường xuyên"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên catch exception ở mọi method không?",
+          "answer": "Không. Chỉ catch khi có thể xử lý, bổ sung context hoặc map lỗi; nếu không nên để exception propagate lên nơi phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "INT-OOP-002",
+      "level": "Intern",
+      "topic": "OOP",
+      "question": "Encapsulation là gì?",
+      "answer": "Encapsulation là che giấu state và chi tiết implementation bên trong object, chỉ expose API cần thiết. Điều này giúp bảo vệ invariant và giảm phụ thuộc giữa các phần của hệ thống.",
+      "keyPoints": [
+        "Ẩn implementation detail",
+        "Bảo vệ state/invariant",
+        "Giảm coupling"
+      ],
+      "followUps": [
+        {
+          "question": "Property private set có liên quan encapsulation thế nào?",
+          "answer": "Nó cho phép đọc từ bên ngoài nhưng hạn chế việc thay đổi state vào các method hoặc constructor có kiểm soát."
+        }
+      ]
+    },
+    {
+      "id": "INT-OOP-003",
+      "level": "Intern",
+      "topic": "OOP",
+      "question": "Inheritance và composition khác nhau thế nào?",
+      "answer": "Inheritance mô tả quan hệ is-a giữa type cha và type con; composition ghép object từ các dependency nhỏ hơn theo quan hệ has-a. Composition thường linh hoạt hơn khi behavior có thể thay đổi độc lập.",
+      "keyPoints": [
+        "Inheritance = is-a",
+        "Composition = has-a",
+        "Composition thường giảm coupling"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào inheritance là lựa chọn hợp lý?",
+          "answer": "Khi subtype thật sự tuân contract của base type và quan hệ đó ổn định, không chỉ để tái sử dụng vài dòng code."
+        }
+      ]
+    },
+    {
+      "id": "INT-OOP-004",
+      "level": "Intern",
+      "topic": "OOP",
+      "question": "Polymorphism giúp ích gì trong thiết kế?",
+      "answer": "Polymorphism cho phép code làm việc qua interface hoặc base type trong khi implementation cụ thể có thể khác nhau. Nó giúp thay implementation mà không phải sửa code gọi nếu contract được giữ ổn định.",
+      "keyPoints": [
+        "Code theo abstraction",
+        "Nhiều implementation",
+        "Giảm phụ thuộc concrete type"
+      ],
+      "followUps": [
+        {
+          "question": "Dependency Injection thường tận dụng polymorphism thế nào?",
+          "answer": "Service phụ thuộc interface, còn DI container cung cấp implementation cụ thể tại runtime theo cấu hình."
+        }
+      ]
+    },
+    {
+      "id": "INT-API-001",
+      "level": "Intern",
+      "topic": "ASP.NET Core",
+      "question": "Endpoint trong Web API là gì?",
+      "answer": "Endpoint là một điểm HTTP mà client có thể gọi, thường được xác định bởi route, HTTP method và handler/controller action. Nó nhận request, xử lý và trả response.",
+      "keyPoints": [
+        "Route + HTTP method",
+        "Nhận request",
+        "Trả response"
+      ],
+      "followUps": [
+        {
+          "question": "GET và POST khác nhau ở mục đích chính nào?",
+          "answer": "GET dùng để đọc resource và nên không tạo side effect; POST thường dùng để tạo hoặc xử lý một operation làm thay đổi state."
+        }
+      ]
+    },
+    {
+      "id": "INT-API-002",
+      "level": "Intern",
+      "topic": "ASP.NET Core",
+      "question": "Route parameter và query string khác nhau thế nào?",
+      "answer": "Route parameter thường xác định resource chính trong URL, ví dụ `/users/10`; query string thường dùng cho filter, sort hoặc pagination như `?page=2`. Cả hai đều là input cho endpoint nhưng mang ý nghĩa khác nhau.",
+      "keyPoints": [
+        "Route xác định resource",
+        "Query dùng filter/sort/page",
+        "Đều là request input"
+      ],
+      "followUps": [
+        {
+          "question": "ID của resource nên để route hay query?",
+          "answer": "Thường để route nếu nó xác định resource chính, ví dụ `GET /users/10`."
+        }
+      ]
+    },
+    {
+      "id": "INT-API-003",
+      "level": "Intern",
+      "topic": "ASP.NET Core",
+      "question": "Dependency Injection trong ASP.NET Core thường được dùng ở đâu?",
+      "answer": "Service được đăng ký trong container rồi inject vào controller, endpoint hoặc service khác qua constructor. Điều này tránh việc class tự `new` dependency và giúp test dễ hơn.",
+      "keyPoints": [
+        "Đăng ký service",
+        "Inject qua constructor",
+        "Giảm coupling"
+      ],
+      "followUps": [
+        {
+          "question": "Nếu một service chưa đăng ký mà inject vào controller thì sao?",
+          "answer": "Ứng dụng thường lỗi khi container không thể resolve dependency đó lúc tạo controller hoặc endpoint."
+        }
+      ]
+    },
+    {
+      "id": "INT-API-004",
+      "level": "Intern",
+      "topic": "ASP.NET Core",
+      "question": "Middleware là gì?",
+      "answer": "Middleware là thành phần trong HTTP pipeline có thể xử lý request trước khi tới endpoint và response khi quay ra. Các middleware thường dùng cho logging, exception handling, auth hoặc CORS.",
+      "keyPoints": [
+        "Nằm trong request pipeline",
+        "Có thể xử lý request/response",
+        "Dùng cho cross-cutting concerns"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao thứ tự middleware quan trọng?",
+          "answer": "Vì request đi theo thứ tự đăng ký; đặt auth, exception hoặc CORS sai vị trí có thể làm behavior không đúng."
+        }
+      ]
+    },
+    {
+      "id": "INT-API-005",
+      "level": "Intern",
+      "topic": "ASP.NET Core",
+      "question": "Status code 200, 201, 400 và 404 thường dùng khi nào?",
+      "answer": "200 cho request thành công có response, 201 thường dùng khi tạo resource mới, 400 khi request không hợp lệ, và 404 khi resource được yêu cầu không tồn tại.",
+      "keyPoints": [
+        "200 = success",
+        "201 = created",
+        "400 = bad request",
+        "404 = not found"
+      ],
+      "followUps": [
+        {
+          "question": "Tạo resource mới có luôn phải trả 201 không?",
+          "answer": "Không bắt buộc mọi trường hợp, nhưng 201 là lựa chọn chuẩn khi server thật sự tạo resource mới và có thể cung cấp location của resource."
+        }
+      ]
+    },
+    {
+      "id": "INT-EF-001",
+      "level": "Intern",
+      "topic": "EF Core",
+      "question": "DbContext trong EF Core là gì?",
+      "answer": "DbContext đại diện cho phiên làm việc với database. Nó quản lý query, tracking entity và lưu thay đổi qua SaveChanges hoặc SaveChangesAsync.",
+      "keyPoints": [
+        "Database session",
+        "Query + tracking",
+        "SaveChanges để ghi dữ liệu"
+      ],
+      "followUps": [
+        {
+          "question": "DbSet<T> là gì?",
+          "answer": "DbSet đại diện cho tập entity của một type và là điểm bắt đầu phổ biến để query hoặc thao tác dữ liệu."
+        }
+      ]
+    },
+    {
+      "id": "INT-EF-002",
+      "level": "Intern",
+      "topic": "EF Core",
+      "question": "`ToListAsync()` làm gì trong EF Core?",
+      "answer": "`ToListAsync()` thực thi query bất đồng bộ và materialize kết quả thành List. Trước đó, nhiều LINQ operator chỉ đang xây query chứ chưa gửi SQL tới database.",
+      "keyPoints": [
+        "Thực thi query",
+        "Materialize thành List",
+        "Async database I/O"
+      ],
+      "followUps": [
+        {
+          "question": "Nếu gọi Where trước ToListAsync thì Where chạy ở đâu?",
+          "answer": "Nếu query còn là IQueryable và provider translate được, điều kiện thường được dịch thành SQL và chạy ở database."
+        }
+      ]
+    },
+    {
+      "id": "INT-EF-003",
+      "level": "Intern",
+      "topic": "EF Core",
+      "question": "`Add` và `SaveChanges` khác nhau thế nào?",
+      "answer": "`Add` đánh dấu entity là Added trong change tracker, còn `SaveChanges` mới thực sự gửi INSERT tới database. Vì vậy gọi Add chưa đồng nghĩa dữ liệu đã được lưu.",
+      "keyPoints": [
+        "Add thay đổi tracking state",
+        "SaveChanges phát SQL",
+        "Chưa SaveChanges thì chưa commit"
+      ],
+      "followUps": [
+        {
+          "question": "Có thể Add nhiều entity rồi SaveChanges một lần không?",
+          "answer": "Có. EF Core có thể gom nhiều thay đổi tracked và lưu trong một lần SaveChanges."
+        }
+      ]
+    },
+    {
+      "id": "INT-EF-004",
+      "level": "Intern",
+      "topic": "EF Core",
+      "question": "Migration giúp gì khi phát triển database?",
+      "answer": "Migration ghi lại thay đổi schema theo model để team có thể version và áp dụng thay đổi database theo thứ tự. Nó giúp đồng bộ schema giữa môi trường nhưng vẫn cần review trước production.",
+      "keyPoints": [
+        "Version schema",
+        "Theo dõi thay đổi model",
+        "Có thể apply theo thứ tự"
+      ],
+      "followUps": [
+        {
+          "question": "Migration có thay thế backup database không?",
+          "answer": "Không. Migration thay đổi schema; backup vẫn cần để phục hồi dữ liệu khi có sự cố."
+        }
+      ]
+    },
+    {
+      "id": "INT-SQL-003",
+      "level": "Intern",
+      "topic": "SQL",
+      "question": "`WHERE` dùng để làm gì?",
+      "answer": "`WHERE` lọc các row theo điều kiện trước khi trả kết quả hoặc trước các bước xử lý tiếp theo của query. Điều kiện có thể dùng toán tử so sánh, AND, OR, IN và nhiều biểu thức khác.",
+      "keyPoints": [
+        "Lọc row",
+        "Dùng predicate",
+        "Kết hợp AND/OR"
+      ],
+      "followUps": [
+        {
+          "question": "`WHERE` khác `HAVING` thế nào?",
+          "answer": "WHERE lọc row trước grouping, còn HAVING lọc group sau GROUP BY."
+        }
+      ]
+    },
+    {
+      "id": "INT-SQL-004",
+      "level": "Intern",
+      "topic": "SQL",
+      "question": "`ORDER BY` dùng để làm gì?",
+      "answer": "`ORDER BY` sắp xếp kết quả theo một hoặc nhiều cột, tăng dần hoặc giảm dần. Nếu không có ORDER BY, không nên giả định database luôn trả row theo cùng một thứ tự.",
+      "keyPoints": [
+        "Sắp xếp kết quả",
+        "ASC/DESC",
+        "Không có ORDER BY thì không đảm bảo thứ tự"
+      ],
+      "followUps": [
+        {
+          "question": "Có thể ORDER BY nhiều cột không?",
+          "answer": "Có, database sẽ ưu tiên cột đầu rồi dùng các cột sau để phân biệt những row có cùng giá trị."
+        }
+      ]
+    },
+    {
+      "id": "INT-SQL-005",
+      "level": "Intern",
+      "topic": "SQL",
+      "question": "Primary key có mục đích gì?",
+      "answer": "Primary key định danh duy nhất mỗi row trong bảng và không cho giá trị null theo semantics thông thường. Nó là nền tảng cho quan hệ và thường được tham chiếu bởi foreign key.",
+      "keyPoints": [
+        "Định danh duy nhất row",
+        "Không null",
+        "Được foreign key tham chiếu"
+      ],
+      "followUps": [
+        {
+          "question": "Một bảng có thể có nhiều primary key không?",
+          "answer": "Chỉ có một primary key constraint, nhưng primary key đó có thể gồm nhiều cột."
+        }
+      ]
+    },
+    {
+      "id": "INT-SQL-006",
+      "level": "Intern",
+      "topic": "SQL",
+      "question": "INNER JOIN dùng để làm gì?",
+      "answer": "INNER JOIN kết hợp row từ hai bảng khi điều kiện join khớp ở cả hai phía. Những row không có match sẽ không xuất hiện trong kết quả.",
+      "keyPoints": [
+        "Ghép dữ liệu nhiều bảng",
+        "Chỉ lấy row match",
+        "Dựa trên join condition"
+      ],
+      "followUps": [
+        {
+          "question": "INNER JOIN khác LEFT JOIN thế nào?",
+          "answer": "LEFT JOIN vẫn giữ toàn bộ row phía trái và trả NULL cho phía phải nếu không có match."
+        }
+      ]
+    },
+    {
+      "id": "INT-GIT-002",
+      "level": "Intern",
+      "topic": "Git",
+      "question": "`git pull` thường làm gì?",
+      "answer": "`git pull` lấy thay đổi từ remote rồi tích hợp vào branch hiện tại, thường tương đương fetch sau đó merge hoặc rebase tùy cấu hình. Trước khi pull nên hiểu mình đang đứng ở branch nào.",
+      "keyPoints": [
+        "Fetch remote changes",
+        "Tích hợp vào branch hiện tại",
+        "Behavior phụ thuộc config"
+      ],
+      "followUps": [
+        {
+          "question": "`git fetch` khác `git pull` thế nào?",
+          "answer": "Fetch chỉ tải metadata/commit từ remote mà chưa thay branch hiện tại; pull tải rồi tích hợp ngay."
+        }
+      ]
+    },
+    {
+      "id": "INT-GIT-003",
+      "level": "Intern",
+      "topic": "Git",
+      "question": "Commit tốt nên có đặc điểm gì?",
+      "answer": "Commit nên tập trung vào một thay đổi logic tương đối rõ, build/test được và có message mô tả mục đích. Commit quá lớn hoặc trộn refactor với feature khó review và revert.",
+      "keyPoints": [
+        "Một mục đích rõ",
+        "Message có ý nghĩa",
+        "Dễ review/revert"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên commit file chứa secret không?",
+          "answer": "Không. Secret phải được quản lý ngoài source control và nếu lỡ commit thì cần rotate secret, không chỉ xóa commit mới nhất."
+        }
+      ]
+    },
+    {
+      "id": "INT-ANG-001",
+      "level": "Intern",
+      "topic": "Angular",
+      "question": "Component trong Angular là gì?",
+      "answer": "Component là đơn vị UI gồm class, template và metadata. Nó nhận dữ liệu, xử lý interaction và render một phần giao diện.",
+      "keyPoints": [
+        "Class + template",
+        "Có metadata @Component",
+        "Đại diện một phần UI"
+      ],
+      "followUps": [
+        {
+          "question": "Component nên chứa toàn bộ business logic không?",
+          "answer": "Không. Component nên tập trung presentation/interaction; logic dùng chung hoặc nghiệp vụ nên tách sang service hoặc layer phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "INT-ANG-002",
+      "level": "Intern",
+      "topic": "Angular",
+      "question": "Service trong Angular dùng để làm gì?",
+      "answer": "Service thường chứa logic dùng chung như gọi API, quản lý state hoặc xử lý nghiệp vụ nhẹ và được inject qua DI. Nó giúp component bớt phụ thuộc vào implementation cụ thể.",
+      "keyPoints": [
+        "Logic dùng chung",
+        "Dùng DI",
+        "Giảm logic trong component"
+      ],
+      "followUps": [
+        {
+          "question": "`providedIn: 'root'` nghĩa là gì?",
+          "answer": "Service thường được đăng ký ở root injector và dùng một instance cho toàn application."
+        }
+      ]
+    },
+    {
+      "id": "INT-ANG-003",
+      "level": "Intern",
+      "topic": "Angular",
+      "question": "Input và Output dùng để làm gì?",
+      "answer": "Input truyền dữ liệu từ parent xuống child, còn Output phát event từ child lên parent. Cách này giúp component giao tiếp theo data flow rõ ràng.",
+      "keyPoints": [
+        "Input: parent -> child",
+        "Output: child -> parent",
+        "Data flow rõ"
+      ],
+      "followUps": [
+        {
+          "question": "Child có nên sửa trực tiếp object từ Input không?",
+          "answer": "Thường nên tránh mutation ngoài ý muốn; tốt hơn là emit event để owner của state quyết định cập nhật."
+        }
+      ]
+    },
+    {
+      "id": "INT-ANG-004",
+      "level": "Intern",
+      "topic": "Angular",
+      "question": "Angular Router giải quyết bài toán gì?",
+      "answer": "Router ánh xạ URL tới view/component và hỗ trợ chuyển trang trong SPA mà không cần reload toàn bộ document. Nó cũng hỗ trợ params, guard và lazy loading.",
+      "keyPoints": [
+        "URL -> component",
+        "SPA navigation",
+        "Hỗ trợ params/guard/lazy loading"
+      ],
+      "followUps": [
+        {
+          "question": "Route parameter dùng để làm gì?",
+          "answer": "Dùng để truyền giá trị nằm trong path, ví dụ `/users/:id` để xác định user cần hiển thị."
+        }
+      ]
+    },
+    {
+      "id": "INT-JS-008",
+      "level": "Intern",
+      "topic": "JavaScript",
+      "question": "Array `map` và `filter` khác nhau thế nào?",
+      "answer": "`map` biến mỗi phần tử thành một giá trị mới và giữ số lượng phần tử; `filter` giữ lại những phần tử thỏa điều kiện và có thể làm số lượng giảm.",
+      "keyPoints": [
+        "map = transform",
+        "filter = select",
+        "Khác mục đích"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên dùng map chỉ để tạo side effect không?",
+          "answer": "Không nên. Nếu mục tiêu chỉ là lặp để side effect, `forEach` hoặc loop thường diễn đạt intent rõ hơn."
+        }
+      ]
+    },
+    {
+      "id": "INT-JS-009",
+      "level": "Intern",
+      "topic": "JavaScript",
+      "question": "Object và Array khác nhau khi lưu dữ liệu thế nào?",
+      "answer": "Array phù hợp cho danh sách có thứ tự và index số; object phù hợp cho tập thuộc tính theo key. Chọn structure theo semantics dữ liệu thay vì chỉ vì cú pháp quen thuộc.",
+      "keyPoints": [
+        "Array cho sequence",
+        "Object cho key-value properties",
+        "Chọn theo semantics"
+      ],
+      "followUps": [
+        {
+          "question": "Array cũng là object trong JavaScript phải không?",
+          "answer": "Đúng về mặt type system runtime, nhưng Array có behavior và API riêng cho collection có thứ tự."
+        }
+      ]
+    },
+    {
+      "id": "INT-TS-006",
+      "level": "Intern",
+      "topic": "TypeScript",
+      "question": "Optional property `?` có ý nghĩa gì?",
+      "answer": "Dấu `?` cho biết property có thể không tồn tại hoặc có giá trị undefined theo type contract. Code sử dụng cần kiểm tra hoặc xử lý trường hợp thiếu giá trị.",
+      "keyPoints": [
+        "Property có thể thiếu",
+        "Type checker cảnh báo",
+        "Cần null/undefined handling"
+      ],
+      "followUps": [
+        {
+          "question": "Optional property khác property có type `string | undefined` không?",
+          "answer": "Optional cho phép property vắng mặt hoàn toàn; union với undefined vẫn có thể yêu cầu property tồn tại tùy declaration."
+        }
+      ]
+    },
+    {
+      "id": "INT-TS-007",
+      "level": "Intern",
+      "topic": "TypeScript",
+      "question": "Readonly property giúp gì?",
+      "answer": "`readonly` ngăn code gán lại property qua type checker sau khi khởi tạo theo contract. Nó giúp thể hiện intent immutable nhưng không tự làm nested object immutable sâu.",
+      "keyPoints": [
+        "Ngăn reassignment",
+        "Compile-time protection",
+        "Không deep immutable"
+      ],
+      "followUps": [
+        {
+          "question": "Readonly có tồn tại như cơ chế bảo vệ ở runtime không?",
+          "answer": "Không theo nghĩa type system; TypeScript type bị erase khi compile nên cần runtime logic nếu muốn enforce thật."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ARCH-004",
+      "level": "Senior",
+      "topic": "Architecture",
+      "question": "Bạn quyết định modular monolith hay microservices dựa trên tiêu chí nào?",
+      "answer": "Tôi bắt đầu từ domain boundary, team ownership, deployment independence và failure isolation. Nếu chưa có nhu cầu scale/ownership độc lập rõ ràng, modular monolith thường đơn giản hơn; microservices chỉ đáng giá khi lợi ích vượt chi phí distributed system.",
+      "keyPoints": [
+        "Domain boundary",
+        "Team/deploy independence",
+        "Không dùng microservice vì trend"
+      ],
+      "followUps": [
+        {
+          "question": "Dấu hiệu nào cho thấy monolith đang cần tách service?",
+          "answer": "Khi một capability có ownership, release cadence, scaling hoặc failure profile khác biệt đủ lớn và boundary đã rõ trong code/domain."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ARCH-005",
+      "level": "Senior",
+      "topic": "Architecture",
+      "question": "Bạn thiết kế boundary giữa domain và infrastructure thế nào?",
+      "answer": "Domain/application code nên phụ thuộc abstraction cần thiết thay vì database, queue hay HTTP client cụ thể. Infrastructure implement các port/adapters đó; boundary phải phục vụ testability và thay đổi thật, không tạo abstraction giả chỉ để đủ layer.",
+      "keyPoints": [
+        "Domain không phụ thuộc infrastructure detail",
+        "Dùng abstraction có giá trị",
+        "Tránh layer ceremony"
+      ],
+      "followUps": [
+        {
+          "question": "Có phải mọi repository đều cần interface không?",
+          "answer": "Không. Interface chỉ đáng khi có nhiều implementation, cần boundary test hoặc muốn tách dependency thực; không tạo interface máy móc cho mọi class."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ARCH-006",
+      "level": "Senior",
+      "topic": "Architecture",
+      "question": "Bạn xử lý distributed transaction giữa database và message broker thế nào?",
+      "answer": "Tôi tránh two-phase commit nếu không thật sự cần và thường dùng transactional outbox: commit business data cùng outbox record trong một DB transaction, rồi worker publish message với retry/idempotency.",
+      "keyPoints": [
+        "Outbox pattern",
+        "Atomic DB commit",
+        "Consumer/idempotency vẫn cần"
+      ],
+      "followUps": [
+        {
+          "question": "Outbox có đảm bảo exactly-once end-to-end không?",
+          "answer": "Không. Publish/consume vẫn thường là at-least-once, nên consumer phải chịu được duplicate."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ARCH-007",
+      "level": "Senior",
+      "topic": "Architecture",
+      "question": "Bạn quyết định dùng synchronous API hay asynchronous messaging thế nào?",
+      "answer": "Synchronous phù hợp khi caller cần kết quả ngay và coupling theo thời gian chấp nhận được. Messaging phù hợp khi cần decouple, absorb burst, retry hoặc eventual consistency. Quyết định dựa trên latency, consistency và failure model.",
+      "keyPoints": [
+        "Sync cho immediate response",
+        "Messaging cho decoupling/burst",
+        "Dựa trên consistency/failure model"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên dùng queue cho mọi inter-service communication không?",
+          "answer": "Không. Queue thêm complexity vận hành, eventual consistency và debugging; chỉ dùng khi lợi ích rõ."
+        }
+      ]
+    },
+    {
+      "id": "SEN-API-002",
+      "level": "Senior",
+      "topic": "ASP.NET Core",
+      "question": "Bạn thiết kế API versioning và deprecation cho hệ thống nhiều client thế nào?",
+      "answer": "Tôi ưu tiên backward-compatible additive change, chỉ tạo version mới khi contract thực sự breaking. Deprecation cần timeline, telemetry client usage, documentation và communication trước khi remove version cũ.",
+      "keyPoints": [
+        "Ưu tiên backward compatibility",
+        "Version khi breaking",
+        "Có deprecation telemetry/timeline"
+      ],
+      "followUps": [
+        {
+          "question": "Thêm field response có luôn backward compatible không?",
+          "answer": "Thường có với client tolerant, nhưng client deserialize strict hoặc contract đặc biệt vẫn có thể vỡ; cần hiểu consumer behavior."
+        }
+      ]
+    },
+    {
+      "id": "SEN-API-003",
+      "level": "Senior",
+      "topic": "ASP.NET Core",
+      "question": "Bạn bảo vệ downstream service khi API nhận traffic burst lớn thế nào?",
+      "answer": "Tôi dùng rate limiting, bounded concurrency, timeout, queue/backpressure và circuit breaker phù hợp. Mục tiêu là fail fast hoặc degrade có kiểm soát thay vì để request dồn xuống dependency tới khi toàn hệ thống sụp.",
+      "keyPoints": [
+        "Backpressure",
+        "Bounded concurrency",
+        "Timeout/circuit breaker"
+      ],
+      "followUps": [
+        {
+          "question": "Retry có thể làm traffic burst tệ hơn thế nào?",
+          "answer": "Nếu nhiều client retry cùng lúc mà không có backoff/jitter, retry storm có thể nhân tải lên downstream đang yếu."
+        }
+      ]
+    },
+    {
+      "id": "SEN-API-004",
+      "level": "Senior",
+      "topic": "ASP.NET Core",
+      "question": "Bạn thiết kế multi-tenant API để tránh rò dữ liệu giữa tenant thế nào?",
+      "answer": "Tenant identity phải được xác định ở boundary đáng tin, propagate xuyên request và enforce ở data access/authorization. Tôi dùng defense-in-depth: query filter hoặc repository policy, resource authorization và test cross-tenant nghiêm ngặt.",
+      "keyPoints": [
+        "Tenant context đáng tin",
+        "Enforce ở data access + auth",
+        "Defense-in-depth"
+      ],
+      "followUps": [
+        {
+          "question": "Chỉ dùng tenantId từ request body có an toàn không?",
+          "answer": "Không. Client có thể sửa giá trị đó; tenant identity nên đến từ credential/session hoặc mapping server-side đáng tin."
+        }
+      ]
+    },
+    {
+      "id": "SEN-EF-001",
+      "level": "Senior",
+      "topic": "EF Core",
+      "question": "Bạn quyết định dùng EF Core hay raw SQL/Dapper cho một query nóng thế nào?",
+      "answer": "Tôi giữ EF Core làm mặc định vì productivity và maintainability. Chỉ chuyển sang raw SQL/Dapper khi profiling cho thấy bottleneck rõ và query shape thực sự hưởng lợi, đồng thời chấp nhận thêm mapping/maintenance cost.",
+      "keyPoints": [
+        "EF Core mặc định",
+        "Profile trước khi tối ưu",
+        "Raw SQL có maintenance cost"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên mix EF Core và Dapper trong cùng service không?",
+          "answer": "Có thể, nếu boundary rõ và transaction/connection ownership được quản lý cẩn thận; không nên mix tùy tiện chỉ vì sở thích."
+        }
+      ]
+    },
+    {
+      "id": "SEN-EF-002",
+      "level": "Senior",
+      "topic": "EF Core",
+      "question": "Bạn thiết kế migration cho bảng hàng trăm triệu row thế nào?",
+      "answer": "Tôi tránh blocking migration lớn trong deploy app. Dùng expand-and-contract, backfill theo batch, online/index option nếu DB hỗ trợ, monitor lock/log growth và tách schema change khỏi data migration dài.",
+      "keyPoints": [
+        "Expand-and-contract",
+        "Batch backfill",
+        "Theo dõi lock/log growth"
+      ],
+      "followUps": [
+        {
+          "question": "Thêm column có default vào bảng lớn có thể nguy hiểm thế nào?",
+          "answer": "Tùy database/version, operation có thể rewrite nhiều row hoặc giữ schema lock lâu; cần test trên dữ liệu tương tự production."
+        }
+      ]
+    },
+    {
+      "id": "SEN-EF-003",
+      "level": "Senior",
+      "topic": "EF Core",
+      "question": "Bạn quản lý DbContext trong background processing có concurrency cao thế nào?",
+      "answer": "Mỗi message/job nên có scope và DbContext riêng, không share một context giữa concurrent workers. Concurrency limit phải phù hợp connection pool và database capacity, không chỉ số CPU.",
+      "keyPoints": [
+        "DbContext per unit of work",
+        "Không share concurrent context",
+        "Tune theo DB/connection pool"
+      ],
+      "followUps": [
+        {
+          "question": "Tăng số worker có luôn tăng throughput không?",
+          "answer": "Không. Khi DB hoặc connection pool bão hòa, thêm worker chỉ tăng queueing, lock contention và latency."
+        }
+      ]
+    },
+    {
+      "id": "SEN-SQL-002",
+      "level": "Senior",
+      "topic": "SQL",
+      "question": "Bạn xử lý hot table có write contention cao thế nào?",
+      "answer": "Tôi xác định contention đến từ lock, sequence/hot key, index hay transaction shape trước. Giải pháp có thể gồm rút ngắn transaction, partition workload, thay key strategy, giảm index write cost hoặc queue writes tùy bottleneck.",
+      "keyPoints": [
+        "Đo contention trước",
+        "Giảm transaction/index pressure",
+        "Có thể partition/queue"
+      ],
+      "followUps": [
+        {
+          "question": "Thêm index có thể làm write contention tệ hơn không?",
+          "answer": "Có. Mỗi INSERT/UPDATE phải duy trì thêm index, tăng I/O và lock/latch pressure."
+        }
+      ]
+    },
+    {
+      "id": "SEN-SQL-003",
+      "level": "Senior",
+      "topic": "SQL",
+      "question": "Bạn đánh giá read replica cho hệ thống như thế nào?",
+      "answer": "Read replica giúp scale read và tách workload, nhưng thường có replication lag. Chỉ route query chấp nhận stale data; read-after-write quan trọng có thể phải đọc primary hoặc dùng consistency strategy khác.",
+      "keyPoints": [
+        "Scale read",
+        "Có replication lag",
+        "Chọn query chấp nhận stale"
+      ],
+      "followUps": [
+        {
+          "question": "Có thể route mọi GET sang replica không?",
+          "answer": "Không. Một số GET cần thấy dữ liệu vừa ghi hoặc consistency mạnh, nên phải phân loại theo semantics."
+        }
+      ]
+    },
+    {
+      "id": "SEN-SQL-004",
+      "level": "Senior",
+      "topic": "SQL",
+      "question": "Bạn quyết định partition table dựa trên gì?",
+      "answer": "Partitioning hữu ích khi dữ liệu rất lớn và access/maintenance có natural partition key như date hoặc tenant. Nó không thay index/query design và key sai có thể gây hotspot hoặc cross-partition query đắt.",
+      "keyPoints": [
+        "Cần natural partition key",
+        "Hỗ trợ manage/scale data lớn",
+        "Không thay index design"
+      ],
+      "followUps": [
+        {
+          "question": "Partition theo tenant luôn tốt không?",
+          "answer": "Không. Tenant size có thể lệch lớn gây hotspot; cần xem distribution và query pattern thực tế."
+        }
+      ]
+    },
+    {
+      "id": "SEN-SEC-002",
+      "level": "Senior",
+      "topic": "Security",
+      "question": "Bạn xây threat model cho một tính năng mới thế nào?",
+      "answer": "Tôi xác định asset, trust boundary, actor, data flow và abuse case trước, rồi đánh giá authentication, authorization, spoofing/tampering/data exposure và dependency risk. Kết quả phải dẫn tới control và test cụ thể.",
+      "keyPoints": [
+        "Asset + trust boundary",
+        "Abuse cases",
+        "Control/test cụ thể"
+      ],
+      "followUps": [
+        {
+          "question": "Threat modeling nên làm khi nào?",
+          "answer": "Nên làm sớm khi thiết kế và cập nhật khi architecture hoặc data flow thay đổi, không chỉ trước penetration test."
+        }
+      ]
+    },
+    {
+      "id": "SEN-SEC-003",
+      "level": "Senior",
+      "topic": "Security",
+      "question": "Bạn xử lý secret rotation mà không downtime thế nào?",
+      "answer": "Hệ thống cần hỗ trợ overlap giữa secret cũ và mới trong một khoảng thời gian hoặc đọc secret động từ manager. Quy trình rotate phải có audit, rollback và tránh hard-code secret vào image/config bất biến.",
+      "keyPoints": [
+        "Overlap old/new secret",
+        "Secret manager",
+        "Có rollback/audit"
+      ],
+      "followUps": [
+        {
+          "question": "Rotation database credential khó ở điểm nào?",
+          "answer": "Connection pool có thể giữ connection dùng credential cũ, nên cần strategy refresh/recycle pool sau khi credential mới có hiệu lực."
+        }
+      ]
+    },
+    {
+      "id": "SEN-RES-002",
+      "level": "Senior",
+      "topic": "Reliability",
+      "question": "Bạn đặt timeout cho call downstream dựa trên gì?",
+      "answer": "Timeout phải nhỏ hơn request budget tổng và dựa trên latency distribution/SLO của dependency, không dùng một giá trị tùy ý cho mọi call. Cần chừa thời gian cho retry/cleanup nếu có.",
+      "keyPoints": [
+        "Timeout theo latency/SLO",
+        "Nằm trong request budget",
+        "Phối hợp retry"
+      ],
+      "followUps": [
+        {
+          "question": "Timeout quá dài gây gì?",
+          "answer": "Request/thread/resource bị giữ lâu, queue tăng và failure lan rộng khi dependency chậm."
+        }
+      ]
+    },
+    {
+      "id": "SEN-RES-003",
+      "level": "Senior",
+      "topic": "Reliability",
+      "question": "Circuit breaker giải quyết vấn đề gì?",
+      "answer": "Circuit breaker ngừng gửi request tới dependency đang fail trong một thời gian để tránh lãng phí resource và cascading failure. Nó không thay timeout/retry và cần fallback hoặc error behavior rõ.",
+      "keyPoints": [
+        "Ngăn cascading failure",
+        "Fail fast",
+        "Phối hợp timeout/retry"
+      ],
+      "followUps": [
+        {
+          "question": "Circuit breaker mở có nghĩa dependency chắc chắn down không?",
+          "answer": "Không. Nó chỉ phản ánh failure rate theo policy gần đây; breaker sẽ thử half-open để kiểm tra khả năng phục hồi."
+        }
+      ]
+    },
+    {
+      "id": "SEN-OBS-002",
+      "level": "Senior",
+      "topic": "Observability",
+      "question": "Bạn định nghĩa SLI và SLO cho API như thế nào?",
+      "answer": "SLI là chỉ số đo như availability, latency hoặc error rate; SLO là mục tiêu mong muốn của SLI trong một cửa sổ thời gian. Tôi chọn SLI gắn với trải nghiệm user và dùng error budget để cân bằng reliability với tốc độ thay đổi.",
+      "keyPoints": [
+        "SLI = measure",
+        "SLO = target",
+        "Error budget hỗ trợ quyết định"
+      ],
+      "followUps": [
+        {
+          "question": "CPU utilization có phải SLI tốt cho user experience không?",
+          "answer": "Thường không trực tiếp. CPU là resource metric; user-facing SLI như success rate hoặc latency thường phản ánh trải nghiệm tốt hơn."
+        }
+      ]
+    },
+    {
+      "id": "SEN-DEP-002",
+      "level": "Senior",
+      "topic": "DevOps",
+      "question": "Bạn thiết kế deployment strategy để giảm rủi ro release thế nào?",
+      "answer": "Tôi ưu tiên automated tests, backward-compatible change và rollout dần như canary hoặc blue-green khi phù hợp. Release cần health metrics, rollback/roll-forward plan và feature flag cho thay đổi rủi ro.",
+      "keyPoints": [
+        "Progressive rollout",
+        "Backward-compatible change",
+        "Rollback/feature flag"
+      ],
+      "followUps": [
+        {
+          "question": "Rollback app có luôn rollback database được không?",
+          "answer": "Không. Schema/data migration có thể không reversible an toàn, nên deploy cần expand-and-contract để app cũ và mới cùng chạy được."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ANG-019",
+      "level": "Senior",
+      "topic": "Angular",
+      "question": "Bạn quản lý design system Angular cho nhiều team thế nào?",
+      "answer": "Design system cần API component ổn định, accessibility, visual consistency, versioning và migration path. Tôi tách token/style foundation khỏi business component và dùng documentation/story/demo cùng automated regression khi cần.",
+      "keyPoints": [
+        "Stable component API",
+        "Accessibility + consistency",
+        "Versioning/migration"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên đưa business-specific component vào design system chung không?",
+          "answer": "Thường không. Design system nên generic và dùng được rộng; component gắn domain nên ở feature/domain library phù hợp."
         }
       ]
     }
