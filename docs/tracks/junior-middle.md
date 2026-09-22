@@ -91,6 +91,9 @@ Middle nên hiểu thêm behavior production:
 - rolling deployment
 - PostgreSQL row locking, EXPLAIN ANALYZE, MVCC, connection pooling
 - load balancer và CDN
+- Messaging: queue vs pub/sub, at-least-once, DLQ, ordering, retry, idempotent consumer
+- Observability: logs/metrics/traces, correlation ID, cardinality, OpenTelemetry
+- Reliability: retry đúng lỗi, bulkhead, load shedding, graceful degradation
 
 ### Frontend Angular
 
