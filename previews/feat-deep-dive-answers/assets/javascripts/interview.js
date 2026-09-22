@@ -122,15 +122,18 @@
       return;
     }
 
-    root.innerHTML = filtered.map(q => `
+    root.innerHTML = filtered.map((q, idx) => `
       <details class="question-card" data-level="${esc(q.level)}">
         <summary class="question-summary">
           <div class="question-header-content">
-            <div class="badges">${renderBadges(q)}</div>
+            <div class="badges">
+              <span class="badge badge-index">#${idx + 1}</span>
+              ${renderBadges(q)}
+            </div>
             <div class="question-title">${esc(q.question)}</div>
           </div>
           <span class="accordion-chevron" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </span>
         </summary>
         <div class="answer-block">
@@ -140,22 +143,29 @@
     `).join('');
   }
 
-  function initQuestionBank() {
-    if (!byId('question-bank')) return;
-    fillTopics(byId('qb-topic'), questions);
+  // Delegated event handling for Question Bank
+  document.addEventListener('click', (e) => {
+    const expandBtn = e.target.closest('#qb-expand-all');
+    if (expandBtn) {
+      e.preventDefault();
+      document.querySelectorAll('#question-bank details.question-card').forEach(d => {
+        d.open = true;
+      });
+      return;
+    }
 
-    ['qb-level', 'qb-topic'].forEach(id => byId(id)?.addEventListener('change', renderQuestionBank));
-    byId('qb-search')?.addEventListener('input', renderQuestionBank);
+    const collapseBtn = e.target.closest('#qb-collapse-all');
+    if (collapseBtn) {
+      e.preventDefault();
+      document.querySelectorAll('#question-bank details.question-card').forEach(d => {
+        d.open = false;
+      });
+      return;
+    }
 
-    byId('qb-expand-all')?.addEventListener('click', () => {
-      document.querySelectorAll('#question-bank details.question-card').forEach(d => { d.open = true; });
-    });
-
-    byId('qb-collapse-all')?.addEventListener('click', () => {
-      document.querySelectorAll('#question-bank details.question-card').forEach(d => { d.open = false; });
-    });
-
-    byId('qb-reset')?.addEventListener('click', () => {
+    const resetBtn = e.target.closest('#qb-reset');
+    if (resetBtn) {
+      e.preventDefault();
       const lvl = byId('qb-level');
       const top = byId('qb-topic');
       const src = byId('qb-search');
@@ -163,8 +173,25 @@
       if (top) top.value = '';
       if (src) src.value = '';
       renderQuestionBank();
-    });
+      return;
+    }
+  });
 
+  document.addEventListener('change', (e) => {
+    if (e.target && (e.target.id === 'qb-level' || e.target.id === 'qb-topic')) {
+      renderQuestionBank();
+    }
+  });
+
+  document.addEventListener('input', (e) => {
+    if (e.target && e.target.id === 'qb-search') {
+      renderQuestionBank();
+    }
+  });
+
+  function initQuestionBank() {
+    if (!byId('question-bank')) return;
+    fillTopics(byId('qb-topic'), questions);
     renderQuestionBank();
   }
 
@@ -303,32 +330,40 @@
       flip();
     });
 
-    // Keyboard Shortcuts
-    window.addEventListener('keydown', e => {
-      const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
-      if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
-      if (!byId('flashcard-app') || byId('flashcard-app').offsetParent === null) return;
-
-      if (e.code === 'Space' || e.code === 'Enter') {
-        e.preventDefault();
-        flip();
-      } else if (e.code === 'ArrowLeft') {
-        e.preventDefault();
-        move(-1);
-      } else if (e.code === 'ArrowRight') {
-        e.preventDefault();
-        move(1);
-      } else if (e.key === '1') {
-        e.preventDefault();
-        mark('Cần ôn');
-      } else if (e.key === '2') {
-        e.preventDefault();
-        mark('Đã biết');
-      }
-    });
+    activeFcFlip = flip;
+    activeFcMove = move;
+    activeFcMark = mark;
 
     rebuild(true);
   }
+
+  let activeFcFlip = null;
+  let activeFcMove = null;
+  let activeFcMark = null;
+
+  // Keyboard Shortcuts (bound once globally)
+  window.addEventListener('keydown', e => {
+    const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+    if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
+    if (!byId('flashcard-app') || byId('flashcard-app').offsetParent === null) return;
+
+    if (e.code === 'Space' || e.code === 'Enter') {
+      e.preventDefault();
+      activeFcFlip?.();
+    } else if (e.code === 'ArrowLeft') {
+      e.preventDefault();
+      activeFcMove?.(-1);
+    } else if (e.code === 'ArrowRight') {
+      e.preventDefault();
+      activeFcMove?.(1);
+    } else if (e.key === '1') {
+      e.preventDefault();
+      activeFcMark?.('Cần ôn');
+    } else if (e.key === '2') {
+      e.preventDefault();
+      activeFcMark?.('Đã biết');
+    }
+  });
 
   /* --- Mock Interview Controller --- */
   function initMock() {
@@ -506,27 +541,61 @@
     byId('mock-next')?.addEventListener('click', () => advance('skipped'));
   }
 
-  /* --- Main Init --- */
-  async function main() {
-    try {
-      const response = await fetch(dataUrl);
-      const data = await response.json();
-      questions = data.questions || [];
+  /* --- Main Init & Instant Navigation Support --- */
+  let questionsPromise = null;
+  function loadQuestions() {
+    if (questions.length) return Promise.resolve(questions);
+    if (!questionsPromise) {
+      questionsPromise = fetch(dataUrl)
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.json();
+        })
+        .then(data => {
+          questions = data.questions || [];
+          return questions;
+        })
+        .catch(err => {
+          questionsPromise = null;
+          throw err;
+        });
+    }
+    return questionsPromise;
+  }
+
+  function boot() {
+    loadQuestions().then(() => {
       initQuestionBank();
       initFlashcards();
       initMock();
-    } catch (error) {
+    }).catch(error => {
       console.error('Không tải được interview question data', error);
       document.querySelectorAll('#question-bank,#flashcard-app,#mock-setup').forEach(el => {
         if (el) el.innerHTML = '<p>Không tải được dữ liệu câu hỏi. Hãy kiểm tra file docs/data/questions.json.</p>';
       });
-    }
+    });
+  }
+
+  // Subscribe to Material for MkDocs instant navigation
+  if (typeof window.document$ !== 'undefined') {
+    window.document$.subscribe(boot);
+  } else {
+    let checkCount = 0;
+    const checkDoc = setInterval(() => {
+      checkCount++;
+      if (typeof window.document$ !== 'undefined') {
+        clearInterval(checkDoc);
+        window.document$.subscribe(boot);
+      } else if (checkCount > 60) {
+        clearInterval(checkDoc);
+      }
+    }, 50);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', main);
+    document.addEventListener('DOMContentLoaded', boot);
   } else {
-    main();
+    boot();
   }
 })();
 
