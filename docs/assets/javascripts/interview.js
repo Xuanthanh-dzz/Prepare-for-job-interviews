@@ -46,7 +46,13 @@
         <div class="answer-block">
           <h4>Trả lời mẫu</h4><p>${esc(q.answer)}</p>
           <h4>Key points</h4><ul class="key-list">${q.keyPoints.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
-          <h4>Follow-up thường gặp</h4><ul>${q.followUps.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+          <h4>Câu hỏi đào sâu</h4>
+          <div class="deep-dive-list">${q.followUps.map(x => `
+            <details class="deep-dive-item">
+              <summary>${esc(x.question)}</summary>
+              <p><strong>Trả lời mẫu:</strong> ${esc(x.answer)}</p>
+            </details>`).join('')}
+          </div>
         </div>
       </details>`).join('') : '<p>Không tìm thấy câu hỏi phù hợp.</p>';
   }
@@ -148,7 +154,7 @@
       byId('mock-progress').textContent = `Câu ${index + 1} / ${session.length}`;
       byId('mock-question').textContent = q.question;
       byId('mock-meta').textContent = `${q.level} · ${q.topic} · ${q.id}`;
-      answerEl.innerHTML = `<strong>Trả lời mẫu</strong><p>${esc(q.answer)}</p><strong>Key points</strong><ul>${q.keyPoints.map(x => `<li>${esc(x)}</li>`).join('')}</ul><strong>Follow-up</strong><ul>${q.followUps.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+      answerEl.innerHTML = `<strong>Trả lời mẫu</strong><p>${esc(q.answer)}</p><strong>Key points</strong><ul>${q.keyPoints.map(x => `<li>${esc(x)}</li>`).join('')}</ul><strong>Câu hỏi đào sâu</strong><div class="deep-dive-list">${q.followUps.map(x => `<details class="deep-dive-item"><summary>${esc(x.question)}</summary><p><strong>Trả lời mẫu:</strong> ${esc(x.answer)}</p></details>`).join('')}</div>`;
       answerEl.hidden = true;
       scoreEl.hidden = true;
       byId('mock-reveal').hidden = false;
