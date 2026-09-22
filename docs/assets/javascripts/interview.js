@@ -132,7 +132,17 @@
   function initMock() {
     if (!byId('mock-start')) return;
 
+    const backendTopics = new Set([
+      'C#', '.NET', 'Collections/LINQ', 'Async/Concurrency', 'Memory/GC',
+      'ASP.NET Core', 'EF Core', 'SQL', 'HTTP/API', 'Security',
+      'Testing', 'Architecture', 'Reliability', 'Observability', 'DevOps'
+    ]);
+    const frontendTopics = new Set([
+      'JavaScript', 'TypeScript', 'HTML', 'CSS', 'Web Platform', 'Angular'
+    ]);
+
     const levelEl = byId('mock-level');
+    const trackEl = byId('mock-track');
     const topicEl = byId('mock-topic');
     const sessionEl = byId('mock-session');
     const resultEl = byId('mock-result');
@@ -143,8 +153,19 @@
     let index = 0;
     let scores = { review: 0, pass: 0, strong: 0, skipped: 0 };
 
+    const matchesTrack = q => {
+      if (!trackEl || !trackEl.value) return true;
+      if (trackEl.value === 'backend') return backendTopics.has(q.topic);
+      if (trackEl.value === 'frontend') return frontendTopics.has(q.topic);
+      return true;
+    };
+
+    function currentPool() {
+      return questions.filter(q => q.level === levelEl.value && matchesTrack(q));
+    }
+
     function refreshTopics() {
-      fillTopics(topicEl, questions.filter(q => q.level === levelEl.value));
+      fillTopics(topicEl, currentPool());
     }
 
     function showQuestion() {
@@ -163,11 +184,13 @@
     function finish() {
       sessionEl.hidden = true;
       resultEl.hidden = false;
+      const trackLabel = trackEl?.selectedOptions?.[0]?.textContent || 'Full Stack';
       resultEl.innerHTML = `
         <div>
           <h2>Hoàn thành lượt phỏng vấn</h2>
+          <p><strong>${levelEl.value} · ${esc(trackLabel)}</strong></p>
           <p><strong>${session.length} câu</strong> · Cần ôn: <strong>${scores.review}</strong> · Đạt: <strong>${scores.pass}</strong> · Tốt: <strong>${scores.strong}</strong> · Bỏ qua: <strong>${scores.skipped}</strong></p>
-          <p>Hãy đưa các câu “Cần ôn” về Flashcards, sau đó tạo một đề mới cùng topic để kiểm tra lại khả năng recall.</p>
+          <p>Hãy đưa các câu “Cần ôn” về Flashcards, sau đó tạo một đề mới cùng track/topic để kiểm tra lại khả năng recall.</p>
         </div>`;
     }
 
@@ -182,13 +205,13 @@
     }
 
     levelEl.addEventListener('change', refreshTopics);
+    trackEl?.addEventListener('change', refreshTopics);
     refreshTopics();
 
     byId('mock-start').addEventListener('click', () => {
-      const level = levelEl.value;
       const topic = topicEl.value;
       const count = Number(byId('mock-count').value);
-      const pool = questions.filter(q => q.level === level && (!topic || q.topic === topic));
+      const pool = currentPool().filter(q => !topic || q.topic === topic);
 
       session = shuffle(pool).slice(0, count);
       index = 0;
