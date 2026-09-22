@@ -3,6 +3,14 @@
 Học để **trả lời như một kỹ sư**, không học thuộc một câu văn mẫu.
 
 <div class="hero-grid">
+  <a class="hero-card" href="tracks/intern-senior/">
+    <div class="hero-card-header">
+      <span class="hero-card-icon">⚖️</span>
+      <strong>Intern & Senior — 60/40</strong>
+    </div>
+    <span>Intern chắc nền tảng; Senior tập trung architecture, reliability và quyết định production.</span>
+    <div class="hero-card-footer">Xem trọng tâm level &rarr;</div>
+  </a>
   <a class="hero-card" href="tracks/junior-middle/">
     <div class="hero-card-header">
       <span class="hero-card-icon">🚀</span>
@@ -75,7 +83,7 @@ Repo ưu tiên làm sâu các công nghệ gắn trực tiếp với vị trí *
 2. Chọn module và level gần với vị trí bạn chuẩn bị ứng tuyển.
 3. Học theo **Question Bank** để hiểu bản chất.
 4. Chuyển sang **Flashcards** để luyện nhớ chủ động.
-5. Nếu đang ứng tuyển Junior/Middle, dùng trang **Junior & Middle Focus** làm checklist.
+5. Dùng trang **Intern & Senior — 60/40** hoặc **Junior & Middle Focus** làm checklist theo level.
 6. Cuối cùng làm **Mock Interview** theo level + track + topic và tự trả lời thành tiếng trước khi mở đáp án.
 
 ## Chuẩn câu trả lời

@@ -38,6 +38,7 @@ nav:
   - Trang chủ: index.md
   - Stack ưu tiên: roadmap.md
   - Trọng tâm level:
+      - Intern & Senior — 60/40: tracks/intern-senior.md
       - Junior & Middle: tracks/junior-middle.md
   - Modules:
       - Backend — C# / .NET: modules/csharp-dotnet.md
