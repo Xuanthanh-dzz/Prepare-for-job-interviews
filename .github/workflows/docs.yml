@@ -6,9 +6,15 @@ on:
     branches-ignore:
       - gh-pages
   workflow_dispatch:
+    inputs:
+      deploy_only:
+        description: Deploy the current gh-pages snapshot from main
+        required: false
+        default: "false"
 
 permissions:
   contents: write
+  actions: write
   pages: write
   id-token: write
 
@@ -18,6 +24,7 @@ concurrency:
 
 jobs:
   validate:
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.deploy_only != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout current ref
@@ -34,14 +41,10 @@ jobs:
       - name: Validate MkDocs build
         run: mkdocs build --strict
 
-  deploy:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+  publish-snapshot:
+    if: github.event_name == 'push'
     needs: validate
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
       - name: Checkout current branch
         uses: actions/checkout@v4
@@ -66,23 +69,31 @@ jobs:
           python-version: "3.x"
 
       - name: Install docs dependencies
-        run: pip install -r source/requirements-docs.txt
+        run: |
+          pip install -r production-source/requirements-docs.txt
+          pip install -r source/requirements-docs.txt
 
       - name: Build production from main
         run: |
-          mkdocs build --strict             -f production-source/mkdocs.yml             -d "$GITHUB_WORKSPACE/build-production"
+          mkdocs build --strict \
+            -f production-source/mkdocs.yml \
+            -d "$GITHUB_WORKSPACE/build-production"
 
       - name: Build current branch
         run: |
-          mkdocs build --strict             -f source/mkdocs.yml             -d "$GITHUB_WORKSPACE/build-current"
+          mkdocs build --strict \
+            -f source/mkdocs.yml \
+            -d "$GITHUB_WORKSPACE/build-current"
 
-      - name: Prepare production and preview site
+      - name: Prepare production and branch preview
         id: paths
         shell: bash
         run: |
           set -euo pipefail
 
-          BRANCH_SLUG="$(printf '%s' "$GITHUB_REF_NAME"             | sed 's#[/ ]#-#g'             | tr -cd 'A-Za-z0-9._-')"
+          BRANCH_SLUG="$(printf '%s' "$GITHUB_REF_NAME" \
+            | sed 's#[/ ]#-#g' \
+            | tr -cd 'A-Za-z0-9._-')"
 
           if [ -z "$BRANCH_SLUG" ]; then
             echo "Could not derive branch preview slug."
@@ -122,9 +133,49 @@ jobs:
           if git diff --cached --quiet; then
             echo "No generated site changes to commit."
           else
-            git commit -m "deploy: $GITHUB_REF_NAME"
+            git commit -m "deploy snapshot: $GITHUB_REF_NAME"
             git push origin HEAD:gh-pages
           fi
+
+      - name: Request preview deployment through main
+        if: github.ref_name != 'main'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl --fail-with-body -L -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/docs.yml/dispatches" \
+            -d '{"ref":"main","inputs":{"deploy_only":"true"}}'
+
+      - name: Publish preview URL
+        if: github.ref_name != 'main'
+        shell: bash
+        run: |
+          OWNER="${GITHUB_REPOSITORY%%/*}"
+          REPO="${GITHUB_REPOSITORY#*/}"
+          {
+            echo "### Branch preview"
+            echo ""
+            echo "https://${OWNER}.github.io/${REPO}/previews/${{ steps.paths.outputs.branch_slug }}/"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy-production:
+    if: github.event_name == 'push' && github.ref_name == 'main'
+    needs: publish-snapshot
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout Pages snapshot
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: publish
 
       - name: Prepare Pages artifact
         run: |
@@ -140,19 +191,36 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v5
 
-      - name: Publish URLs
+      - name: Publish production URL
         shell: bash
         run: |
           OWNER="${GITHUB_REPOSITORY%%/*}"
           REPO="${GITHUB_REPOSITORY#*/}"
-          BASE_URL="https://${OWNER}.github.io/${REPO}/"
+          echo "https://${OWNER}.github.io/${REPO}/" >> "$GITHUB_STEP_SUMMARY"
 
-          {
-            echo "### Website URLs"
-            echo ""
-            echo "- Production: ${BASE_URL}"
+  deploy-preview-snapshot:
+    if: github.event_name == 'workflow_dispatch' && github.ref_name == 'main' && github.event.inputs.deploy_only == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout Pages snapshot
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: publish
 
-            if [ "$GITHUB_REF_NAME" != "main" ]; then
-              echo "- Preview: ${BASE_URL}previews/${{ steps.paths.outputs.branch_slug }}/"
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Prepare Pages artifact
+        run: |
+          mkdir -p pages-artifact
+          rsync -a --delete --exclude='.git' publish/ pages-artifact/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages-artifact
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
