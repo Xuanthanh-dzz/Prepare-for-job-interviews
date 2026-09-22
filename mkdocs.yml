@@ -34,6 +34,8 @@ theme:
 nav:
   - Trang chủ: index.md
   - Stack ưu tiên: roadmap.md
+  - Trọng tâm level:
+      - Junior & Middle: tracks/junior-middle.md
   - Modules:
       - Backend — C# / .NET: modules/csharp-dotnet.md
       - Frontend — JS / TS / Angular: modules/frontend-angular.md

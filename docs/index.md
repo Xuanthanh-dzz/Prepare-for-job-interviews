@@ -3,6 +3,10 @@
 Học để **trả lời như một kỹ sư**, không học thuộc một câu văn mẫu.
 
 <div class="hero-grid">
+  <a class="hero-card" href="tracks/junior-middle/">
+    <strong>Junior & Middle Focus</strong>
+    <span>Luyện đúng chuẩn tuyển dụng: Junior build feature, Middle trade-off + debugging + performance.</span>
+  </a>
   <a class="hero-card" href="roadmap/">
     <strong>Stack ưu tiên</strong>
     <span>Backend: C#/.NET/EF/SQL · Frontend: JavaScript/TypeScript/Angular.</span>
@@ -43,7 +47,8 @@ Repo ưu tiên làm sâu các công nghệ gắn trực tiếp với vị trí *
 2. Chọn module và level gần với vị trí bạn chuẩn bị ứng tuyển.
 3. Học theo **Question Bank** để hiểu bản chất.
 4. Chuyển sang **Flashcards** để luyện nhớ chủ động.
-5. Cuối cùng làm **Mock Interview** theo topic và tự trả lời thành tiếng trước khi mở đáp án.
+5. Nếu đang ứng tuyển Junior/Middle, dùng trang **Junior & Middle Focus** làm checklist.
+6. Cuối cùng làm **Mock Interview** theo level + track + topic và tự trả lời thành tiếng trước khi mở đáp án.
 
 ## Chuẩn câu trả lời
 
