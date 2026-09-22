@@ -60,3 +60,17 @@ Component, DI, Router, Forms, Signals, RxJS, performance, testing và architectu
 **Frontend:** JavaScript → TypeScript → HTML/CSS/Web Platform → Angular
 
 **Full Stack:** HTTP/API → Security → Testing → Docker/CI-CD → Architecture
+
+## Market expansion sau core track
+
+Sau khi các module C#/.NET, ASP.NET Core, EF Core, SQL và Angular đã đủ sâu, repo mới mở rộng các kỹ năng giúp tăng phạm vi vị trí ứng tuyển:
+
+- React — mở rộng lựa chọn Frontend/Full Stack
+- Docker / CI-CD
+- Azure / cloud fundamentals
+- Redis / caching
+- Messaging
+- Observability
+- System Design
+
+Nguyên tắc là **không làm rộng trước khi core track đủ sâu để đi phỏng vấn thực tế**.
