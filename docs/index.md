@@ -48,7 +48,7 @@ Học để **trả lời như một kỹ sư**, không học thuộc một câu
       <span class="hero-card-icon">📚</span>
       <strong>Ngân hàng câu hỏi</strong>
     </div>
-    <span>508+ câu hỏi chia theo level (Intern &rarr; Senior), có Trả lời mẫu + Key points + Câu hỏi đào sâu.</span>
+    <span>578+ câu hỏi chia theo level (Intern &rarr; Senior), có Trả lời mẫu + Key points + Câu hỏi đào sâu.</span>
     <div class="hero-card-footer">Tra cứu ngân hàng &rarr;</div>
   </a>
   <a class="hero-card" href="flashcards/">
