@@ -28,8 +28,8 @@ Quy ước deploy:
 - Entity Framework Core
 - SQL / Database
 - Authentication / Authorization / Security
-- HTML / CSS / JavaScript / TypeScript
-- Frontend framework concepts
+- JavaScript / TypeScript / HTML / CSS / Web Platform
+- Angular / RxJS / Forms / Routing / Frontend Architecture
 - Testing
 - Git / CI-CD / Docker / Cloud basics
 - Architecture / Distributed Systems / System Design
@@ -54,4 +54,4 @@ Quy ước deploy:
 
 Cấu trúc dữ liệu này được tái sử dụng cho **website học**, **flashcard** và **mock interview**.
 
-> Nội dung ưu tiên chất lượng câu hỏi và cách trả lời thực chiến hơn số lượng.
+> Core track hiện tại: **Backend C#/.NET/EF Core/SQL** và **Frontend JavaScript/TypeScript/Angular**. Nội dung ưu tiên chất lượng câu hỏi và cách trả lời thực chiến hơn số lượng.
