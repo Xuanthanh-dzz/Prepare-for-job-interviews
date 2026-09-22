@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "questions": [
     {
       "id": "INT-CS-001",
@@ -2158,187 +2158,198 @@
     {
       "id": "INT-TS-001",
       "level": "Intern",
-      "topic": "TypeScript giúp gì so với JavaScript?",
-      "question": "TypeScript thêm static type checking và tooling trên JavaScript, giúp phát hiện nhiều lỗi trước runtime và hỗ trợ refactor tốt hơn. Sau build, type information chủ yếu bị xóa và code chạy vẫn là JavaScript.",
-      "answer": [
+      "topic": "TypeScript",
+      "question": "TypeScript giúp gì so với JavaScript?",
+      "answer": "TypeScript thêm static type checking và tooling trên JavaScript, giúp phát hiện nhiều lỗi trước runtime và hỗ trợ refactor tốt hơn. Sau build, type information chủ yếu bị xóa và code chạy vẫn là JavaScript.",
+      "keyPoints": [
         "Static type checking",
         "Tooling/refactor tốt hơn",
         "Compile thành JavaScript"
       ],
-      "keyPoints": "TypeScript có đảm bảo dữ liệu API đúng type ở runtime không?",
       "followUps": [
         {
-          "question": "Không. TypeScript chỉ kiểm tra lúc compile; dữ liệu từ API vẫn cần runtime validation nếu không tin cậy."
+          "question": "TypeScript có đảm bảo dữ liệu API đúng type ở runtime không?",
+          "answer": "Không. TypeScript chỉ kiểm tra lúc compile; dữ liệu từ API vẫn cần runtime validation nếu không tin cậy."
         }
       ]
     },
     {
       "id": "INT-TS-002",
       "level": "Intern",
-      "topic": "Type và interface trong TypeScript khác nhau thế nào?",
-      "question": "Cả hai đều mô tả shape của dữ liệu. `interface` hỗ trợ declaration merging và thường phù hợp cho object contract public; `type` linh hoạt hơn với union, intersection và alias primitive. Không cần cực đoan chọn một cho mọi trường hợp.",
-      "answer": [
+      "topic": "TypeScript",
+      "question": "Type và interface trong TypeScript khác nhau thế nào?",
+      "answer": "Cả hai đều mô tả shape của dữ liệu. `interface` hỗ trợ declaration merging và thường phù hợp cho object contract public; `type` linh hoạt hơn với union, intersection và alias primitive. Không cần cực đoan chọn một cho mọi trường hợp.",
+      "keyPoints": [
         "Đều mô tả type shape",
         "interface có declaration merging",
         "type mạnh với union/intersection"
       ],
-      "keyPoints": "Interface có thể extend type alias không?",
       "followUps": [
         {
-          "question": "Có nếu type alias biểu diễn object type phù hợp; ngược lại type cũng có thể kết hợp interface bằng intersection."
+          "question": "Interface có thể extend type alias không?",
+          "answer": "Có nếu type alias biểu diễn object type phù hợp; ngược lại type cũng có thể kết hợp interface bằng intersection."
         }
       ]
     },
     {
       "id": "INT-TS-003",
       "level": "Intern",
-      "topic": "any và unknown khác nhau thế nào?",
-      "question": "`any` gần như tắt type checking cho giá trị đó. `unknown` vẫn nhận được mọi giá trị nhưng buộc code phải narrow hoặc validate trước khi sử dụng, nên an toàn hơn ở boundary không biết trước type.",
-      "answer": [
+      "topic": "TypeScript",
+      "question": "any và unknown khác nhau thế nào?",
+      "answer": "`any` gần như tắt type checking cho giá trị đó. `unknown` vẫn nhận được mọi giá trị nhưng buộc code phải narrow hoặc validate trước khi sử dụng, nên an toàn hơn ở boundary không biết trước type.",
+      "keyPoints": [
         "any bỏ qua type safety",
         "unknown cần narrowing",
         "Ưu tiên unknown ở untrusted boundary"
       ],
-      "keyPoints": "never dùng để làm gì?",
       "followUps": [
         {
-          "question": "`never` biểu diễn trường hợp không thể xảy ra, hữu ích cho exhaustive checking trong union hoặc function luôn throw."
+          "question": "never dùng để làm gì?",
+          "answer": "`never` biểu diễn trường hợp không thể xảy ra, hữu ích cho exhaustive checking trong union hoặc function luôn throw."
         }
       ]
     },
     {
       "id": "INT-TS-004",
       "level": "Intern",
-      "topic": "Union type và intersection type khác nhau thế nào?",
-      "question": "Union `A | B` nghĩa là giá trị có thể thuộc một trong các type; code phải narrow trước khi dùng member riêng. Intersection `A & B` yêu cầu giá trị thỏa cả hai type cùng lúc.",
-      "answer": [
+      "topic": "TypeScript",
+      "question": "Union type và intersection type khác nhau thế nào?",
+      "answer": "Union `A | B` nghĩa là giá trị có thể thuộc một trong các type; code phải narrow trước khi dùng member riêng. Intersection `A & B` yêu cầu giá trị thỏa cả hai type cùng lúc.",
+      "keyPoints": [
         "Union = một trong nhiều type",
         "Intersection = kết hợp nhiều contract",
         "Union thường cần narrowing"
       ],
-      "keyPoints": "Discriminated union là gì?",
       "followUps": [
         {
-          "question": "Đó là union có một field phân biệt như `kind`, giúp TypeScript narrow chính xác từng case và hỗ trợ exhaustive checking."
+          "question": "Discriminated union là gì?",
+          "answer": "Đó là union có một field phân biệt như `kind`, giúp TypeScript narrow chính xác từng case và hỗ trợ exhaustive checking."
         }
       ]
     },
     {
       "id": "INT-TS-005",
       "level": "Intern",
-      "topic": "Generic trong TypeScript dùng để làm gì?",
-      "question": "Generic giúp viết function hoặc type tái sử dụng mà vẫn giữ quan hệ type giữa input và output. Ví dụ `identity<T>(value: T): T` giữ chính xác type của giá trị truyền vào thay vì trả `any`.",
-      "answer": [
+      "topic": "TypeScript",
+      "question": "Generic trong TypeScript dùng để làm gì?",
+      "answer": "Generic giúp viết function hoặc type tái sử dụng mà vẫn giữ quan hệ type giữa input và output. Ví dụ `identity<T>(value: T): T` giữ chính xác type của giá trị truyền vào thay vì trả `any`.",
+      "keyPoints": [
         "Reusable nhưng vẫn type-safe",
         "Giữ quan hệ input/output",
         "Có generic constraints"
       ],
-      "keyPoints": "`T extends U` có ý nghĩa gì?",
       "followUps": [
         {
-          "question": "Nó giới hạn generic T phải phù hợp với contract U, nhờ đó code bên trong được phép dùng các member mà U đảm bảo."
+          "question": "`T extends U` có ý nghĩa gì?",
+          "answer": "Nó giới hạn generic T phải phù hợp với contract U, nhờ đó code bên trong được phép dùng các member mà U đảm bảo."
         }
       ]
     },
     {
       "id": "INT-HTML-001",
       "level": "Intern",
-      "topic": "Semantic HTML là gì và vì sao quan trọng?",
-      "question": "Semantic HTML dùng element theo ý nghĩa nội dung như `header`, `nav`, `main`, `button`, `form` thay vì chỉ dùng `div`. Nó cải thiện accessibility, SEO và khả năng bảo trì vì browser và assistive technology hiểu cấu trúc tốt hơn.",
-      "answer": [
+      "topic": "HTML",
+      "question": "Semantic HTML là gì và vì sao quan trọng?",
+      "answer": "Semantic HTML dùng element theo ý nghĩa nội dung như `header`, `nav`, `main`, `button`, `form` thay vì chỉ dùng `div`. Nó cải thiện accessibility, SEO và khả năng bảo trì vì browser và assistive technology hiểu cấu trúc tốt hơn.",
+      "keyPoints": [
         "Dùng element theo meaning",
         "Tốt cho accessibility",
         "Cải thiện SEO/maintainability"
       ],
-      "keyPoints": "Vì sao không nên dùng div có click thay cho button?",
       "followUps": [
         {
-          "question": "`button` có keyboard behavior, focus và semantics accessibility sẵn; dùng div phải tự tái tạo các behavior đó và dễ làm sai."
+          "question": "Vì sao không nên dùng div có click thay cho button?",
+          "answer": "`button` có keyboard behavior, focus và semantics accessibility sẵn; dùng div phải tự tái tạo các behavior đó và dễ làm sai."
         }
       ]
     },
     {
       "id": "INT-HTML-002",
       "level": "Intern",
-      "topic": "Block element và inline element khác nhau thế nào?",
-      "question": "Block element thường chiếm chiều ngang khả dụng và bắt đầu dòng mới, còn inline element nằm trong flow của text. CSS `display` có thể thay đổi behavior nên đây là default formatting chứ không phải rule bất biến.",
-      "answer": [
+      "topic": "HTML",
+      "question": "Block element và inline element khác nhau thế nào?",
+      "answer": "Block element thường chiếm chiều ngang khả dụng và bắt đầu dòng mới, còn inline element nằm trong flow của text. CSS `display` có thể thay đổi behavior nên đây là default formatting chứ không phải rule bất biến.",
+      "keyPoints": [
         "Default layout behavior",
         "Block thường xuống dòng",
         "CSS display có thể thay đổi"
       ],
-      "keyPoints": "`display: inline-block` dùng khi nào?",
       "followUps": [
         {
-          "question": "Khi muốn element nằm cùng dòng như inline nhưng vẫn nhận width/height và box model giống block tốt hơn."
+          "question": "`display: inline-block` dùng khi nào?",
+          "answer": "Khi muốn element nằm cùng dòng như inline nhưng vẫn nhận width/height và box model giống block tốt hơn."
         }
       ]
     },
     {
       "id": "INT-CSS-001",
       "level": "Intern",
-      "topic": "CSS box model gồm những phần nào?",
-      "question": "Box model gồm content, padding, border và margin. Với `box-sizing: border-box`, width/height đã bao gồm padding và border, thường giúp layout dễ kiểm soát hơn.",
-      "answer": [
+      "topic": "CSS",
+      "question": "CSS box model gồm những phần nào?",
+      "answer": "Box model gồm content, padding, border và margin. Với `box-sizing: border-box`, width/height đã bao gồm padding và border, thường giúp layout dễ kiểm soát hơn.",
+      "keyPoints": [
         "Content/Padding/Border/Margin",
         "Hiểu box-sizing",
         "border-box dễ quản lý kích thước"
       ],
-      "keyPoints": "Margin có nằm trong width của border-box không?",
       "followUps": [
         {
-          "question": "Không. `border-box` chỉ tính content, padding và border vào width/height; margin vẫn nằm bên ngoài."
+          "question": "Margin có nằm trong width của border-box không?",
+          "answer": "Không. `border-box` chỉ tính content, padding và border vào width/height; margin vẫn nằm bên ngoài."
         }
       ]
     },
     {
       "id": "INT-CSS-002",
       "level": "Intern",
-      "topic": "Flexbox và Grid nên dùng khi nào?",
-      "question": "Flexbox phù hợp cho layout một chiều theo row hoặc column; Grid mạnh cho layout hai chiều gồm cả hàng và cột. Nhiều UI thực tế dùng Grid ở layout lớn và Flexbox bên trong component.",
-      "answer": [
+      "topic": "CSS",
+      "question": "Flexbox và Grid nên dùng khi nào?",
+      "answer": "Flexbox phù hợp cho layout một chiều theo row hoặc column; Grid mạnh cho layout hai chiều gồm cả hàng và cột. Nhiều UI thực tế dùng Grid ở layout lớn và Flexbox bên trong component.",
+      "keyPoints": [
         "Flexbox thiên 1 chiều",
         "Grid thiên 2 chiều",
         "Có thể kết hợp"
       ],
-      "keyPoints": "Flexbox có thay thế hoàn toàn Grid không?",
       "followUps": [
         {
-          "question": "Không. Cả hai giải quyết layout khác nhau; chọn theo cấu trúc thay vì cố dùng một công cụ cho mọi trường hợp."
+          "question": "Flexbox có thay thế hoàn toàn Grid không?",
+          "answer": "Không. Cả hai giải quyết layout khác nhau; chọn theo cấu trúc thay vì cố dùng một công cụ cho mọi trường hợp."
         }
       ]
     },
     {
       "id": "INT-WEB-003",
       "level": "Intern",
-      "topic": "LocalStorage, SessionStorage và cookie khác nhau thế nào?",
-      "question": "LocalStorage tồn tại lâu theo origin, SessionStorage gắn với tab/session, còn cookie có thể được browser tự gửi kèm HTTP request theo rule domain/path/SameSite. Dữ liệu auth nhạy cảm cần cân nhắc security chứ không chỉ tiện lưu ở đâu.",
-      "answer": [
+      "topic": "Web Platform",
+      "question": "LocalStorage, SessionStorage và cookie khác nhau thế nào?",
+      "answer": "LocalStorage tồn tại lâu theo origin, SessionStorage gắn với tab/session, còn cookie có thể được browser tự gửi kèm HTTP request theo rule domain/path/SameSite. Dữ liệu auth nhạy cảm cần cân nhắc security chứ không chỉ tiện lưu ở đâu.",
+      "keyPoints": [
         "Khác lifetime",
         "Cookie có thể tự gửi với request",
         "Storage choice liên quan security"
       ],
-      "keyPoints": "HttpOnly cookie có lợi gì?",
       "followUps": [
         {
-          "question": "JavaScript không đọc được HttpOnly cookie, giúp giảm nguy cơ token bị lấy trực tiếp khi có XSS; nó không tự loại bỏ mọi rủi ro XSS/CSRF."
+          "question": "HttpOnly cookie có lợi gì?",
+          "answer": "JavaScript không đọc được HttpOnly cookie, giúp giảm nguy cơ token bị lấy trực tiếp khi có XSS; nó không tự loại bỏ mọi rủi ro XSS/CSRF."
         }
       ]
     },
     {
       "id": "INT-WEB-004",
       "level": "Intern",
-      "topic": "DOM là gì?",
-      "question": "DOM là representation dạng cây của document HTML mà JavaScript có thể đọc và thay đổi. Framework như Angular cuối cùng vẫn tạo/cập nhật DOM, nhưng cung cấp abstraction để quản lý state và rendering có cấu trúc hơn.",
-      "answer": [
+      "topic": "Web Platform",
+      "question": "DOM là gì?",
+      "answer": "DOM là representation dạng cây của document HTML mà JavaScript có thể đọc và thay đổi. Framework như Angular cuối cùng vẫn tạo/cập nhật DOM, nhưng cung cấp abstraction để quản lý state và rendering có cấu trúc hơn.",
+      "keyPoints": [
         "Tree representation của document",
         "JS có thể thao tác DOM",
         "Framework vẫn render ra DOM"
       ],
-      "keyPoints": "Virtual DOM có phải Angular dùng mặc định không?",
       "followUps": [
         {
-          "question": "Không. Angular không dựa trên Virtual DOM theo mô hình React; Angular có cơ chế change detection và rendering riêng."
+          "question": "Virtual DOM có phải Angular dùng mặc định không?",
+          "answer": "Không. Angular không dựa trên Virtual DOM theo mô hình React; Angular có cơ chế change detection và rendering riêng."
         }
       ]
     },
@@ -3294,6 +3305,24 @@
         {
           "question": "Dấu hiệu component quá nhiều responsibility là gì?",
           "answer": "Nó vừa fetch/mutate data, chứa nhiều business rule, quản lý form lớn, navigation và UI detail; thay đổi một concern thường kéo theo sửa nhiều phần không liên quan."
+        }
+      ]
+    },
+    {
+      "id": "JUN-ANG-013",
+      "level": "Junior",
+      "topic": "Angular",
+      "question": "Input và Output dùng để giao tiếp giữa component như thế nào?",
+      "answer": "Input truyền dữ liệu từ parent xuống child; Output phát event từ child lên parent. Với Angular hiện đại có thể dùng các API signal-based tương ứng, nhưng nguyên tắc vẫn là giữ data flow rõ và tránh child tự sửa state của parent.",
+      "keyPoints": [
+        "Input: parent -> child",
+        "Output: child -> parent event",
+        "Giữ data flow rõ ràng"
+      ],
+      "followUps": [
+        {
+          "question": "Khi nào nên dùng shared service thay vì Input/Output?",
+          "answer": "Khi các component không có quan hệ parent-child thuận tiện hoặc cùng cần một state/service theo feature. Tuy nhiên không nên dùng shared service để né thiết kế component tree một cách tùy tiện."
         }
       ]
     }
