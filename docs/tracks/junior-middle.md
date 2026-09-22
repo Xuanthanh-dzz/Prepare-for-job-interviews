@@ -23,6 +23,16 @@ Bạn nên chắc:
 
 **Chuẩn Junior:** trả lời đúng bản chất, biết dùng trong feature thật, biết lỗi phổ biến.
 
+### Platform bổ trợ cho Junior
+
+Sau core stack, nên biết đủ để chạy/debug ứng dụng:
+
+- Redis: cache hit/miss, TTL, cache-aside, String/Hash
+- Docker: image/container, Dockerfile, multi-stage build, volume
+- Docker Compose cho local dependencies
+- HTTP headers, Content-Type/Accept, HTTPS, reverse proxy
+- Security: SQL injection, least privilege, CSP
+
 ### Frontend Angular
 
 Bạn nên chắc:
@@ -68,6 +78,19 @@ Bạn nên chắc:
 - cache stampede
 
 **Chuẩn Middle:** nói được performance implication, concurrency issue, failure mode và cách đo/debug.
+
+### Platform bổ trợ cho Middle
+
+Middle nên hiểu thêm behavior production:
+
+- Redis persistence, eviction, pipeline, Pub/Sub/Streams, distributed lock
+- cache invalidation và Redis Cluster ở mức khái niệm
+- Docker layer cache
+- Kubernetes readiness/liveness/startup probes
+- CPU/memory requests + limits
+- rolling deployment
+- PostgreSQL row locking, EXPLAIN ANALYZE, MVCC, connection pooling
+- load balancer và CDN
 
 ### Frontend Angular
 
