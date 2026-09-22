@@ -3,6 +3,10 @@
 Học để **trả lời như một kỹ sư**, không học thuộc một câu văn mẫu.
 
 <div class="hero-grid">
+  <a class="hero-card" href="modules/csharp-dotnet/">
+    <strong>Module C# / .NET</strong>
+    <span>Học theo level: language, LINQ, async, concurrency, memory/GC và runtime.</span>
+  </a>
   <a class="hero-card" href="question-bank/">
     <strong>Ngân hàng câu hỏi</strong>
     <span>Lọc theo level và chủ đề, xem đáp án + key points + follow-up.</span>
@@ -13,16 +17,16 @@ Học để **trả lời như một kỹ sư**, không học thuộc một câu
   </a>
   <a class="hero-card" href="mock-interview/">
     <strong>Mock Interview</strong>
-    <span>Tạo đề ngẫu nhiên theo level và luyện trả lời trước khi xem đáp án.</span>
+    <span>Tạo đề theo level + topic, tự chấm và xem tổng kết sau mỗi lượt.</span>
   </a>
 </div>
 
 ## Cách dùng
 
-1. Chọn level gần với vị trí bạn chuẩn bị ứng tuyển.
+1. Chọn module và level gần với vị trí bạn chuẩn bị ứng tuyển.
 2. Học theo **Question Bank** để hiểu bản chất.
 3. Chuyển sang **Flashcards** để luyện nhớ chủ động.
-4. Cuối cùng làm **Mock Interview** và tự trả lời thành tiếng trước khi mở đáp án.
+4. Cuối cùng làm **Mock Interview** theo topic và tự trả lời thành tiếng trước khi mở đáp án.
 
 ## Chuẩn câu trả lời
 
