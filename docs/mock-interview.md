@@ -11,6 +11,13 @@ Hãy trả lời **thành tiếng** trước khi xem đáp án. Một lượt n�
       <option>Senior</option>
     </select>
   </label>
+  <label>Track
+    <select id="mock-track">
+      <option value="">Full Stack</option>
+      <option value="backend" selected>Backend .NET</option>
+      <option value="frontend">Frontend Angular</option>
+    </select>
+  </label>
   <label>Chủ đề
     <select id="mock-topic">
       <option value="">Tất cả</option>
@@ -46,5 +53,10 @@ Hãy trả lời **thành tiếng** trước khi xem đáp án. Một lượt n�
 
 <div id="mock-result" class="mock-panel" hidden></div>
 
+!!! tip "Preset nên dùng cho Junior / Middle"
+    **Junior Backend**: ưu tiên C#, ASP.NET Core, EF Core, SQL, HTTP/API, Security.  
+    **Middle Backend**: thêm performance, transaction, caching, testing và architecture.  
+    **Frontend Angular**: JavaScript/TypeScript + Angular theo đúng level.
+
 !!! note "Cách tự chấm"
-    **Cần ôn**: sai bản chất hoặc không trả lời được. **Đạt**: đúng ý chính nhưng còn thiếu trade-off/ví dụ. **Tốt**: trả lời đúng, có trade-off và xử lý được follow-up. Không cần nói giống đáp án mẫu từng chữ.
+    **Cần ôn**: sai bản chất hoặc không trả lời được. **Đạt**: đúng ý chính nhưng còn thiếu trade-off/ví dụ. **Tốt**: trả lời đúng, có trade-off và xử lý được câu hỏi đào sâu. Không cần nói giống đáp án mẫu từng chữ.
