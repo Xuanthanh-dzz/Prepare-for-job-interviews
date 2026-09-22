@@ -1,5 +1,5 @@
 {
-  "version": 11,
+  "version": 12,
   "questions": [
     {
       "id": "INT-CS-001",
@@ -7864,6 +7864,654 @@
         {
           "question": "Asset có content hash nên cache thế nào?",
           "answer": "Có thể dùng TTL rất dài/immutable vì khi nội dung đổi thì filename/hash đổi, tránh phải invalidate cùng URL."
+        }
+      ]
+    },
+    {
+      "id": "MID-MSG-001",
+      "level": "Middle",
+      "topic": "Messaging",
+      "question": "Queue và Pub/Sub khác nhau thế nào?",
+      "answer": "Queue thường phân phối mỗi message cho một consumer trong nhóm xử lý, còn Pub/Sub phát cùng một event tới nhiều subscriber độc lập. Queue hợp work distribution; Pub/Sub hợp fan-out notification hoặc integration event.",
+      "keyPoints": [
+        "Queue phân phối work",
+        "Pub/Sub fan-out",
+        "Chọn theo delivery model"
+      ],
+      "followUps": [
+        {
+          "question": "Một message có thể vừa cần queue vừa cần pub/sub không?",
+          "answer": "Có. Một event có thể fan-out tới nhiều consumer group, còn bên trong từng group các instance cùng chia nhau xử lý workload."
+        }
+      ]
+    },
+    {
+      "id": "MID-MSG-002",
+      "level": "Middle",
+      "topic": "Messaging",
+      "question": "At-least-once delivery có ý nghĩa gì với consumer?",
+      "answer": "Message có thể được giao lại nếu broker hoặc consumer không chắc lần xử lý trước đã hoàn tất. Vì vậy consumer phải chịu được duplicate, thường bằng idempotency key, unique constraint hoặc lưu trạng thái xử lý.",
+      "keyPoints": [
+        "Message có thể duplicate",
+        "Consumer cần idempotent",
+        "Ack failure gây redelivery"
+      ],
+      "followUps": [
+        {
+          "question": "Duplicate message có phải broker bị lỗi không?",
+          "answer": "Không. Với at-least-once, duplicate là behavior được chấp nhận để đổi lấy việc hạn chế mất message."
+        }
+      ]
+    },
+    {
+      "id": "MID-MSG-003",
+      "level": "Middle",
+      "topic": "Messaging",
+      "question": "Dead-letter queue dùng để làm gì?",
+      "answer": "DLQ giữ các message không thể xử lý thành công sau policy retry hoặc vi phạm contract để chúng không chặn luồng chính. Message vào DLQ cần có observability, nguyên nhân lỗi và quy trình replay hoặc xử lý thủ công.",
+      "keyPoints": [
+        "Tách poison message",
+        "Không chặn queue chính",
+        "Cần replay/alert process"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên tự động replay DLQ liên tục không?",
+          "answer": "Không. Nếu root cause chưa sửa, replay chỉ tạo vòng lặp lỗi; cần phân loại transient và permanent failure trước."
+        }
+      ]
+    },
+    {
+      "id": "MID-MSG-004",
+      "level": "Middle",
+      "topic": "Messaging",
+      "question": "Ordering trong Kafka hoặc queue partitioned cần hiểu thế nào?",
+      "answer": "Thứ tự thường chỉ được đảm bảo trong phạm vi partition hoặc queue cụ thể, không phải toàn hệ thống. Nếu business cần ordering cho cùng một entity, nên dùng key ổn định để các event liên quan đi cùng partition.",
+      "keyPoints": [
+        "Ordering thường theo partition",
+        "Key quyết định grouping",
+        "Global ordering rất đắt"
+      ],
+      "followUps": [
+        {
+          "question": "Dùng một partition để có global order có trade-off gì?",
+          "answer": "Throughput và khả năng scale consumer giảm vì toàn bộ traffic bị serialize qua một partition."
+        }
+      ]
+    },
+    {
+      "id": "MID-MSG-005",
+      "level": "Middle",
+      "topic": "Messaging",
+      "question": "Retry message nên đặt ở consumer hay broker?",
+      "answer": "Transient failure ngắn có thể retry trong consumer với backoff; retry dài thường nên dùng delayed queue/topic hoặc broker strategy để không giữ worker bận. Cần giới hạn retry và chuyển lỗi lâu dài sang DLQ.",
+      "keyPoints": [
+        "Retry transient có backoff",
+        "Không giữ worker quá lâu",
+        "Giới hạn retry + DLQ"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao retry ngay lập tức nhiều lần có thể nguy hiểm?",
+          "answer": "Nó tạo retry storm lên dependency đang lỗi và làm backlog tăng nhanh hơn."
+        }
+      ]
+    },
+    {
+      "id": "MID-MSG-006",
+      "level": "Middle",
+      "topic": "Messaging",
+      "question": "Consumer idempotency thường được implement thế nào?",
+      "answer": "Consumer dùng message ID hoặc business key để phát hiện message đã xử lý, thường kết hợp unique constraint hoặc inbox table trong cùng transaction với thay đổi business. Mục tiêu là duplicate không tạo side effect lần hai.",
+      "keyPoints": [
+        "Dùng message/business key",
+        "Có inbox/unique constraint",
+        "Side effect chỉ xảy ra một lần về business"
+      ],
+      "followUps": [
+        {
+          "question": "Chỉ giữ message ID trong memory có đủ không?",
+          "answer": "Không nếu process restart hoặc có nhiều instance; trạng thái deduplicate cần nằm ở nơi shared và bền vững nếu guarantee quan trọng."
+        }
+      ]
+    },
+    {
+      "id": "MID-OBS-001",
+      "level": "Middle",
+      "topic": "Observability",
+      "question": "Logs, metrics và traces khác nhau ở điểm nào?",
+      "answer": "Logs ghi event chi tiết, metrics cho số liệu tổng hợp theo thời gian, còn traces theo dõi một request đi qua nhiều component. Ba loại bổ trợ nhau: metrics phát hiện vấn đề, traces khoanh vùng path, logs cung cấp context chi tiết.",
+      "keyPoints": [
+        "Logs = event detail",
+        "Metrics = aggregate signal",
+        "Traces = request flow"
+      ],
+      "followUps": [
+        {
+          "question": "Có thể chỉ dùng logs mà không cần metrics/traces không?",
+          "answer": "Có thể ở hệ thống nhỏ, nhưng khi scale lớn logs đơn thuần khó phát hiện trend và correlation giữa nhiều service."
+        }
+      ]
+    },
+    {
+      "id": "MID-OBS-002",
+      "level": "Middle",
+      "topic": "Observability",
+      "question": "Correlation ID giúp debug distributed request thế nào?",
+      "answer": "Correlation ID gắn một identifier chung vào logs hoặc request chain để truy tìm các event liên quan tới cùng một flow. Trong hệ thống tracing chuẩn, trace ID thường đóng vai trò tương tự nhưng có cấu trúc span rõ hơn.",
+      "keyPoints": [
+        "Liên kết logs cùng flow",
+        "Hữu ích qua nhiều service",
+        "Trace ID thường là lựa chọn chuẩn hơn"
+      ],
+      "followUps": [
+        {
+          "question": "Có nên để client tự quyết định correlation ID không?",
+          "answer": "Có thể nhận từ client nhưng server nên validate/normalize và bảo đảm không dùng nó như thông tin bảo mật hay quyền truy cập."
+        }
+      ]
+    },
+    {
+      "id": "MID-OBS-003",
+      "level": "Middle",
+      "topic": "Observability",
+      "question": "High-cardinality metric gây vấn đề gì?",
+      "answer": "Label có quá nhiều giá trị như userId hoặc requestId làm số time series tăng mạnh, tốn memory/storage và làm query metric chậm. Những giá trị này thường phù hợp logs hoặc traces hơn metrics.",
+      "keyPoints": [
+        "Nhiều label value tạo nhiều series",
+        "Tăng cost/storage",
+        "UserId không hợp metric label"
+      ],
+      "followUps": [
+        {
+          "question": "Route có phải label tốt hơn raw URL không?",
+          "answer": "Thường có, vì route template như `/users/{id}` có cardinality thấp hơn URL chứa ID thật."
+        }
+      ]
+    },
+    {
+      "id": "MID-OBS-004",
+      "level": "Middle",
+      "topic": "Observability",
+      "question": "OpenTelemetry giải quyết bài toán gì?",
+      "answer": "OpenTelemetry cung cấp API, SDK và semantic conventions để thu thập traces, metrics và logs theo cách vendor-neutral. Ứng dụng có thể instrument một lần rồi export sang backend quan sát khác nhau.",
+      "keyPoints": [
+        "Vendor-neutral telemetry",
+        "Traces/metrics/logs",
+        "Tách instrumentation khỏi backend"
+      ],
+      "followUps": [
+        {
+          "question": "OpenTelemetry có phải là nơi lưu telemetry không?",
+          "answer": "Không. Nó chủ yếu chuẩn hóa collection/export; dữ liệu thường được gửi tới backend như Jaeger, Prometheus-compatible system hoặc vendor APM."
+        }
+      ]
+    },
+    {
+      "id": "MID-REL-001",
+      "level": "Middle",
+      "topic": "Reliability",
+      "question": "Retry nên áp dụng cho loại lỗi nào?",
+      "answer": "Retry phù hợp lỗi transient như timeout ngắn hoặc 503 tạm thời, không phù hợp lỗi validation hoặc business conflict. Operation cần idempotent hoặc có idempotency protection trước khi retry để tránh side effect lặp.",
+      "keyPoints": [
+        "Chỉ retry transient failure",
+        "Không retry lỗi permanent",
+        "Cần idempotency"
+      ],
+      "followUps": [
+        {
+          "question": "HTTP 400 có nên retry không?",
+          "answer": "Thông thường không vì request sai sẽ tiếp tục sai cho tới khi input thay đổi."
+        }
+      ]
+    },
+    {
+      "id": "MID-REL-002",
+      "level": "Middle",
+      "topic": "Reliability",
+      "question": "Bulkhead pattern là gì?",
+      "answer": "Bulkhead tách resource hoặc concurrency giữa các workload để một dependency hay tenant bị chậm không chiếm hết thread/connection của toàn hệ thống. Có thể implement bằng queue, semaphore hoặc pool riêng.",
+      "keyPoints": [
+        "Cô lập resource",
+        "Ngăn một workload kéo sập toàn hệ thống",
+        "Có concurrency limit riêng"
+      ],
+      "followUps": [
+        {
+          "question": "Bulkhead khác circuit breaker thế nào?",
+          "answer": "Bulkhead giới hạn phạm vi resource/failure; circuit breaker ngừng call dependency đang lỗi để fail fast."
+        }
+      ]
+    },
+    {
+      "id": "MID-REL-003",
+      "level": "Middle",
+      "topic": "Reliability",
+      "question": "Load shedding là gì?",
+      "answer": "Load shedding chủ động từ chối hoặc giảm bớt request khi hệ thống vượt capacity để giữ phần còn lại hoạt động ổn định. Có thể ưu tiên request quan trọng, trả 429/503 hoặc bỏ work không thiết yếu.",
+      "keyPoints": [
+        "Từ chối có kiểm soát",
+        "Bảo vệ capacity",
+        "Ưu tiên workload quan trọng"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao nhận tất cả request rồi xử lý chậm không tốt hơn?",
+          "answer": "Queue và latency có thể tăng vô hạn, giữ resource lâu và dẫn tới cascading failure thay vì fail nhanh có kiểm soát."
+        }
+      ]
+    },
+    {
+      "id": "MID-REL-004",
+      "level": "Middle",
+      "topic": "Reliability",
+      "question": "Graceful degradation là gì?",
+      "answer": "Khi một dependency hoặc feature lỗi, hệ thống vẫn cung cấp chức năng cốt lõi ở mức giảm thay vì fail toàn bộ. Ví dụ bỏ recommendation nhưng vẫn cho checkout, hoặc dùng dữ liệu cache cũ có giới hạn.",
+      "keyPoints": [
+        "Giữ core function",
+        "Giảm feature không thiết yếu",
+        "Cần fallback có chủ đích"
+      ],
+      "followUps": [
+        {
+          "question": "Fallback có thể che lỗi production không?",
+          "answer": "Có nếu không có metric/alert riêng; degradation phải được quan sát để team biết hệ thống đang chạy ở chế độ fallback."
+        }
+      ]
+    },
+    {
+      "id": "MID-ARCH-008",
+      "level": "Middle",
+      "topic": "Architecture",
+      "question": "API Gateway thường đảm nhiệm những gì?",
+      "answer": "API Gateway là entry point trước nhiều backend service, thường xử lý routing, auth edge, rate limiting hoặc protocol translation. Không nên biến gateway thành nơi chứa business logic phức tạp vì sẽ tạo bottleneck và coupling.",
+      "keyPoints": [
+        "Single entry point",
+        "Routing/auth/rate limit",
+        "Tránh business logic nặng"
+      ],
+      "followUps": [
+        {
+          "question": "API Gateway có giống load balancer không?",
+          "answer": "Có phần giao nhau về routing, nhưng gateway thường hiểu API-level concern sâu hơn còn load balancer chủ yếu phân phối traffic tới instance."
+        }
+      ]
+    },
+    {
+      "id": "MID-ARCH-009",
+      "level": "Middle",
+      "topic": "Architecture",
+      "question": "Service discovery giải quyết bài toán gì?",
+      "answer": "Trong môi trường instance thay đổi động, service discovery giúp caller tìm endpoint hiện có thay vì hard-code IP. Discovery có thể do platform như Kubernetes DNS xử lý hoặc qua registry riêng.",
+      "keyPoints": [
+        "Không hard-code instance IP",
+        "Phù hợp dynamic scaling",
+        "Platform có thể cung cấp discovery"
+      ],
+      "followUps": [
+        {
+          "question": "Kubernetes Service giúp discovery thế nào?",
+          "answer": "Nó cung cấp tên DNS và virtual endpoint ổn định trong khi Pod phía sau có thể thay đổi."
+        }
+      ]
+    },
+    {
+      "id": "MID-ARCH-010",
+      "level": "Middle",
+      "topic": "Architecture",
+      "question": "Vì sao stateless service dễ scale ngang hơn?",
+      "answer": "Nếu request không phụ thuộc memory state của một instance cụ thể, load balancer có thể gửi request tới bất kỳ instance nào. Session hoặc shared state nên nằm ở external store phù hợp nếu cần scale/failover dễ.",
+      "keyPoints": [
+        "Request không phụ thuộc instance",
+        "Dễ load balance",
+        "State cần externalize khi cần"
+      ],
+      "followUps": [
+        {
+          "question": "Stateless có nghĩa ứng dụng không được có cache local không?",
+          "answer": "Không. Cache local vẫn dùng được nếu chỉ là optimization và mất nó không làm sai business state."
+        }
+      ]
+    },
+    {
+      "id": "MID-ARCH-011",
+      "level": "Middle",
+      "topic": "Architecture",
+      "question": "Eventual consistency nghĩa là gì?",
+      "answer": "Các bản sao hoặc service có thể chưa đồng bộ ngay sau một thay đổi nhưng sẽ hội tụ sau một khoảng thời gian nếu hệ thống hoạt động bình thường. Thiết kế phải xác định rõ stale window nào chấp nhận được và UX xử lý ra sao.",
+      "keyPoints": [
+        "Không đồng bộ tức thời",
+        "Dữ liệu sẽ hội tụ",
+        "Cần xác định stale window"
+      ],
+      "followUps": [
+        {
+          "question": "Eventual consistency có đồng nghĩa dữ liệu sai không?",
+          "answer": "Không. Nó là consistency model có chủ đích; vấn đề là phải phù hợp business invariant và user expectation."
+        }
+      ]
+    },
+    {
+      "id": "SEN-MSG-001",
+      "level": "Senior",
+      "topic": "Messaging",
+      "question": "Consumer group và partition ảnh hưởng khả năng scale như thế nào?",
+      "answer": "Trong mô hình như Kafka, một partition tại một thời điểm thường chỉ được xử lý bởi một consumer trong cùng group. Số partition đặt trần parallelism hiệu quả của group, nên cần cân bằng throughput, ordering và khả năng rebalance.",
+      "keyPoints": [
+        "Partition giới hạn parallelism",
+        "Consumer group chia workload",
+        "Nhiều partition tăng overhead"
+      ],
+      "followUps": [
+        {
+          "question": "Tăng consumer vượt số partition có giúp tăng throughput không?",
+          "answer": "Không đáng kể cho cùng group vì consumer dư sẽ không có partition để xử lý."
+        }
+      ]
+    },
+    {
+      "id": "SEN-MSG-002",
+      "level": "Senior",
+      "topic": "Messaging",
+      "question": "Bạn quản lý schema evolution của event như thế nào?",
+      "answer": "Ưu tiên additive backward-compatible change, version contract rõ và tránh remove/rename field đột ngột khi consumer cũ còn tồn tại. Schema registry hoặc contract test giúp kiểm tra producer/consumer compatibility trước deploy.",
+      "keyPoints": [
+        "Ưu tiên backward compatibility",
+        "Có version/contract strategy",
+        "Contract test/schema registry"
+      ],
+      "followUps": [
+        {
+          "question": "Thêm field required mới có an toàn không?",
+          "answer": "Không luôn. Consumer/producer cũ có thể không cung cấp field đó; field mới thường nên optional/default trong giai đoạn chuyển đổi."
+        }
+      ]
+    },
+    {
+      "id": "SEN-MSG-003",
+      "level": "Senior",
+      "topic": "Messaging",
+      "question": "Exactly-once processing có thực sự đơn giản như tên gọi không?",
+      "answer": "Broker có thể cung cấp exactly-once trong phạm vi nhất định, nhưng side effect ra database hoặc external service vẫn cần transaction/idempotency riêng. Tôi thường thiết kế business operation chịu được at-least-once thay vì dựa vào promise exactly-once end-to-end.",
+      "keyPoints": [
+        "Exactly-once có scope giới hạn",
+        "External side effect vẫn cần protection",
+        "Idempotency thực tế hơn"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao exactly-once end-to-end khó?",
+          "answer": "Vì không thể atomically commit mọi hệ thống khác nhau chỉ bằng guarantee của một broker khi network/failure xảy ra."
+        }
+      ]
+    },
+    {
+      "id": "SEN-MSG-004",
+      "level": "Senior",
+      "topic": "Messaging",
+      "question": "Poison message nên được xử lý thế nào ở production?",
+      "answer": "Phải phân biệt transient failure với message hỏng vĩnh viễn, giới hạn retry, đưa message sang DLQ và alert theo rate. Quy trình cần giữ payload/context đủ để debug nhưng vẫn tuân thủ bảo mật và PII policy.",
+      "keyPoints": [
+        "Phân loại transient/permanent",
+        "Giới hạn retry",
+        "DLQ + alert + replay"
+      ],
+      "followUps": [
+        {
+          "question": "Một poison message có nên chặn partition mãi để giữ ordering không?",
+          "answer": "Tùy business. Có thể pause partition để bảo toàn order, nhưng cần operational policy vì một message có thể làm ngừng toàn bộ key/partition rất lâu."
+        }
+      ]
+    },
+    {
+      "id": "SEN-MSG-005",
+      "level": "Senior",
+      "topic": "Messaging",
+      "question": "Saga orchestration và choreography khác nhau thế nào?",
+      "answer": "Orchestration có coordinator điều khiển các bước và compensation; choreography để service phản ứng qua event mà không có trung tâm. Orchestration dễ nhìn flow hơn, choreography giảm central coupling nhưng khó trace và quản dependency khi flow lớn.",
+      "keyPoints": [
+        "Orchestration có coordinator",
+        "Choreography event-driven",
+        "Trade-off visibility và coupling"
+      ],
+      "followUps": [
+        {
+          "question": "Khi workflow có nhiều bước nghiệp vụ phức tạp bạn nghiêng về cách nào?",
+          "answer": "Thường orchestration dễ quản lý state, timeout và compensation hơn; nhưng quyết định còn phụ thuộc team/domain boundaries."
+        }
+      ]
+    },
+    {
+      "id": "SEN-MSG-006",
+      "level": "Senior",
+      "topic": "Messaging",
+      "question": "Hot partition trong hệ thống messaging xảy ra vì sao?",
+      "answer": "Một key hoặc partition nhận tỷ lệ traffic vượt trội khiến một broker/consumer trở thành bottleneck dù cluster còn capacity. Cần xem key distribution, partition count và strategy sharding, nhưng thay key có thể ảnh hưởng ordering semantics.",
+      "keyPoints": [
+        "Traffic phân bố lệch",
+        "Một partition thành bottleneck",
+        "Key strategy ảnh hưởng ordering"
+      ],
+      "followUps": [
+        {
+          "question": "Random key có giải quyết hot partition hoàn toàn không?",
+          "answer": "Nó phân tán tốt hơn nhưng làm mất ordering theo entity; cần balance giữa distribution và business ordering."
+        }
+      ]
+    },
+    {
+      "id": "SEN-OBS-003",
+      "level": "Senior",
+      "topic": "Observability",
+      "question": "Bạn thiết kế alert để tránh alert fatigue thế nào?",
+      "answer": "Alert nên gắn với user impact hoặc SLO burn thay vì mọi metric vượt ngưỡng nhỏ. Phân cấp severity, có runbook và chỉ page khi cần hành động ngay; tín hiệu không khẩn cấp nên vào dashboard/ticket.",
+      "keyPoints": [
+        "Alert theo user impact",
+        "Có severity/runbook",
+        "Không page cho mọi anomaly"
+      ],
+      "followUps": [
+        {
+          "question": "CPU 90% có nên page ngay không?",
+          "answer": "Không mặc định. Nếu latency/error vẫn trong SLO thì CPU cao có thể chỉ là capacity signal, chưa chắc incident."
+        }
+      ]
+    },
+    {
+      "id": "SEN-OBS-004",
+      "level": "Senior",
+      "topic": "Observability",
+      "question": "RED và USE method khác nhau thế nào?",
+      "answer": "RED nhìn service theo Rate, Errors, Duration; USE nhìn resource theo Utilization, Saturation, Errors. RED phù hợp user-facing service, USE phù hợp CPU, memory, disk, connection pool và infrastructure.",
+      "keyPoints": [
+        "RED cho service",
+        "USE cho resource",
+        "Hai góc nhìn bổ trợ nhau"
+      ],
+      "followUps": [
+        {
+          "question": "Connection pool exhaustion nên nhìn theo RED hay USE?",
+          "answer": "Chủ yếu USE vì đó là resource saturation, sau đó liên hệ RED để xem user latency/error bị ảnh hưởng ra sao."
+        }
+      ]
+    },
+    {
+      "id": "SEN-OBS-005",
+      "level": "Senior",
+      "topic": "Observability",
+      "question": "Trace sampling nên thiết kế thế nào ở hệ thống traffic lớn?",
+      "answer": "Không thể luôn lưu 100% trace ở traffic cao vì cost lớn. Có thể head sampling cho tỷ lệ cố định hoặc tail sampling để giữ trace lỗi/chậm quan trọng; cần bảo đảm sampling không làm mất khả năng điều tra incident.",
+      "keyPoints": [
+        "Sampling giảm telemetry cost",
+        "Head vs tail sampling",
+        "Ưu tiên trace lỗi/chậm"
+      ],
+      "followUps": [
+        {
+          "question": "Sampling 1% có thể làm mất incident hiếm thế nào?",
+          "answer": "Nếu lấy mẫu ngẫu nhiên từ đầu, lỗi hiếm có thể không được giữ; tail sampling theo error/latency giúp giữ tín hiệu quan trọng hơn."
+        }
+      ]
+    },
+    {
+      "id": "SEN-OBS-006",
+      "level": "Senior",
+      "topic": "Observability",
+      "question": "Bạn cần telemetry gì để điều tra một request chậm xuyên nhiều service?",
+      "answer": "Tôi cần distributed trace để thấy span latency, metrics để biết saturation/error của dependency và structured logs có trace ID để xem context. Quan trọng là timestamp, service name và propagation context nhất quán.",
+      "keyPoints": [
+        "Trace để xem critical path",
+        "Metrics cho saturation",
+        "Logs có trace context"
+      ],
+      "followUps": [
+        {
+          "question": "Nếu mỗi service dùng timestamp timezone khác nhau thì sao?",
+          "answer": "Điều tra khó và dễ lệch timeline; telemetry nên chuẩn hóa timestamp, thường theo UTC, và backend observability xử lý hiển thị timezone."
+        }
+      ]
+    },
+    {
+      "id": "SEN-REL-004",
+      "level": "Senior",
+      "topic": "Reliability",
+      "question": "Error budget burn rate dùng để làm gì?",
+      "answer": "Burn rate đo tốc độ hệ thống đang tiêu thụ error budget so với mức cho phép. Burn cao trong cửa sổ ngắn giúp phát hiện incident nghiêm trọng; burn thấp kéo dài chỉ ra reliability đang xấu dần.",
+      "keyPoints": [
+        "Đo tốc độ tiêu error budget",
+        "Kết hợp nhiều time window",
+        "Hỗ trợ alert theo SLO"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao alert theo burn rate tốt hơn chỉ alert error rate cố định?",
+          "answer": "Nó gắn trực tiếp với SLO và mức độ ảnh hưởng theo thời gian, tránh threshold không phù hợp mọi service."
+        }
+      ]
+    },
+    {
+      "id": "SEN-REL-005",
+      "level": "Senior",
+      "topic": "Reliability",
+      "question": "Chaos testing có mục tiêu gì?",
+      "answer": "Chaos testing chủ động tạo failure có kiểm soát để xác minh giả định về resilience, failover và observability. Nó phải bắt đầu ở phạm vi nhỏ, có abort condition và hypothesis rõ, không phải phá production ngẫu nhiên.",
+      "keyPoints": [
+        "Kiểm chứng resilience hypothesis",
+        "Failure có kiểm soát",
+        "Có abort condition"
+      ],
+      "followUps": [
+        {
+          "question": "Nên bắt đầu chaos testing ở production luôn không?",
+          "answer": "Không. Bắt đầu từ test/staging hoặc production phạm vi nhỏ khi đã có monitoring, rollback và confidence phù hợp."
+        }
+      ]
+    },
+    {
+      "id": "SEN-REL-006",
+      "level": "Senior",
+      "topic": "Reliability",
+      "question": "Graceful degradation nên được thiết kế theo priority thế nào?",
+      "answer": "Phân loại feature thành core và optional, xác định dependency nào có thể fail-open/fail-closed và fallback nào chấp nhận được. Khi capacity giảm, hệ thống nên bỏ work ít giá trị trước để giữ transaction cốt lõi.",
+      "keyPoints": [
+        "Phân loại core vs optional",
+        "Fallback theo business priority",
+        "Giữ critical path"
+      ],
+      "followUps": [
+        {
+          "question": "Recommendation service down có nên chặn checkout không?",
+          "answer": "Thường không nếu recommendation không phải invariant của checkout; nên degrade và tiếp tục flow chính."
+        }
+      ]
+    },
+    {
+      "id": "SEN-REL-007",
+      "level": "Senior",
+      "topic": "Reliability",
+      "question": "Queue backlog tăng liên tục nói lên điều gì?",
+      "answer": "Arrival rate đang cao hơn processing rate hoặc consumer gặp dependency bottleneck. Cần theo dõi queue depth, oldest-message age, throughput và saturation để quyết định scale consumer, giảm producer hoặc xử lý root cause.",
+      "keyPoints": [
+        "Arrival > processing",
+        "Theo dõi age + depth",
+        "Scale chỉ khi downstream chịu được"
+      ],
+      "followUps": [
+        {
+          "question": "Tăng consumer luôn là cách sửa đúng không?",
+          "answer": "Không. Nếu database/downstream đã bão hòa, thêm consumer chỉ chuyển bottleneck và tăng contention."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ARCH-008",
+      "level": "Senior",
+      "topic": "Architecture",
+      "question": "Capacity estimation trong system design nên bắt đầu từ đâu?",
+      "answer": "Bắt đầu từ traffic, read/write ratio, payload size, retention và latency/SLO, sau đó ước lượng QPS, storage, bandwidth và headroom. Mục tiêu không phải số tuyệt đối hoàn hảo mà là xác định order of magnitude và bottleneck chính.",
+      "keyPoints": [
+        "Ước lượng QPS/storage/bandwidth",
+        "Dựa workload assumptions",
+        "Có headroom"
+      ],
+      "followUps": [
+        {
+          "question": "Vì sao cần ghi rõ assumption?",
+          "answer": "Vì mọi con số phụ thuộc assumption; khi traffic hoặc payload thay đổi, ta biết cần tính lại phần nào."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ARCH-009",
+      "level": "Senior",
+      "topic": "Architecture",
+      "question": "Sharding database nên được cân nhắc khi nào?",
+      "answer": "Khi một database không còn đáp ứng capacity hoặc write throughput dù đã tối ưu schema/index và scale phù hợp, sharding có thể phân dữ liệu qua nhiều node. Đổi lại cross-shard query, transaction và rebalancing phức tạp hơn nhiều.",
+      "keyPoints": [
+        "Scale data/write capacity",
+        "Shard key cực kỳ quan trọng",
+        "Cross-shard operation phức tạp"
+      ],
+      "followUps": [
+        {
+          "question": "Shard key xấu có hậu quả gì?",
+          "answer": "Có thể tạo hotspot, phân bố dữ liệu lệch và buộc nhiều query phải fan-out qua mọi shard."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ARCH-010",
+      "level": "Senior",
+      "topic": "Architecture",
+      "question": "Active-active multi-region có trade-off gì?",
+      "answer": "Nó cải thiện latency và availability theo vùng nhưng làm consistency, conflict resolution, data replication và failover phức tạp hơn. Không nên dùng chỉ vì muốn 'high availability' nếu single-region multi-AZ đã đáp ứng SLO.",
+      "keyPoints": [
+        "Latency/availability tốt hơn",
+        "Conflict/consistency khó hơn",
+        "Operational cost cao"
+      ],
+      "followUps": [
+        {
+          "question": "Write cùng một entity ở hai region cần xử lý thế nào?",
+          "answer": "Cần ownership rule, conflict resolution hoặc data model tránh concurrent conflicting writes; không thể chỉ dựa vào replication tự giải quyết business semantics."
+        }
+      ]
+    },
+    {
+      "id": "SEN-ARCH-011",
+      "level": "Senior",
+      "topic": "Architecture",
+      "question": "Backpressure nên được thiết kế xuyên hệ thống thế nào?",
+      "answer": "Mỗi layer cần giới hạn concurrency/queue và truyền tín hiệu overload thay vì buffer vô hạn. Có thể dùng bounded queue, 429/503, consumer lag threshold hoặc rate limit để producer chậm lại và giữ hệ thống trong capacity.",
+      "keyPoints": [
+        "Không buffer vô hạn",
+        "Bounded concurrency/queue",
+        "Truyền overload signal"
+      ],
+      "followUps": [
+        {
+          "question": "Queue lớn có phải luôn tốt vì hấp thụ burst không?",
+          "answer": "Không. Queue quá lớn làm latency tăng và che overload lâu, khiến recovery chậm và tài nguyên bị giữ nhiều."
         }
       ]
     }
